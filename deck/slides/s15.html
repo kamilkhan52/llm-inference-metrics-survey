@@ -1,0 +1,55 @@
+<section class="slide" id="s15" data-title="Limits">
+<style>
+#s15 .cols.c2 { gap: 40px; height: auto; align-items: start; }
+#s15 h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; color: var(--ink); margin: 0 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+#s15 table.t { font-size: 14px; line-height: 1.38; table-layout: fixed; }
+#s15 table.t th { padding: 6px 8px 5px; }
+#s15 table.t td { padding: 8px 8px; }
+#s15 table.t td:first-child { color: var(--ink); font-weight: 600; }
+#s15 table.t td.sz { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+#s15 table.t td.so { color: var(--ink-2); }
+#s15 #s15-limits col.c1 { width: 29%; }
+#s15 #s15-limits col.c2 { width: 39%; }
+#s15 #s15-limits col.c3 { width: 32%; }
+#s15 #s15-mind col.c1 { width: 58%; }
+#s15 #s15-mind col.c2 { width: 42%; }
+#s15 #s15-mind td:first-child { font-weight: 400; }
+#s15 #s15-mind td:last-child { color: var(--ink); font-weight: 600; }
+</style>
+<header class="slide-head">
+  <div class="kicker">15 · Limits</div>
+  <h2>A purposive sample and LLM coding bound these results; two findings would change our mind.</h2>
+  <div class="sub">What the evidence can carry, and the results that would overturn the main readings.</div>
+</header>
+<div class="slide-body">
+  <div class="cols c2">
+    <div>
+      <h3>Limits</h3>
+      <table class="t" id="s15-limits">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+        <thead><tr><th>Limit</th><th>Size</th><th>So</th></tr></thead>
+        <tbody>
+          <tr><td>Purposive, not random sample</td><td class="sz">137 full-text; no 2025–26 compression paper read in full</td><td class="so">shares describe our corpus, not the field</td></tr>
+          <tr><td>LLM extraction</td><td class="sz">primary objective 28/30; exact objective and constraint sets 14/30</td><td class="so">trust families, not exact code sets</td></tr>
+          <tr><td>Weak design quotes</td><td class="sz">~15&nbsp;% of checked quotes (R2)</td><td class="so">some objectives rest on motivation sentences</td></tr>
+          <tr><td>Statistic often unstated</td><td class="sz">30 of 62 serving-latency objective entries</td><td class="so">tier 3 merges mean and unspecified</td></tr>
+          <tr><td>One blind tier coder</td><td class="sz">25/30 agree, κ&nbsp;=&nbsp;0.76</td><td class="so">boundary soft, mostly tier 3 vs 5</td></tr>
+          <tr><td>Coverage gaps</td><td class="sz">blog-only industrial systems (TensorRT-LLM, Dynamo, llm-d)</td><td class="so">harness definitions only partly cover them</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>What would change our mind</h3>
+      <table class="t" id="s15-mind">
+        <colgroup><col class="c1"><col class="c2"></colgroup>
+        <thead><tr><th>If we found…</th><th>We would…</th></tr></thead>
+        <tbody>
+          <tr><td>a random OSDI/SOSP/NSDI/MLSys/EuroSys sample with no decline in latency-limit capacity</td><td>drop the slide 11 trend</td></tr>
+          <tr><td>a second coder placing many more designs in tier 1</td><td>weaken “rarely the objective”</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<footer class="slide-foot"><div class="sources">[D] qa/QA_COMPARISON_v2.txt; qa/TIER_QA_COMPARISON.txt; ORCH_NOTES (30 of 62) · notes/R2_review.md (design-quote check, 7 of 45) · [Syn] SYNTHESIS v6.1 §1, §11</div><div class="pageno">15 / 15</div></footer>
+</section>

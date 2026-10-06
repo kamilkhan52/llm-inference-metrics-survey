@@ -1,132 +1,74 @@
-<section class="slide" id="s12" data-title="Stalls">
+<section class="slide" id="s12" data-title="Mean vs tail">
 <style>
-#s12 .slide-body{display:block}
-#s12 .cols{align-items:center}
-#s12 .txt{display:flex;flex-direction:column;justify-content:center;height:100%}
-#s12 .txt p{font-size:18px;line-height:1.5}
-#s12 .cap{margin-top:6px}
-#s12 svg{width:96%}
-#s12 svg .axis{font-size:12.5px}
+#s12 .cols.c2{grid-template-columns:auto auto;gap:28px;height:auto;justify-content:start}
+#s12 .ptitle{font-size:14px;font-weight:600;fill:var(--ink)}
+#s12 .grid{stroke:var(--rule);stroke-width:1}
+#s12 .whisk{stroke:var(--ink-2);stroke-width:1}
+#s12 .tl{font-size:13px;fill:var(--ink)}
+#s12 .vl{font-size:13px;fill:var(--ink);font-variant-numeric:tabular-nums}
+#s12 .note{font-size:12.5px;fill:var(--ink-3)}
+#s12 .cap{margin:2px 0 6px}
+#s12 .body{margin:0}
 </style>
 <header class="slide-head">
-<div class="kicker">12 · Stalls</div>
-<h2>Etalon's capacity ranking flips with the metric: Sarathi-Serve leads on TPOT, trails on P99 TBT.</h2>
-<div class="sub">Highest load (QPS) meeting each criterion at a 25 ms target; Llama-3-8B on H100, Arxiv-Summarization requests (Etalon Fig. 6a).</div>
+<div class="kicker">12 · Mean vs tail</div>
+<h2>Tails enter design mostly as distributional SLOs; only 2 of 137 papers minimize a percentile.</h2>
+<div class="sub">How each design treats the statistic of serving latency (single-sequence-only papers count as tier 5): all papers vs online- or mixed-load papers.</div>
 </header>
 <div class="slide-body">
-<div class="cols c-6-4">
-<div>
-<svg id="s12-chart" viewBox="0 0 680 392" role="img" aria-label="Grouped bars of capacity in QPS at a 25 ms target. TPOT: vLLM 0.66, Sarathi-Serve 1.16. P99 TBT: vLLM 0.65, Sarathi-Serve 0.34. Fluidity index: vLLM 0.60, Sarathi-Serve 0.62."></svg>
-<div class="tiny cap">Bar heights read from the rendered figure against gridlines, ±0.02 QPS (two blind reads agree within 0.01 QPS); paper text gives "2x lower" P99-TBT capacity for Sarathi-Serve and "same at 0.6 QPS" by fluidity. One model (Llama3-8B), one H100, one dataset.</div>
+<div class="cols c2"><div id="s12-p1"></div><div id="s12-p2"></div></div>
+<div class="tiny cap"><svg width="34" height="12" viewBox="0 0 34 12" style="display:inline-block;vertical-align:-1px" aria-hidden="true"><rect x="1" y="1" width="14" height="10" fill="var(--near-soft)" stroke="var(--near)" stroke-width="1.5"/><rect x="19" y="1" width="14" height="10" fill="var(--far-soft)" stroke="var(--far)" stroke-width="1.5"/></svg> Hollow bars: 1b and 2b are the weaker forms of 1a and 2a (tail named without a percentile objective; fixed bound, not a distribution).<br>Tier 1 set by hand from the tail audit and reviews R2–R3, other tiers by script; a blind second coder agreed on 25 of 30 papers (23 online/mixed, 7 other; κ = 0.76).</div>
+<p class="small body">Tier 1a: GORGO (−p95 TTFT fitness) and Autellix (P95/P99 program latency). Preble, Kairos and PolyServe name tails as a design aim without a percentile objective. About 6–8 papers set SLOs on per-request mean TPOT (2 mixed); about 13 constrain token-level timing. 26 of 40 audited papers report tails without targeting them.</p>
 </div>
-<div class="txt">
-<p>A per-request mean TPOT averages stalls away; P99 TBT counts them; Etalon's fluidity index tracks per-token deadlines and rates both systems at about 0.6 QPS. The metric, not only the system, decides which design looks better.</p>
-</div>
-</div>
-</div>
-<footer class="slide-foot"><div class="sources">[P] Agrawal et al., Etalon, arXiv 2407.07000, §5.2 and Fig. 6a pp.8–9; §4.1 (deadline Dᵢ = D_p + i·D_d) · data/etalon_tpot_vs_tbt.json rows b_fig6a_* (two blind extractions; chart read)</div><div class="pageno">12 / 14</div></footer>
-<script type="application/json" id="s12-data">
-[
- {
-  "row_id": "b_fig6a_vllm_fluidity",
-  "system": "vLLM",
-  "criterion": "fluidity-index",
-  "capacity_qps": 0.6,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y (QPS/s), \u00b10.02"
- },
- {
-  "row_id": "b_fig6a_sarathi_fluidity",
-  "system": "Sarathi-Serve",
-  "criterion": "fluidity-index",
-  "capacity_qps": 0.62,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y, \u00b10.02"
- },
- {
-  "row_id": "b_fig6a_vllm_tbt",
-  "system": "vLLM",
-  "criterion": "P99 TBT",
-  "capacity_qps": 0.65,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y, \u00b10.02"
- },
- {
-  "row_id": "b_fig6a_sarathi_tbt",
-  "system": "Sarathi-Serve",
-  "criterion": "P99 TBT",
-  "capacity_qps": 0.34,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y, \u00b10.02"
- },
- {
-  "row_id": "b_fig6a_vllm_tpot",
-  "system": "vLLM",
-  "criterion": "TPOT",
-  "capacity_qps": 0.66,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y, \u00b10.02"
- },
- {
-  "row_id": "b_fig6a_sarathi_tpot",
-  "system": "Sarathi-Serve",
-  "criterion": "TPOT",
-  "capacity_qps": 1.16,
-  "src": "arxiv_2407.07000",
-  "loc": "Fig 6a, p.9",
-  "tag": "P",
-  "unc": "chart read, linear y, \u00b10.02"
- }
-]
-</script>
+<footer class="slide-foot"><div class="sources">[D] data/tail_tiers.json (all|*, online_mixed|*, all|3_mean_named, audit|*) via scripts/analysis_v3.py tier(); qa/TIER_QA_COMPARISON.txt · [P] arxiv_2602.11688 §2.3; arxiv_2502.13965 §1, §3 · [Syn] SYNTHESIS v6.1 §6 (TPOT split)</div><div class="pageno">12 / 15</div></footer>
+<script type="application/json" id="s12-data">{"id":"tail_tiers","rows":[{"row_id":"all|1a","tier":"1a","label":"percentile minimized","k":2,"n":137,"pct":1.4598540145985401,"ci_lo":0.4,"ci_hi":5.2,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|1b","tier":"1b","label":"tail named as design aim","k":3,"n":137,"pct":2.18978102189781,"ci_lo":0.7,"ci_hi":6.2,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|2a","tier":"2a","label":"distributional target: percentile SLO, attainment, goodput, per-token deadline","k":32,"n":137,"pct":23.357664233576642,"ci_lo":17.1,"ci_hi":31.1,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|2b","tier":"2b","label":"deterministic bound","k":4,"n":137,"pct":2.9197080291970803,"ci_lo":1.1,"ci_hi":7.3,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|3","tier":"3","label":"mean or unspecified","k":32,"n":137,"pct":23.357664233576642,"ci_lo":17.1,"ci_hi":31.1,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|5","tier":"5","label":"no serving-latency target","k":64,"n":137,"pct":46.715328467153284,"ci_lo":38.6,"ci_hi":55.0,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|1a","tier":"1a","label":"percentile minimized","k":2,"n":77,"pct":2.5974025974025974,"ci_lo":0.7,"ci_hi":9.0,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|1b","tier":"1b","label":"tail named as design aim","k":3,"n":77,"pct":3.896103896103896,"ci_lo":1.3,"ci_hi":10.8,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|2a","tier":"2a","label":"distributional target: percentile SLO, attainment, goodput, per-token deadline","k":32,"n":77,"pct":41.55844155844156,"ci_lo":31.2,"ci_hi":52.7,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|2b","tier":"2b","label":"deterministic bound","k":0,"n":77,"pct":0.0,"ci_lo":0.0,"ci_hi":4.8,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|3","tier":"3","label":"mean or unspecified","k":25,"n":77,"pct":32.467532467532465,"ci_lo":23.1,"ci_hi":43.5,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"online_mixed|5","tier":"5","label":"no serving-latency target","k":15,"n":77,"pct":19.48051948051948,"ci_lo":12.2,"ci_hi":29.7,"src":"records","loc":"analysis_v3.py tier()","tag":"D","unc":"exact count; Wilson 95 % CI","note":""},{"row_id":"all|3_mean_named","k":5,"src":"records","loc":"word match in design quotes","tag":"D","unc":"script word match; R3 manual check found ~4-5","note":"corpus-wide ~9 by R3 manual check"},{"row_id":"audit|T-REP","k":26,"n":40,"src":"qa/TAIL_AUDIT.md","loc":"tail_role","tag":"D","unc":"exact count","note":"audit of 40 papers before R2/R3 tier changes"}]}</script>
 </section>
 <script>
 (function(){
-var root=document.getElementById('s12');if(!root)return;
-var rows=JSON.parse(root.querySelector('#s12-data').textContent);
-var by={};rows.forEach(function(r){by[r.row_id]=r;});
-var svg=root.querySelector('#s12-chart');var NS='http://www.w3.org/2000/svg';
-function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;svg.appendChild(e);return e;}
-var X0=56,X1=672,Y0=330,Y1=58,MAX=1.4,sc=(Y0-Y1)/MAX;
-function y(v){return Y0-v*sc;}
-for(var t=0;t<=7;t++){var v=t*0.2;el('line',{x1:X0,x2:X1,y1:y(v),y2:y(v),stroke:'var(--rule)','stroke-width':1});
- el('text',{x:X0-8,y:y(v)+4,'text-anchor':'end','class':'axis'},v.toFixed(1));}
-el('text',{x:0,y:14,'class':'axis faint'},'capacity (QPS)');
-var groups=[['tpot','TPOT ≤ 25 ms'],['tbt','P99 TBT ≤ 25 ms'],['fluidity','fluidity-index','(99 % of requests ≥ 0.9)']];
-var gw=(X1-X0)/3,bw=58,gap=8,cen=[];
-groups.forEach(function(g,i){
- var c=X0+gw*(i+.5);cen.push(c);
- [['vllm',c-bw-gap/2,'vLLM'],['sarathi',c+gap/2,'Sarathi-Serve']].forEach(function(b){
-  var r=by['b_fig6a_'+b[0]+'_'+g[0]];var v=r.capacity_qps;
-  var rect=el('rect',{x:b[1],y:y(v),width:bw,height:Y0-y(v),fill:b[0]==='sarathi'?'var(--ink)':'var(--bg)',stroke:'var(--ink)','stroke-width':1.5});
-  var cx=b[1]+bw/2;
-  el('line',{x1:cx,x2:cx,y1:y(v+.02),y2:y(v-.02),stroke:'var(--ink-2)','stroke-width':1});
-  el('line',{x1:cx-4,x2:cx+4,y1:y(v+.02),y2:y(v+.02),stroke:'var(--ink-2)','stroke-width':1});
-  el('line',{x1:cx-4,x2:cx+4,y1:y(v-.02),y2:y(v-.02),stroke:'var(--ink-2)','stroke-width':1});
-  el('text',{x:cx,y:y(v+.02)-6,'text-anchor':'middle','class':'halo num',style:'font-size:14px;font-weight:600'},v.toFixed(2));
-  if(window.DeckTip)window.DeckTip.attach(rect.node||rect,r.row_id+'<br>'+r.src+' '+r.loc+'<br>'+r.unc);
-  if(i===0)el('text',{x:cx,y:Y0+16,'text-anchor':'middle','class':'lbl'},b[2]);
- });
- var gy=Y0+(i===0?38:38);
- el('text',{x:c,y:gy,'text-anchor':'middle',style:'font-size:14px;font-weight:600'},g[1]);
- if(g[2])el('text',{x:c,y:gy+17,'text-anchor':'middle','class':'lbl'},g[2]);
-});
-el('line',{x1:X0,x2:X1,y1:Y0,y2:Y0,stroke:'var(--ink)','stroke-width':1});
-el('text',{x:cen[2],y:y(.62)-34,'text-anchor':'middle','class':'faint',style:'font-size:13px'},'text: "same at 0.6 QPS"');
-/* reversal arrow */
-var ay=34;
-el('defs',{}).innerHTML='<marker id="s12-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-2)"/></marker>';
-el('path',{d:'M'+(cen[0]+30)+','+(y(1.16)-26)+' L'+(cen[0]+30)+','+ay+' L'+(cen[1]+30)+','+ay+' L'+(cen[1]+30)+','+(y(.34)-26),fill:'none',stroke:'var(--ink-2)','stroke-width':1.2,'marker-end':'url(#s12-ah)'});
-el('text',{x:(cen[0]+cen[1])/2+30,y:ay-6,'text-anchor':'middle','class':'lbl halo'},'ranking reverses');
+const root=document.getElementById('s12');
+const D=JSON.parse(root.querySelector('#s12-data').textContent);
+const R={};D.rows.forEach(r=>R[r.row_id]=r);
+const NS='http://www.w3.org/2000/svg';
+const tiers=[
+ {t:'1a',lab:['1a percentile minimized'],fill:'var(--near)'},
+ {t:'1b',lab:['1b tail named as design aim'],fill:'var(--near-soft)',stroke:'var(--near)'},
+ {t:'2a',lab:['2a distributional target: percentile SLO,','attainment, goodput, per-token deadline'],fill:'var(--far)'},
+ {t:'2b',lab:['2b deterministic bound'],fill:'var(--far-soft)',stroke:'var(--far)'},
+ {t:'3',lab:['3 mean or unspecified'],fill:'var(--ink-3)'},
+ {t:'5',lab:['5 no serving-latency target'],fill:'var(--rule)',stroke:'var(--ink-3)'}];
+const PW=290,RH=44,TOP=30,BH=18,LAB=285,RM=95;
+function el(p,n,a,txt){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;p.appendChild(e);return e;}
+const nb='\u00a0';
+function panel(host,pre,title,withLabels){
+  const x0=withLabels?LAB:15, W=x0+PW+RM, H=TOP+RH*6+30;
+  const sv=el(host,'svg',{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const vals=tiers.map(t=>R[pre+'|'+t.t]);
+  sv.setAttribute('aria-label',title+': '+tiers.map((t,i)=>`tier ${t.t} ${vals[i].k} of ${vals[i].n}`).join(', ')+'.');
+  const sx=v=>x0+v/60*PW;
+  el(sv,'text',{x:withLabels?0:x0,y:16,class:'ptitle'},title);
+  [0,20,40,60].forEach(v=>{
+    el(sv,'line',{x1:sx(v),x2:sx(v),y1:TOP,y2:TOP+RH*6,class:'grid'});
+    el(sv,'text',{x:sx(v),y:TOP+RH*6+16,'text-anchor':'middle',class:'axis'},v+(v===60?nb+'%':''));
+  });
+  tiers.forEach((t,i)=>{
+    const r=vals[i],y=TOP+RH*i,cy=y+RH/2-4;
+    if(withLabels){const ls=t.lab;ls.forEach((s,j)=>el(sv,'text',{x:LAB-10,y:cy+4+(j-(ls.length-1)/2)*15,'text-anchor':'end',class:'tl'},s));}
+    const w=Math.max(r.pct/60*PW,0);
+    if(r.k>0){const b=el(sv,'rect',{x:x0,y:cy-BH/2,width:w,height:BH,fill:t.fill});if(t.stroke){b.setAttribute('stroke',t.stroke);b.setAttribute('stroke-width','1.5');}}
+    else el(sv,'line',{x1:x0,x2:x0,y1:cy-BH/2,y2:cy+BH/2,stroke:'var(--ink-3)'});
+    let endx=x0+w;
+    if(r.k>=5){const xl=sx(r.ci_lo),xh=sx(r.ci_hi);
+      el(sv,'line',{x1:xl,x2:xh,y1:cy,y2:cy,class:'whisk'});
+      el(sv,'line',{x1:xl,x2:xl,y1:cy-4,y2:cy+4,class:'whisk'});
+      el(sv,'line',{x1:xh,x2:xh,y1:cy-4,y2:cy+4,class:'whisk'});endx=xh;}
+    const txt=r.k===0?'0':`${r.k}${nb}(${Math.round(r.pct)}${nb}%)`;
+    el(sv,'text',{x:endx+6,y:cy+4.5,class:'vl'},txt);
+    if(withLabels&&t.t==='3')el(sv,'text',{x:LAB-10,y:cy+22,'text-anchor':'end',class:'note'},'about 4–5 name the mean in a design quote');
+  });
+  el(sv,'line',{x1:x0,x2:x0,y1:TOP,y2:TOP+RH*6,stroke:'var(--ink-3)'});
+  return sv;
+}
+panel(root.querySelector('#s12-p1'),'all','All papers (137)',true);
+panel(root.querySelector('#s12-p2'),'online_mixed','Online or mixed load (77)',false);
 })();
 </script>

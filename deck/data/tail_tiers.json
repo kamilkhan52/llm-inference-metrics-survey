@@ -2,7 +2,7 @@
  "id": "tail_tiers",
  "version": 1,
  "slides": [
-  "s10"
+  "s11"
  ],
  "title": "How the design treats the latency statistic (tail tiers)",
  "units": {

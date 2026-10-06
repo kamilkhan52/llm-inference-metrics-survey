@@ -319,8 +319,14 @@ Readings [Syn]:
 - **Goodput at an attainment level looks like the replacement, but the evidence is weak.** Its rise as an objective
   (25 % → 23 % → 41 %) is not statistically significant at these sample sizes.
 - **No level claims for 2022–23.** That cell has only 8 online-load papers.
-- **Version 1's claimed declines in single-sequence-speed and memory objectives are withdrawn.** They were artefacts of
-  track allocation: no 2025–26 compression paper was read in full.
+- **Per-metric trends (scripts/metric_trends.py; deck slide 10).** Targeting a metric (objective or constraint) rose for
+  TTFT (9 % → 25 % → 46 %) and TPOT/TBT (3 % → 21 % → 43 %), both Holm p < 0.01, and both also rise with abstract-coded
+  papers added and within non-model-side papers (TTFT 13 % → 55 %, Holm 0.044). TPOT/TBT rose as a constraint
+  (3 % → 37 %), not as an objective (0 % → 7 %); goodput/SLO attainment is the only objective whose rise survives Holm
+  (6 % → 30 %). E2E (~20 %) and throughput (~42 %) are flat. The falls in single-sequence speed, memory and
+  quality-as-constraint are confounded by corpus mix (model- and kernel-side papers 56 % → 37 % → 17 % of the full-text
+  set; no 2025–26 compression paper read in full): single-sequence speed is mostly mix, while memory (27 % → 13 % in the
+  other papers) and quality (27 % → 8 %) are only partly explained by it.
 - **The sample is purposive.** Discovery asked for at least 30 % 2025–26 papers per cluster, so these are shares of our
   corpus, not of the field.
 

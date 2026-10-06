@@ -694,5 +694,6 @@
    "quote": "Figure 12 compares the average quality and TTFT across the requests (no load); Figure 14: Average Request Rate per Second (request-rate sweep)",
    "judgement": "unclear"
   }
- ]
+ ],
+ "slides": []
 }

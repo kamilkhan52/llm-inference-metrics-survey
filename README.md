@@ -5,7 +5,7 @@ paper it records which metric(s) the method is *designed to optimize*, which it 
 *defines* them. It also derives a metric taxonomy (TTFT, TPOT, TBT/ITL, E2E, throughput, goodput, SLO attainment, and
 more) from the papers' own definitions. A bonus track codes 55 more papers from their abstracts only.
 
-- **Slides (14):** `deck/deck.html`. Open it in a browser; arrow keys move between slides, P starts presenter mode.
+- **Slides (15):** `deck/deck.html`. Open it in a browser; arrow keys move between slides, P starts presenter mode.
 - **Report:** `report/report.html`, the long-form companion with every figure, table and reference.
 - **Synthesis (Markdown):** `SYNTHESIS_v6.md`.
 
@@ -31,6 +31,11 @@ scope.
   - 28 % of papers never define their headline metric.
   - Benchmark harnesses (MLPerf, vLLM, GenAI-Perf) agree that TTFT includes queueing, but disagree on ITL, which
     tokens throughput counts, and goodput.
+- **Metric targeting over time** (deck slide 10; `analysis/metric_trends.txt`). Of papers first posted in 2022–23,
+  2024 and 2025–26, the share that target TTFT (as objective or constraint) went 9 % → 25 % → 46 %, and TPOT/TBT went
+  3 % → 21 % → 43 % (Holm p < 0.01 for both). TPOT/TBT rose as a *constraint*, while goodput/SLO attainment is the
+  objective that rose (6 % → 30 %). E2E (TTLT) at about 20 % and throughput at about 42 % are flat. The falls in
+  single-sequence speed, memory and quality are confounded by the corpus mix.
 - **Change over time.** Within papers evaluated under online load, SLO framing is flat. What declined significantly
   (p < 0.001) is defining capacity as "the max rate before latency blows up". Goodput as an objective rose, but not
   significantly.
@@ -71,6 +76,8 @@ The work was done with LLM agents (Claude) orchestrated over the full texts. The
 python3 -I scripts/aggregate.py .        # -> analysis/summary.txt, summary_v2.txt, paper_table.json, definitions_by_metric.md
 python3 -I scripts/analysis_v3.py .      # -> analysis/summary_v3.txt (tiers, trends with Wilson CIs, trend tests)
 python3 -I scripts/paper_table_md.py .   # -> analysis/PAPER_TABLE.md, paper_table.csv
+python3 -I scripts/metric_trends.py .    # -> analysis/metric_trends.txt/.json (per-metric trends by period)
+python3 -I deck/build/make_metric_trends_data.py .  # -> deck/data/metric_trends.json
 python3 -I deck/build/make_records_data.py .   # -> deck/data/*.json (records-derived figure data)
 ```
 
