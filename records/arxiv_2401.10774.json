@@ -1,0 +1,110 @@
+{
+  "key": "arxiv_2401.10774",
+  "title": "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads",
+  "first_author": "Tianle Cai",
+  "year": 2024,
+  "venue": "ICML'24",
+  "url": "https://arxiv.org/abs/2401.10774",
+  "cluster": "D4",
+  "technique": "extra decoding heads on frozen/fine-tuned backbone predicting multiple future tokens, verified via tree attention; typical-acceptance scheme",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.10774.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Minimizing the number of decoding steps to decrease latency directly",
+      "locator": "App. A.1",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "it cannot further enhance the acceleration rate. Alternatively, we introduce a typical acceptance scheme that selects reasonable candidates from the MEDUSA head outputs.",
+      "locator": "§1 (txt lines ~115-120)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "MEDUSA-1 ... enabling lossless inference acceleration; MEDUSA-2 needs a special training recipe that preserves the model's capabilities; typical acceptance boosts acceptance rate while maintaining generation quality",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "MEDUSA-1 can achieve over 2.2x speedup without compromising generation quality, while MEDUSA-2 further improves the speedup to 2.3-2.8x.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 3 speedup, Table 4 tokens/s base vs Medusa"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Table 1, Fig 4, Table 4 acc. rate"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Table 1 MT-Bench score 0-10, Fig 5"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "mean",
+      "where": "App. roofline FLOP/s and operational intensity vs batch size (Fig 17-19, Tables 6-7)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Acceleration rate",
+      "canonical": "ACCEPT",
+      "definition_quote": "Acceleration rate: This refers to the average number of tokens decoded per decoding step. In a standard auto-regressive model, this rate is 1.0.",
+      "locator": "App. B.1",
+      "notes": "= mean accepted length per step incl. the bonus token"
+    },
+    {
+      "term_as_written": "Overhead",
+      "canonical": "OTHER:per_step_overhead",
+      "definition_quote": "Overhead: This is used to characterize the per decoding step overhead compared to classic decoding, and is calculated by dividing the average per step latency of the MEDUSA models by that of the vanilla model.",
+      "locator": "App. B.1",
+      "notes": ""
+    },
+    {
+      "term_as_written": "Speedup",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Speedup: This refers to the wall-time acceleration rate. Following these definitions, we have the relation: Speedup = Acceleration rate / Overhead.",
+      "locator": "App. B.1",
+      "notes": "single-sequence wall-clock speedup vs HuggingFace baseline; speed also given as tokens/s of one sequence"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 (\"In the paper, we focus on the setting with batch size 1\"; 'representative of the use case where LLMs are locally hosted for personal use'); batch>1 only via roofline analysis in appendix (batch 1-16+), no serving load",
+  "tradeoff_acknowledged": "Quality vs speed: typical acceptance threshold eps up raises quality but reduces acceleration; self-distilled models (Vicuna-13/33B, Zephyr) get lower speedup to preserve quality. Larger batch erodes benefit (compute-bound).",
+  "eval_type": "real-system",
+  "hardware": "single NVIDIA A100 80GB PCIe (training and inference)",
+  "models": "Vicuna-7B/13B/33B, Zephyr-7B",
+  "workloads": "MT-Bench, AlpacaEval, ShareGPT (training)",
+  "confidence": "high",
+  "extractor_notes": "Two-column layout garbled; line refs approximate. Not a serving paper: no TTFT/TBT/throughput under load. Speedup = single-stream decode speed ratio over HuggingFace baseline.",
+  "load_class": "single-sequence",
+  "load_class_quote": "In the paper, we focus on the setting with batch size 1 for simplicity. (§3; txt line 598)",
+  "repass_log": [
+    "TOKEN_LAT: evidence_kind design; abstract result quote replaced by App. A.1 design statement (decrease latency by minimizing decoding steps)",
+    "ACCEPT: paraphrased evidence replaced by verbatim §1 design sentence (typical acceptance scheme to raise acceleration rate)",
+    "QUALITY: design (constraint, training recipe preserves capabilities)",
+    "TOKEN_LAT stat set n/a (unspecified; speedup ratio of single-stream decoding)",
+    "load_class single-sequence"
+  ]
+}

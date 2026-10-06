@@ -1,0 +1,128 @@
+{
+ "key": "arxiv_2408.12757",
+ "title": "NanoFlow: Towards Optimal Large Language Model Serving Throughput",
+ "first_author": "Zhu",
+ "year": 2024,
+ "venue": "OSDI'25 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2408.12757",
+ "cluster": "D5",
+ "technique": "Intra-device parallelism: nano-batching and duplicated nano-operations overlapping compute, memory and network ops; MILP auto-search of pipeline; constant dense batch with chunked prefill",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2408.12757.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "throughput has emerged as a key metric that determines serving systems' performance ... NanoFlow automatically identifies the number, size, ordering, and GPU resource allocation of nano-batches to minimize the execution time",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "NanoFlow, a serving framework that aims to maximize utilization of the workload's resource bottleneck, when considered as a whole.",
+   "locator": "§1 (txt line 86-88)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "role": "constraint",
+   "evidence": "We select the SLO for average normalized latency as 200ms following prior works [59], which is also the typical human reading speed",
+   "locator": "§6.3",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "We select the SLO for average normalized latency as 200ms following prior works [59]"
+  }
+ ],
+ "headline_claim": {
+  "text": "With practical workloads, NanoFlow provides 1.91× throughput boost compared to state-of-the-art serving systems, achieving between 50% to 72% of optimal throughput across popular models.",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Fig 7 (offline total throughput vs optimal 1857 tok/s/GPU), Fig 9-ish ablations"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 8 (normalized latency vs request rate)"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "attainment",
+   "where": "max request rate within 200ms normalized-latency SLO (1.64x TRT-LLM on LMSYS)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "where": "§6.3: P99 latency only 1.07x of average at near-max throughput"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "§6.2 / Fig 10 compute utilization (40% for sequential baseline)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "We define throughput as the total throughput of serving, which is the number of tokens processed per second by both prefill and decode phases.",
+   "locator": "§3.1",
+   "notes": "Counts input+output tokens; optimal measured per GPU (token/s/GPU); convertible to decode-only or req/s via p/(p+d) factors"
+  },
+  {
+   "term_as_written": "optimal throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Optimal throughput (measured in token/s/GPU) is achieved when the most limited resource, i.e. compute, is fully utilized.",
+   "locator": "§3.5",
+   "notes": "Analytical roofline-style upper bound (1857 tokens/s/GPU for LLaMA-2-70B on A100); results reported as fraction of optimal"
+  },
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "We then measure normalized latency by first calculating the end-to-end request latency divided by output length in tokens, then taking the average for all requests.",
+   "locator": "§6.3",
+   "notes": "Mean of per-request E2E/output tokens; 200ms SLO on the mean (not a per-request or tail SLO)"
+  },
+  {
+   "term_as_written": "decoding throughput / request per second",
+   "canonical": "THR_REQ",
+   "definition_quote": "decoding throughput (decode output per second) is d/(p+d) × Throughput_total, and request per second is 1/(p+d) × Throughput_total.",
+   "locator": "§3.1",
+   "notes": "conversions; p,d = avg prefill/decode tokens"
+  },
+  {
+   "term_as_written": "total throughput (measured)",
+   "canonical": "THR_TOK",
+   "definition_quote": "to measure the total throughput defined as the total number of input and output tokens divided by the execution time",
+   "locator": "§6.2",
+   "notes": "offline; input+output tokens"
+  }
+ ],
+ "slo_spec": "SLO on average normalized latency = 200 ms/token, following prior work [59] and typical human reading speed; maximum request rate sustained within it reported",
+ "load_regime": "offline batch (throughput) plus Poisson (exponential interarrival) request-rate sweep on 5-min traces",
+ "tradeoff_acknowledged": "At low request rates NanoFlow has comparable but slightly higher latency than baselines because it targets throughput and uses a large dense batch (2048); nano-batching duplicates ops and increases weight-load memory I/O.",
+ "eval_type": "real-system",
+ "hardware": "8xA100 80GB node (primary); other GPUs for generalization",
+ "models": "LLaMA-2-70B, LLaMA-3-70B/8B, Qwen2-72B, Deepseek-67B, Mixtral 8x7B",
+ "workloads": "Splitwise, LMSYS-Chat-1M, ShareGPT; constant-length",
+ "confidence": "high",
+ "extractor_notes": "Design targets end-to-end serving throughput (and utilization as the mechanism), validated against an analytical optimum; not kernel speed per se, though the mechanism is kernel-level overlap (kernel interference modeled). Latency is only a constraint (mean normalized latency SLO). The P99 remark (1.07x of average) is an observation, not an optimized target. Throughput counts prefill+decode tokens.",
+ "load_class": "mixed",
+ "load_class_quote": "Offline: \"When serving offline requests,\" (§3.6) throughput vs optimal; online: \"we model the request arrival interval via an exponential distribution, following prior work [17]. We generate 5 minutes of request traces\" (§6.3)",
+ "repass_log": [
+  "THR_TOK and UTIL: design (abstract/§1 'aims to maximize utilization' statements already design; evidence_kind added)",
+  "NORM_LAT constraint: design (explicit SLO), stat_basis explicit: average normalized latency",
+  "load_class mixed (offline throughput + Poisson-arrival latency sweep)"
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2410.16179",
+ "title": "MagicPIG: LSH Sampling for Efficient LLM Generation",
+ "first_author": "Chen",
+ "year": 2024,
+ "venue": "ICLR'25",
+ "url": "https://arxiv.org/abs/2410.16179",
+ "cluster": "D3",
+ "technique": "LSH-sampling attention with CPU-side hash tables for long-context decoding",
+ "layer": "long-context",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "MagicPIG can improve decoding throughput by up to $5\\times$",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "achieve 54ms decoding latency on a single RTX 4090",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "while preserving high accuracy for diverse tasks",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "MagicPIG can improve decoding throughput by up to $5\\times$ across various GPU hardware and achieve 54ms decoding latency on a single RTX 4090",
+  "metrics": [
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"decoding latency\" taken as per-step latency of a single sequence."
+}

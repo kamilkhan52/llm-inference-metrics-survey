@@ -1,0 +1,110 @@
+{
+ "key": "arxiv_2311.01282",
+ "title": "FlashDecoding++: Faster Large Language Model Inference on GPUs",
+ "first_author": "Hong",
+ "year": 2023,
+ "venue": "arXiv preprint (MLSys'24)",
+ "url": "https://arxiv.org/abs/2311.01282",
+ "cluster": "D5",
+ "technique": "Asynchronized softmax with unified max value; flat-GEMM with double buffering (pad to 8 not 64); heuristic dataflow selection among kernels by shape/hardware",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2311.01282.txt",
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "To tackle these challenges and enable a faster Large Language Model (LLM) inference, we present FlashDecoding++ in this paper.",
+   "locator": "§1 (txt line 202)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "(2) Under-utilized computation of flat GEMM. The shape of matrices performing GEMM in LLM inference is flat, leading to under-utilized computation and >50% performance loss after padding zeros in previous designs",
+   "locator": "abstract (problem statement the design targets)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "many works focus on improving the throughput of generating tokens (i.e., reducing latency of each token)",
+   "locator": "§1 (txt line 72-74); Fig 1 'each token latency' and 'first token latency'",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified",
+   "evidence_note": "weak design evidence: sentence frames decode-phase goal (reducing latency of each token); no explicit statistic stated"
+  }
+ ],
+ "headline_claim": {
+  "text": "FlashDecoding++ can achieve up to 4.86× and 3.93× speedup on both NVIDIA and AMD GPUs compared to Hugging Face implementations. FlashDecoding++ also achieves an average speedup of 1.37× compared to state-of-the-art LLM inference engines on mainstream LLMs.",
+  "metrics": [
+   "OTHER:kernel_speedup",
+   "TOKEN_LAT",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Fig 1 left, Fig 10, Fig 12 (decode tokens/s at batch 1-8; speedup over baselines)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 1 right, Fig 11 (prefill first-token latency ms)"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "Fig 1 right (each-token latency ms)"
+  },
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "where": "Fig 10-13 speedup bars vs HF/vLLM/DeepSpeed/TRT-LLM/OpenPPL/FlashDecoding"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "prefill phase / first token latency",
+   "canonical": "TTFT",
+   "definition_quote": "The prefill phase generates the first token by processing the input prompt",
+   "locator": "§1",
+   "notes": "Single-request, no queueing: batch size 1-8 offline; 'first token latency' is the prefill phase time"
+  },
+  {
+   "term_as_written": "throughput (token/s) / each token latency",
+   "canonical": "TOKEN_LAT",
+   "definition_quote": "many works [9, 10, 11, 15, 13, 14, 20] focus on improving the throughput of generating tokens (i.e., reducing latency of each token)",
+   "locator": "§1",
+   "notes": "Throughput equated with 1/per-token latency at fixed small batch size; not system throughput under load. Speedup is ratio of these per-engine numbers"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch size (1,2,4,8), fixed input length (1K; 32K case in Fig 1)",
+ "tradeoff_acknowledged": null,
+ "eval_type": "real-system",
+ "hardware": "NVIDIA A100, RTX3090; AMD MI210, RX7900XTX",
+ "models": "Llama2-7B/13B, OPT, ChatGLM2-6B",
+ "workloads": "single-batch offline decode and prefill microbenchmarks; no request arrivals",
+ "confidence": "high",
+ "extractor_notes": "Kernel/engine-level: the design targets kernel utilization and per-engine decode/prefill speed (speedup), not serving metrics under load. No SLO, no percentiles, no queueing. 'Throughput' in figures is decode tokens/s at fixed small batch (effectively 1/per-token latency); it does not define throughput formally. Prefill speedup is modest (1.05-1.40x).",
+ "load_class": "single-sequence",
+ "load_class_quote": "\"The left is with batch size=1 and input length=1K\" (Fig 1 caption, txt line 132); fixed batch 1-8 offline decode/prefill microbenchmarks",
+ "repass_log": [
+  "kernel_speedup, UTIL: design (replaced headline-result quote with §1 design statement / abstract problem statement)",
+  "TOKEN_LAT: design (framing sentence kept, noted weak), stat_basis unspecified, stat mean->n/a",
+  "TTFT: result-only (figure caption), no design statement for prefill target -> moved to reported_metrics (headline only)",
+  "load_class single-sequence"
+ ]
+}

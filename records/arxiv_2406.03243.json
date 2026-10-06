@@ -1,0 +1,167 @@
+{
+  "key": "arxiv_2406.03243",
+  "title": "Llumnix: Dynamic Scheduling for Large Language Model Serving",
+  "first_author": "Biao Sun",
+  "year": 2024,
+  "venue": "OSDI'24 (arXiv)",
+  "url": "https://arxiv.org/abs/2406.03243",
+  "cluster": "D2",
+  "technique": "Runtime rescheduling across vLLM instances via live KV-cache migration, with a unified 'virtual usage'/freeness-based policy for load balancing, de-fragmentation, priorities, and auto-scaling",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2406.03243.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Llumnix's scheduling policy is designed with the following goals. The first is to improve prefill and decode latencies, by reducing queuing delays, preemptions, and interference.",
+      "locator": "§4.4.1 Goals and Definitions",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Llumnix's scheduling policy is designed with the following goals. The first is to improve prefill and decode latencies, by reducing queuing delays, preemptions, and interference.",
+      "locator": "§4.4.1 Goals and Definitions",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Requests with higher scheduling priorities will get scheduled earlier to reduce their queuing delays.",
+      "locator": "§3 / priorities paragraph (txt line ~440)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The second goal is load-adaptivity to handle varying cluster load and improve cost efficiency ... instance auto-scaling to keep appropriate cluster load for both saving costs and maximizing the benefits of rescheduling.",
+      "locator": "§4.4.1",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Llumnix improves tail latencies by an order of magnitude, accelerates high-priority requests by up to 1.5×, and delivers up to 36% cost savings while achieving similar tail latencies, compared against state-of-the-art LLM serving systems.",
+    "metrics": [
+      "TTFT",
+      "TPOT",
+      "E2E",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Figs 11-14 (request mean/P99)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "Figs 11-14"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Figs 11-14 (prefill mean/P99)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "Figs 11-14 (decode mean/P99)"
+    },
+    {
+      "metric": "PREEMPT",
+      "stat": "mean",
+      "where": "§6.3 preemption loss / preempted requests"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Fig 14/15 average number of instances"
+    },
+    {
+      "metric": "OTHER:migration_downtime",
+      "stat": "n/a",
+      "where": "Fig 10 migration downtime vs recompute/Gloo"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "request latency (end-to-end, prefill, decode)",
+      "canonical": "E2E",
+      "definition_quote": "We focus on request latency, in terms of end-to-end, prefill (that of the first generated token), and decode (that since first generated token to the last, averaged over all generated tokens). We report both mean and P99 values.",
+      "locator": "§6.1 Key metrics",
+      "notes": "Prefill latency = TTFT and includes queueing; decode latency = TPOT (averaged over all generated tokens), not per-token TBT"
+    },
+    {
+      "term_as_written": "prefill latency",
+      "canonical": "TTFT",
+      "definition_quote": "The prefill latency determines how long it takes to start receiving the response, which can be dominated by the queuing delay.",
+      "locator": "§2.1",
+      "notes": "includes queuing"
+    },
+    {
+      "term_as_written": "decode latency",
+      "canonical": "TPOT",
+      "definition_quote": "The decode latency determines the speed of receiving the following tokens subsequently.",
+      "locator": "§2.1",
+      "notes": ""
+    },
+    {
+      "term_as_written": "downtime",
+      "canonical": "OTHER:migration_downtime",
+      "definition_quote": "Llumnix introduces near-zero downtime that is constant to the sequence length",
+      "locator": "§1 / §4.2",
+      "notes": "stall time a migrated request experiences during live migration"
+    }
+  ],
+  "slo_spec": "No numeric SLO attainment; priorities (scheduling and execution) express differing SLOs; autoscaling targets a P99 prefill latency (about 5 s, red dashed line in Fig 15) while minimizing instances",
+  "load_regime": "request-rate sweep with Poisson and Gamma arrivals (varying CV), varying length distributions (ShareGPT, BurstGPT, generated long-tail), 16 instances",
+  "tradeoff_acknowledged": "Migration copy adds up to ~1% slowdown to running batches on the source instance; migration/rescheduling benefits limited under very high or very low cluster load",
+  "eval_type": "real-system",
+  "hardware": "16 NVIDIA A10 (24 GB) GPUs (4 per node, PCIe 4.0)",
+  "models": "LLaMA-7B, LLaMA-30B",
+  "workloads": "ShareGPT (GPT4), BurstGPT, generated power-law/long-tail length distributions",
+  "confidence": "high",
+  "extractor_notes": "Tail focus: mean and P99 both reported; headline gains are on P99. Decode latency is a per-request average over generated tokens (TPOT-like), with P99 taken across requests. Cost = average number of instances used. | TAIL AUDIT 2026-10-06: TTFT tail stat -> n/a (metric targeted, percentile only reported); TPOT tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT/TPOT/E2E P99 (reported); design goal is improve prefill/decode latency generally",
+    "correction": "Demote TTFT P99 and TPOT P99 'objectives' to reported/headline. Policy (virtual-usage freeness, migration) has no percentile target; autoscaling compared at equal P99 only in eval. Borderline: motivation names tail latency.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep with Poisson and Gamma arrivals (varying CV) on a 16-instance cluster (§6)",
+  "repass_log": [
+    "TTFT (prefill latency) and TPOT (decode latency): P99 headline quotes replaced by §4.4.1 design goal; stat unspecified -> n/a (tail_audit correction applied; no percentile target)",
+    "E2E (high-priority mean latency) demoted to reported: headline only",
+    "COST quote replaced with design goal (auto-scaling for cost efficiency)",
+    "QUEUE design quote kept; stat n/a",
+    "load_class online-arrivals"
+  ]
+}

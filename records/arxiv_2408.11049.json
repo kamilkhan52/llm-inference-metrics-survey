@@ -1,0 +1,97 @@
+{
+  "key": "arxiv_2408.11049",
+  "title": "MagicDec: Breaking the Latency-Throughput Tradeoff for Long Context Generation with Speculative Decoding",
+  "first_author": "Ranajoy Sadhukhan",
+  "year": 2024,
+  "venue": "ICLR'25",
+  "url": "https://arxiv.org/abs/2408.11049",
+  "cluster": "D4",
+  "technique": "speculative decoding for large-batch long-context serving using draft models with sparse (StreamingLLM/SnapKV) KV cache; theoretical model to choose drafting strategy and speculation length",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2408.11049.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Can we simultaneously improve throughput and latency without sacrificing accuracy, particularly for long sequences?",
+      "locator": "§1",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Can we simultaneously improve throughput and latency without sacrificing accuracy, particularly for long sequences?",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "enhance throughput and reduce latency without compromising accuracy (lossless verification)",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "For moderate to long sequences, we demonstrate up to 2.51x speedup for LLaMA-3.1-8B when serving batch sizes ranging from 32 to 256 on various types of hardware and tasks.",
+    "metrics": [
+      "TOKEN_LAT",
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 6, Tables 1-2 (T_AR vs T_SD, speedup x); Fig 1b per-token latency"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Fig 1b throughput tokens/s vs per-token latency"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Fig 1c, Fig 4, Omega(gamma,alpha) in tables"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "expected latency per token for SD",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Hence, the expected latency per token for speculative decoding is simply T_Avg = T_Total^SD / Omega(gamma,alpha).",
+      "locator": "§3.1 (txt line 278)",
+      "notes": "T_Total^SD = gamma*T_D(B,S) + T_V(B,S,gamma); Omega = expected generated tokens per step = (1-alpha^(gamma+1))/(1-alpha). This is per decoding step latency for the whole batch (per-token of each sequence), not system tokens/s"
+    },
+    {
+      "term_as_written": "speedup",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "The speedup of speculative decoding ... T_Avg^SD / T_T = (1/Omega(gamma,alpha)) * (gamma*T_D/T_T + T_V(gamma)/T_T)",
+      "locator": "§3.1 Eq. 2",
+      "notes": "Tables report x = T_AR / T_SD (ratio of autoregressive to speculative per-token latency, ms). Because every sequence in a fixed batch advances at the same rate, a latency speedup at fixed batch size equals a throughput speedup; paper equates them (\"speedup ... demonstrating speculative decoding's ability to improve throughput\")"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed batch size sweep (B=1..256, notably 32-256), fixed sequence lengths 256-100k, offline generation of 96 tokens per sequence, greedy; no request arrivals",
+  "tradeoff_acknowledged": "Conventional trade-off (SD speedup falls with batch size for short sequences, where compute-bound verification dominates) is acknowledged: below a critical sequence length SD slows down at large batch (Fig. 6). Drafting KV budget trades draft cost vs acceptance rate.",
+  "eval_type": "both",
+  "hardware": "8xA100 (TP8), 8xH100, 4xH100, 8xL40",
+  "models": "Llama-3.1-8B/70B, Llama-2-7B-32K, others",
+  "workloads": "PG-19, QA-1, CWE (long-context tasks)",
+  "confidence": "medium",
+  "extractor_notes": "Title says 'latency-throughput tradeoff' but the experiments are fixed-batch decode steps; 'throughput' and 'latency' improve together because batch fixed. No TTFT, no SLO, no request-rate load; speedup reported is per-token latency ratio. Table units (ms) inferred: T_SD=(gamma*T_D+T_V)/Omega matches table values.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Each run generates 96 tokens per sentence in the batch through greedy decoding on 20 batches. (§5.1 setup)",
+  "repass_log": [
+    "TOKEN_LAT/THR_TOK: evidence replaced by §1 research-question design statement; stat n/a for TOKEN_LAT",
+    "QUALITY: design",
+    "load_class offline-batch (fixed batch decode steps, no arrivals)"
+  ]
+}

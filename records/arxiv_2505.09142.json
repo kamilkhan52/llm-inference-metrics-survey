@@ -1,0 +1,46 @@
+{
+ "key": "arxiv_2505.09142",
+ "title": "ELIS: Efficient LLM Iterative Scheduling System with Response Length Predictor",
+ "first_author": "Choi",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2505.09142",
+ "cluster": "D1",
+ "technique": "response-length predictor + iterative shortest-remaining-time-first scheduler",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "ISRTF reduces the average job completion time by up to 19.6%",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "ISRTF reduces the average job completion time by up to 19.6%",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

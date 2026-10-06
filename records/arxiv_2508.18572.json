@@ -1,0 +1,95 @@
+{
+  "key": "arxiv_2508.18572",
+  "title": "Strata: Hierarchical Context Caching for Long Context Language Model Serving",
+  "first_author": "Zhiqiang Xie",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2508.18572",
+  "cluster": "D3",
+  "technique": "GPU-assisted I/O to decouple GPU/CPU KV layouts plus cache-aware scheduling (delay-hit deferral, balanced prefill batches, stall hiding with decode) on SGLang",
+  "layer": "prefix/context-caching",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2508.18572.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Strata is designed to improve long-context serving by reducing response latency and increasing overall throughput. Accordingly, we evaluate the system using two primary metrics: average Time To First Token (TTFT) and output token throughput.",
+      "locator": "§5.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "average Time To First Token (TTFT)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Strata is designed to improve long-context serving by reducing response latency and increasing overall throughput. Accordingly, we evaluate the system using two primary metrics: average Time To First Token (TTFT) and output token throughput.",
+      "locator": "§5.2",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Strata achieves up to 5x lower Time-To-First-Token (TTFT) compared to vLLM + LMCache and 3.75x speedup over NVIDIA TensorRT-LLM on long-context benchmarks, without degrading short-context performance.",
+    "metrics": [
+      "TTFT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 8, 9, 13"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P90",
+      "where": "Fig 2 (page-size motivation)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 8 (output tokens/s), Fig 10 peak throughput"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "Fig 3 PCIe bandwidth utilization; I/O stall %"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "TTFT captures query response time, a key determinant of user experience",
+      "locator": "§5.2",
+      "notes": "Not formally defined; includes cache-load stalls and queueing under Poisson arrivals (in-flight cap 128)."
+    },
+    {
+      "term_as_written": "output token throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "output token throughput is a widely adopted metric for characterizing LLM serving system performance",
+      "locator": "§5.2",
+      "notes": "Output tokens only. Results given as throughput at the same TTFT (throughput-latency curves), e.g. 'up to 3.2x higher throughput at the same TTFT'."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep (Poisson arrivals), in-flight cap 128; 60 s think time for ShareGPT multi-turn",
+  "tradeoff_acknowledged": "Larger KV page sizes raise transfer efficiency but lower cache hit rate and raise average and P90 TTFT (Fig 2); Strata aims for no short-context degradation",
+  "eval_type": "real-system",
+  "hardware": "8x H200 node; GH200",
+  "models": "Llama-8B, Qwen2.5-14B, Llama-70B, Mistral-24B",
+  "workloads": "LooGLE, NarrativeQA, ReviewMT, ShareGPT",
+  "confidence": "high",
+  "extractor_notes": "Mean TTFT is the optimization target; P90 TTFT appears only in motivation. Headline '3.75x speedup' vs TensorRT-LLM is throughput at same TTFT (Llama-70B), not TTFT directly.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "we simulate query arrivals using a Poisson distribution to benchmark the system using varying request rates (§5.1)",
+  "repass_log": [
+    "TTFT: evidence/locator replaced with design statement (was: 'Strata achieves up to 5x lower Time-To-First-Token (TTFT) co...')",
+    "TTFT: stat_basis explicit (mean)",
+    "THR_TOK: evidence/locator replaced with design statement (was: 'Strata is designed to improve long-context serving by reduci...')",
+    "load_class = online-arrivals"
+  ]
+}

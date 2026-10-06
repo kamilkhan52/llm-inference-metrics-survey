@@ -1,0 +1,111 @@
+{
+ "key": "arxiv_2403.19708",
+ "title": "Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention",
+ "first_author": "Gao",
+ "year": 2024,
+ "venue": "USENIX ATC'24",
+ "url": "https://arxiv.org/abs/2403.19708",
+ "cluster": "D3",
+ "technique": "AttentionStore: hierarchical (HBM/DRAM/SSD) KV store for reuse across conversation turns, layer-wise pre-loading, async saving, scheduler-aware fetching/eviction, positional-encoding decoupling so truncated KV stays valid",
+ "layer": "prefix/context-caching",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2403.19708.txt",
+ "optimized_metrics": [
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "To reduce the serving cost and improve the inference performance, this paper proposes CachedAttention",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:cache_hit_rate",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "scheduler-aware fetching and eviction schemes ... candidates to be evicted for achieving a high cache hit rate",
+   "locator": "§3.4 (intermediate objective)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "CachedAttention significantly decreases the time to the first token (TTFT) by up to 87%, improves the prompt prefilling throughput by up to 7.8x for multi-turn conversations, and reduces the end-to-end inference cost by up to 70%.",
+  "metrics": [
+   "TTFT",
+   "THR_TOK",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 14"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 15 prefilling throughput (tokens/s)"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "Fig 17 total $ cost of completing the workload"
+  },
+  {
+   "metric": "OTHER:cache_hit_rate",
+   "stat": "n/a",
+   "where": "Fig 13 (86%, 71%, 89%, 90% across models)"
+  },
+  {
+   "metric": "OTHER:gpu_time",
+   "stat": "n/a",
+   "where": "Fig 16 total prefilling / decoding GPU time"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "Time to first token (TTFT)",
+   "canonical": "TTFT",
+   "definition_quote": "TTFT is an important metric for quality of service in LLM serving [2, 31]. It indicates how quickly users start seeing the output of LLMs after entering their prompt.",
+   "locator": "§5.2",
+   "notes": "Informal; elsewhere equated with prefill time: 'The repetitive computation time occupies 99% of the prefilling time (a.k.a., time to the first token) in the new conversation' (§2.3). Queueing treatment not stated."
+  },
+  {
+   "term_as_written": "Prefilling throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Prefilling throughput is the metric to evaluate the speed of processing the prompt.",
+   "locator": "§5.2",
+   "notes": "Prefill-only tokens/s (input tokens including cached/reused ones presumably counted via 't/s' axis); NOT generation throughput. The 7.8x headline is this metric."
+  },
+  {
+   "term_as_written": "Inference cost",
+   "canonical": "COST",
+   "definition_quote": "We evaluate the resource cost based on the on-demand price of AWS EC2 instances [4, 5], i.e., $5/hour per A100 GPU, $0.0088/hour/GB for DRAM and $0.000082/hour/GB for SSD.",
+   "locator": "§5.2",
+   "notes": "Cost = GPU-hours + DRAM + SSD storage cost to complete the workload; storage cost is small relative to GPU time saved."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "trace replay of ShareGPT multi-turn conversations; sessions interleave; compared against recomputation (RE) baseline",
+ "tradeoff_acknowledged": "Storage cost of DRAM/SSD for saved KV (offset by reduced GPU time); low hit rate for LLaMA-65B (2.5 MB/token KV) limits gain; prefetch/save overheads hidden via overlap.",
+ "eval_type": "real-system",
+ "hardware": "A100 80GB GPUs (4-8), large host DRAM and SSD",
+ "models": "LLaMA-13B, LLaMA-65B, LLaMA-70B, Falcon-40B",
+ "workloads": "ShareGPT multi-turn conversation dataset",
+ "confidence": "high",
+ "extractor_notes": "Headline 'throughput' is prefill-only throughput, not end-to-end tokens/s. TTFT is treated as ~prefill time. Cost is the only paper in this batch with an explicit $ model. Only mean/average reported, no percentiles; no SLO.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "we generate request arrival times based on the Poisson distribution with various arrival rates (§4.1)",
+ "repass_log": [
+  "TTFT (mean) and THR_TOK (prefill throughput): only abstract result / metric-definition text found, no design statement -> demoted to reported_metrics",
+  "COST: abstract result replaced by §1 design statement; cache_hit_rate: design",
+  "added load_class online-arrivals"
+ ]
+}

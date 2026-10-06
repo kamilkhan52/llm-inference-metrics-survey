@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2402.07033",
+ "title": "Fiddler: CPU-GPU Orchestration for Fast Inference of Mixture-of-Experts Models",
+ "first_author": "Keisuke Kamahori",
+ "year": 2024,
+ "venue": "ICLR 2025",
+ "url": "https://arxiv.org/abs/2402.07033",
+ "cluster": "D5",
+ "technique": "CPU-GPU orchestration for MoE inference with optimal execution strategy per layer",
+ "layer": "MoE-serving",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Fiddler achieves 1.26 times speed up in single batch inference",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "1.30 times in long prefill processing",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Fiddler achieves 1.26 times speed up in single batch inference, 1.30 times in long prefill processing, and 11.57 times in beam search inference",
+  "metrics": [
+   "E2E",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"speed up\" metric not specified; scenario-dependent (single batch / long prefill / beam search)."
+}

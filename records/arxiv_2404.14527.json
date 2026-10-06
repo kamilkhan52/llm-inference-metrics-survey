@@ -1,0 +1,100 @@
+{
+  "key": "arxiv_2404.14527",
+  "title": "Melange: Cost Efficient Large Language Model Serving by Exploiting GPU Heterogeneity",
+  "first_author": "Tyler Griggs",
+  "year": 2024,
+  "venue": "arXiv preprint (v4)",
+  "url": "https://arxiv.org/abs/2404.14527",
+  "cluster": "D2",
+  "technique": "GPU-type allocation as cost-aware bin packing (ILP) over workload slices (request size, rate) with per-GPU profiled capacity under a TPOT SLO; mixes heterogeneous GPUs",
+  "layer": "energy/cost",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.14527.txt",
+  "optimized_metrics": [
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "our objective is to provision GPUs that can minimize deployment cost while adhering to latency SLO constraints.",
+      "locator": "§5.1 Problem Definition",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "role": "constraint",
+      "evidence": "We define SLO based on average TPOT, however, Mélange can be extended to other definitions of SLO such as time to first token (TTFT).",
+      "locator": "§5.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We define SLO based on average TPOT"
+    }
+  ],
+  "headline_claim": {
+    "text": "Compared to using only a single GPU type, Mélange reduces deployment costs by up to 77% in conversational settings, 33% in document-based settings, and 51% in a mixed setting.",
+    "metrics": [
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Fig 11 ($/hr vs request rate, per dataset/SLO)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "§6.3 Fig 12 TPOT CDFs (99.5% at 40 ms, 99.95% at 120 ms)"
+    },
+    {
+      "metric": "OTHER:tokens_per_dollar",
+      "stat": "n/a",
+      "where": "Figs 3-5 GPU cost efficiency T/$"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "profiled max request rate per GPU at SLO (§5.3)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TPOT",
+      "canonical": "TPOT",
+      "definition_quote": "we use the average Time Per Output Token (TPOT) as our SLO. TPOT is determined by dividing request latency by the number of generated tokens.",
+      "locator": "§4.1",
+      "notes": "CONFLICTS with strict TPOT: divides full request latency (incl. prefill and queueing) by generated tokens, i.e. NORM_LAT-like; SLO is on per-request average TPOT"
+    },
+    {
+      "term_as_written": "T/$ (GPU cost efficiency)",
+      "canonical": "OTHER:tokens_per_dollar",
+      "definition_quote": "We use tokens per dollar (T/$) to measure GPU cost efficiency, calculated by summing input and output tokens and dividing the total by the GPU's on-demand rental cost for a given time period.",
+      "locator": "§4.1",
+      "notes": "input+output tokens; throughput measured at highest saturation where TPOT still meets SLO"
+    },
+    {
+      "term_as_written": "service cost",
+      "canonical": "COST",
+      "definition_quote": "The service cost is computed by summing the hourly on-demand cloud renatl rates for each of the selected GPUs.",
+      "locator": "§5.1",
+      "notes": "$/hr of the GPU allocation"
+    }
+  ],
+  "slo_spec": "Average-TPOT SLO of 40 ms (swift services) and 120 ms (relaxed), set following standard LLM inference benchmarks and above human reading speed; attainment checked post hoc (99.5% / 99.95% of requests met)",
+  "load_regime": "request-rate sweep (workload histogram over request sizes; rates 1-32 req/s) ; load balancer with weighted random routing in validation",
+  "tradeoff_acknowledged": "Allocation chosen on average TPOT leaves ~0.05-0.5% of requests violating SLO; authors note services may need higher adherence. Low-end GPUs cheaper per token but need more instances at tight SLO.",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA L4, A10G, A100-80GB, H100 (cloud on-demand pricing; RunPod H100 normalized)",
+  "models": "Llama2-7b, Llama2-70b",
+  "workloads": "Chatbot Arena (short), PubMed (long), mixed 80/20",
+  "confidence": "high",
+  "extractor_notes": "Latency is only a constraint (average TPOT SLO), cost is the sole objective. TPOT here = request latency / generated tokens (includes prefill and queueing), not the strict decode-only TPOT. SLO is on mean per-request TPOT, not a tail percentile; attainment is measured as fraction of requests under SLO.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep (1-32 req/s) over workload histograms of request sizes; weighted random load balancer in validation (§6)",
+  "repass_log": [
+    "COST and TPOT already design; TPOT stat_basis explicit (average TPOT)",
+    "load_class online-arrivals"
+  ]
+}

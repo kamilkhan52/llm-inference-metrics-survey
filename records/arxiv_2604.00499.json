@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2604.00499",
+ "title": "Scheduling LLM Inference with Uncertainty-Aware Output Length Predictions",
+ "first_author": "Zheng",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2604.00499",
+ "cluster": "D1",
+ "technique": "Tail Inflated Expectation metric for SJF under log-t output-length distribution",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "TIE reduces the per-token latency by $2.31\\times$ for online inference",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves throughput by $1.42\\times$ for offline data generation",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "TIE reduces the per-token latency by $2.31\\times$ for online inference and improves throughput by $1.42\\times$ for offline data generation",
+  "metrics": [
+   "NORM_LAT",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "NORM_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"per-token latency\" in an SJF/online-queueing context most likely means request latency normalized by output length (NORM_LAT), but abstract does not define it; could be TPOT."
+}

@@ -1,0 +1,121 @@
+{
+ "key": "arxiv_2603.16104",
+ "title": "Efficient LLM Serving for Agentic Workflows: A Data Systems Perspective (Helium)",
+ "first_author": "Noppanat Wadlom",
+ "year": 2026,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2603.16104",
+ "cluster": "D6",
+ "technique": "Helium: agentic workflows as query plans with LLM calls as operators; proactive prompt/KV caching and cache-aware scheduling (makespan-minimizing operator-to-worker assignment)",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2603.16104.txt",
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "find an assignment of calls to workers and an execution order that optimizes the makespan (i.e., wall-clock latency) of the execution.",
+   "locator": "§5 Scheduling Problem Formulation (raw txt line 729-730)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "achieving up to 1.56× speedup over state-of-the-art agent serving systems on various workloads.",
+  "metrics": [
+   "OTHER:batch_time"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "where": "Fig 5, Table 2, Fig 7 (end-to-end latency of a query batch)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P50",
+   "where": "Fig 12c per-request latency CDF (28.3 s to 20.5 s vs LangGraph)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P95",
+   "where": "Fig 12c (37.2 s vs 51.7 s for LangGraph)"
+  },
+  {
+   "metric": "OTHER:cache_hit_rate",
+   "stat": "n/a",
+   "where": "§7 cache analysis"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "Fig 12a-b effective batch size"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "We evaluate all frameworks using end-to-end latency (total wall-clock time for query batch preparation and execution). For Helium, this includes optimization, scheduling, and processing.",
+   "locator": "§7.1 Evaluation metrics (raw txt line 1187-1190)",
+   "notes": "Batch-level wall-clock latency of a whole batch of workflow queries (offline/batch regime), including Helium's own planning overhead. Effectively batch makespan, not per-request latency."
+  },
+  {
+   "term_as_written": "throughput vs latency",
+   "canonical": "THR_REQ",
+   "definition_quote": "Since throughput is inversely proportional to latency for a fixed batch size, we report only latency to simplify comparison.",
+   "locator": "§7.1",
+   "notes": "Throughput deliberately not reported separately."
+  },
+  {
+   "term_as_written": "total token step / makespan",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "The total token step 𝑇 (𝜎) for a schedule 𝜎 is the token step at which the last LLM call finishes, analogous to the makespan in classical scheduling problems.",
+   "locator": "§5 (raw txt line 876-878)",
+   "notes": "Scheduler's internal cost model: time measured in token steps proportional to token usage; objective is min of the max completion over all calls of all workflows."
+  },
+  {
+   "term_as_written": "per-request latency (CDF)",
+   "canonical": "E2E",
+   "definition_quote": "Helium reduces the 95th percentile latency to 37.2 s compared to 51.7 s for LangGraph. This confirms that cache-aware scheduling effectively mitigates congestion, preventing the straggler requests that typically degrade total workflow completion time.",
+   "locator": "§7.4 (raw txt line 2000-2005)",
+   "notes": "Per-LLM-request latency within the batch; used only as an explanatory analysis."
+  },
+  {
+   "term_as_written": "end-to-end latency (batch wall-clock)",
+   "canonical": "OTHER:batch_time",
+   "definition_quote": "end-to-end latency (total wall-clock time for query batch preparation and execution)",
+   "locator": "§7.1 Evaluation metrics",
+   "notes": "Offline batch makespan of a workflow query batch; includes Helium optimization/scheduling time (added in re-pass)."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "offline batch of workflow queries (fixed batch sizes, e.g. 16); not an arrival-rate sweep",
+ "tradeoff_acknowledged": "Helium adds planning overhead (query optimization, cache-aware scheduling, TRT construction) that is included in reported latency and is shown to be small.",
+ "eval_type": "real-system",
+ "hardware": "2x NVIDIA H100 NVL 94GB, AMD EPYC 9554",
+ "models": "Qwen3-8B, Qwen3-14B",
+ "workloads": "agentic workflows combining Parallel, Debate, Map-Reduce patterns (e.g. Trading workflow, MapRed, Debate) on several datasets; baselines vLLM, OpWise, LangGraph, KVFlow, Parrot",
+ "confidence": "high",
+ "extractor_notes": "Program-level and batch-level: the metric is total wall-clock time to finish a batch of workflow queries (makespan), which is PROGRAM_JCT in aggregate rather than per-workflow JCT. Per-request latency CDF only in analysis. No TTFT/TPOT/SLO. Quality unaffected (greedy sampling, caching). Uses 'speedup' (relative latency). | TAIL AUDIT 2026-10-06: PROGRAM_JCT stat max->n/a",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "workflow makespan (batch objective, not a tail); P95 latency reported in online experiments",
+  "correction": "Change PROGRAM_JCT stat 'max' to 'n/a' (makespan of a batch DAG, i.e. completion time, not a tail statistic). P95 is reported only.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "offline-batch",
+ "load_class_quote": "total wall-clock time for query batch preparation and [§7: all requests of a query batch evaluated together; makespan objective; P95 per-request latency only in a case study]",
+ "repass_log": [
+  "PROGRAM_JCT recoded to OTHER:batch_time: objective is makespan of a batch workflow DAG (offline batch wall-clock), not per-request/program latency; §5 design quote kept; stat n/a (tail_audit)",
+  "E2E: abstract result only (same quantity as batch makespan, no design quote); moved to reported_metrics"
+ ]
+}

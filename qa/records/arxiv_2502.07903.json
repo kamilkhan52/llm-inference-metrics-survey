@@ -1,0 +1,19 @@
+{
+"key":"arxiv_2502.07903","title":"HexGen-2: Disaggregated Generative Inference of LLMs in Heterogeneous Environment","first_author":"Youhe Jiang","year":2025,"venue":"arXiv preprint (ICLR'25)","url":"https://arxiv.org/abs/2502.07903","cluster":"D2",
+"technique":"max-flow + graph-partition scheduling of PD-disaggregated replicas and parallel plans over heterogeneous GPUs under a price budget","layer":"cluster-routing/placement","read_level":"full","fulltext_path":"fulltext/arxiv_2502.07903.txt",
+"optimized_metrics":[
+{"metric":"THR_TOK","stat":"mean","role":"objective","evidence":"HexGen-2 delivers up to a 2.0x and on average a 1.3x improvement in serving throughput, reduces the average inference latency by 1.5x compared with state-of-the-art systems given the same price budget","locator":"abstract"},
+{"metric":"COST","stat":"n/a","role":"constraint","evidence":"given the same price budget, and achieves comparable inference performance with a 30% lower price budget","locator":"abstract; §1 Contribution 3"},
+{"metric":"SLO_ATT","stat":"attainment","role":"objective","evidence":"We assess system performance on inference latency using service level objective (SLO) attainment, which gauges the proportion (e.g., 99%) of requests fulfilled within a time frame predefined by the SLO.","locator":"§2 Inference serving goal"}
+],
+"headline_claim":{"text":"HexGen-2 delivers up to a 2.0x and on average a 1.3x improvement in serving throughput, reduces the average inference latency by 1.5x compared with state-of-the-art systems given the same price budget, and achieves comparable inference performance with a 30% lower price budget.","metrics":["THR_TOK","E2E","COST"],"locator":"abstract"},
+"reported_metrics":[{"metric":"THR_TOK","stat":"mean","where":"Figs 6,7,9,11, Table 4"},{"metric":"SLO_ATT","stat":"attainment","where":"Fig 8 vs SLO scale"}],
+"metric_definitions":[
+{"term_as_written":"Throughput","canonical":"THR_TOK","definition_quote":"Throughput refers to the number of tokens a system can generate within a specified time period.","locator":"§2","notes":"generated tokens only; offline eval reports 'average decoding throughput'"},
+{"term_as_written":"Inference latency","canonical":"E2E","definition_quote":"Inference latency is the time required to complete each inference request from start to finish.","locator":"§2","notes":"no TTFT/TPOT used"},
+{"term_as_written":"SLO attainment","canonical":"SLO_ATT","definition_quote":"This SLO is adjusted to various multiples of single device execution latency (termed as SLO scale) to measure performance under different degrees of SLO stringency.","locator":"§2","notes":""}],
+"slo_spec":"deadline = multiple of single-device execution latency (SLO scale 1-5); attainment curve (e.g. 99% example)",
+"load_regime":"offline (arrival saturating cluster, 4 workload types HPLD/HPHD/LPHD/LPLD) and online (arrival rate = 75% of cluster peak throughput, Azure Conversation samples)",
+"tradeoff_acknowledged":null,"eval_type":"real-system","hardware":"heterogeneous H100/A100/L40/A6000 GPUs under fixed price budget (cloud)","models":"OPT-30B, Llama-2-70B","workloads":"Azure Conversation derived; synthetic HPLD/HPHD/LPHD/LPLD",
+"confidence":"medium","extractor_notes":"The scheduler's internal objective is maximizing system throughput (max-flow = requests per period T) under a price budget; latency is only used to choose prefill parallel plans (latency-optimal) and in the SLO-attainment evaluation. Ambiguous whether latency is an objective or just reported."
+}

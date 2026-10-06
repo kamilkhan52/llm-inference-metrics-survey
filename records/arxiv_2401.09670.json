@@ -1,0 +1,131 @@
+{
+  "key": "arxiv_2401.09670",
+  "title": "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving",
+  "first_author": "Yinmin Zhong",
+  "year": 2024,
+  "venue": "OSDI'24 (arXiv v3)",
+  "url": "https://arxiv.org/abs/2401.09670",
+  "cluster": "D2",
+  "technique": "prefill/decode disaggregation onto separate GPUs with per-phase parallelism and replica counts chosen by a simulator-driven goodput-maximizing placement algorithm, bandwidth-aware placement",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.09670.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "an effective LLM serving system should balance these needs and maximize per-GPU goodput, defined as the maximum request rate that can be served adhering to the SLO attainment goal (say, 90%) for each GPU provisioned",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Given the application's TTFT and TPOT requirements, DistServe co-optimizes the resource allocation and parallelism strategy tailored for each phase.",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "SLO attainment goal (say, 90%)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "DistServe ... staying within latency constraints for > 90% of requests",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "SLO attainment goal (say, 90%)"
+    }
+  ],
+  "headline_claim": {
+    "text": "DistServe can serve 7.4x more requests or 12.6x tighter SLO, compared to state-of-the-art systems, while staying within latency constraints for > 90% of requests.",
+    "metrics": [
+      "GOODPUT",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Figs 8-9 (vs per-GPU rate and SLO scale; 90% and 99% targets)"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "per-GPU goodput at 90% (vertical lines)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P90",
+      "where": "Fig 1 motivation"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P90",
+      "where": "Fig 1 motivation"
+    },
+    {
+      "metric": "OTHER:kv_transfer_time_fraction",
+      "stat": "n/a",
+      "where": "Fig 10 latency breakdown (<0.1% transmission)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "the time to first token (TTFT), which is the duration of the prefill phase",
+      "locator": "§1",
+      "notes": "informally prefill duration, but footnote/§2.2 says latency comprises execution time plus queuing delay (the TTFT model Eq.1 includes queuing); SLO attainment is measured on request-level TTFT incl. queuing"
+    },
+    {
+      "term_as_written": "TPOT",
+      "canonical": "TPOT",
+      "definition_quote": "the time per output token (TPOT), which represents the average time taken to generate a token for each request (except for the first token)",
+      "locator": "§1",
+      "notes": "per-request average, excludes first token; footnote 1: 'The overall request latency equals TTFT plus TPOT times the number of generated tokens.'"
+    },
+    {
+      "term_as_written": "per-GPU goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "per-GPU goodput, defined as the maximum request rate that can be served adhering to the SLO attainment goal (say, 90%) for each GPU provisioned",
+      "locator": "§1",
+      "notes": "request-rate goodput, normalized per GPU provisioned; SLO = both TTFT and TPOT must be met per request"
+    },
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "SLO attainment (the proportion of requests that meet the SLOs)",
+      "locator": "§1",
+      "notes": "joint over TTFT and TPOT"
+    },
+    {
+      "term_as_written": "SLO Scale",
+      "canonical": "OTHER:SLO_scale",
+      "definition_quote": "ments in Table 1 simultaneously using a parameter called SLO Scale. As SLO Scale decreases, the latency requirement becomes more stringent.",
+      "locator": "§6.2",
+      "notes": "multiplier on both TTFT and TPOT SLOs used to find tightest SLO met at 90%"
+    }
+  ],
+  "slo_spec": "Table 1, set empirically ('there exists no available SLO settings'): chatbot OPT-13B TTFT 0.25s / TPOT 0.1s; OPT-66B 2.5s/0.15s; OPT-175B 4.0s/0.2s; code completion OPT-66B 0.125s/0.2s; summarization OPT-66B 15s/0.15s; attainment goal 90% (99% in appendix)",
+  "load_regime": "request-rate sweep with Poisson arrivals over datasets without timestamps; SLO-scale sweep",
+  "tradeoff_acknowledged": "chunked prefill 'trades TTFT for TPOT and cannot eliminate the interference'; disaggregation adds KV transfer overhead (found <0.1% of latency)",
+  "eval_type": "real-system",
+  "hardware": "4 nodes x 8 NVIDIA A100-80GB (NVLink; 25 Gbps cross-node)",
+  "models": "OPT-13B, OPT-66B, OPT-175B",
+  "workloads": "ShareGPT (chatbot), HumanEval (code completion), LongBench (summarization); Poisson arrivals",
+  "confidence": "high",
+  "extractor_notes": "Goodput here is request-rate at 90% joint TTFT+TPOT attainment, per GPU (cost proxy). Fig 1 motivation reports P90 TTFT/TPOT while the system itself optimizes attainment. Baselines vLLM and DeepSpeed-MII.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep with Poisson arrivals over datasets without timestamps; SLO-scale sweep (§6)",
+  "repass_log": [
+    "all entries already design (goodput goal, TTFT/TPOT SLO constraints)",
+    "TTFT and TPOT stat_basis explicit (attainment at 90%)",
+    "load_class online-arrivals"
+  ]
+}

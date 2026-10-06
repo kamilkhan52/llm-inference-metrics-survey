@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2502.14617",
+ "title": "SageServe: Optimizing LLM Serving on Cloud Data Centers with Forecast Aware Auto-Scaling",
+ "first_author": "Jaiswal",
+ "year": 2025,
+ "venue": "PACMMAC 2025",
+ "url": "https://arxiv.org/abs/2502.14617",
+ "cluster": "D2",
+ "technique": "forecast-aware ILP co-optimizing routing, autoscaling and model placement",
+ "layer": "cluster-routing/placement",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "up to 25% savings in GPU-hours",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "role": "constraint",
+   "evidence": "while maintaining tail latency and meeting SLAs",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "We achieve up to 25% savings in GPU-hours compared to the current baseline deployment and reduce GPU-hour wastage due to inefficient auto-scaling by 80%",
+  "metrics": [
+   "COST",
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"tail latency\" metric and percentile not stated (constraint)."
+}

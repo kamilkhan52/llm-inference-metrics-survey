@@ -1,0 +1,117 @@
+{
+  "key": "arxiv_2302.11665",
+  "title": "AlpaServe: Statistical Multiplexing with Model Parallelism for Deep Learning Serving",
+  "first_author": "Zhuohan Li",
+  "year": 2023,
+  "venue": "OSDI'23 (arXiv v2)",
+  "url": "https://arxiv.org/abs/2302.11665",
+  "cluster": "D2",
+  "technique": "simulator-guided model placement and cluster group partition combining inter-/intra-op model parallelism across multiple models to statistically multiplex GPUs under bursty traffic",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2302.11665.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "it then partitions and places the models and schedules the requests to optimize SLO attainment (i.e., the percentage of requests served within SLO).",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "Our goal is to find a placement that maximizes the SLO attainment.",
+      "locator": "§4.2",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "AlpaServe can process requests at up to 10x higher rates or 6x more burstiness while staying within latency constraints for more than 99% of requests.",
+    "metrics": [
+      "THR_REQ",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Figs 12-15 (vs rate, CV, SLO scale, #devices); 99% goal"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean/P99",
+      "where": "Figs 2-5 motivation (mean and P99 latency, CDF)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "max sustainable request rate at 99% attainment; Fig 9b"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 9 memory usage vs #GPUs"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "minimal number of devices needed at 99% attainment"
+    },
+    {
+      "metric": "E2E",
+      "stat": "attainment",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "SLO attainment (i.e., the percentage of requests served within SLO)",
+      "locator": "§1",
+      "notes": "request considered served if it finishes within deadline, where latency 'includes the GPU execution time and queuing delay' (§3.1)"
+    },
+    {
+      "term_as_written": "request latency",
+      "canonical": "E2E",
+      "definition_quote": "request latency (which includes the GPU execution time and queuing delay)",
+      "locator": "§3.1",
+      "notes": "whole-request latency; models are single-pass (BERT, MoE) with fixed execution time"
+    },
+    {
+      "term_as_written": "SLO Scale",
+      "canonical": "OTHER:SLO_scale",
+      "definition_quote": "the default SLO is set as tight as 5x inference latency (SLO Scale=5)",
+      "locator": "§6.1",
+      "notes": "SLO = SLO-scale multiple of single-device inference latency"
+    },
+    {
+      "term_as_written": "Metrics (evaluation)",
+      "canonical": "SLO_ATT",
+      "definition_quote": "We use SLO attainment as the major evaluation metric. Under a specific SLO attainment goal (say, 99%), we concern with another four measures: (1) the minimal number of devices the system needs, (2) the maximum average request rate, (3) the maximum traffic burstiness the system can support, and (4) the minimal SLO the system can handle.",
+      "locator": "§6.1",
+      "notes": "optimizes one of four capacity measures at a time at a fixed 99% attainment"
+    }
+  ],
+  "slo_spec": "SLO = SLO Scale x single-device inference latency (default scale 5); attainment goal 99%; scale swept; following Clockwork and InferLine",
+  "load_regime": "trace replay (Azure MAF1, MAF2) with swept rate scale, burstiness (CV), SLO scale and #devices; Gamma processes for synthetic",
+  "tradeoff_acknowledged": "model parallelism adds overhead (communication, stage imbalance) vs statistical multiplexing benefit; with loose SLO or high rate, replication outperforms model parallelism ('model parallelism is beneficial for smaller SLOs')",
+  "eval_type": "both",
+  "hardware": "64 GPUs: 8 nodes x 8 NVIDIA Tesla V100-16GB; simulator validated (<2% error)",
+  "models": "BERT-1.3B/2.7B/6.7B/104B, GShard MoE (non-autoregressive; extension to GPT-3-style generation only discussed)",
+  "workloads": "Azure Function traces MAF1 (2019) and MAF2 (2021) mapped to models",
+  "confidence": "high",
+  "extractor_notes": "Not autoregressive LLM generation: models are single-forward-pass with deterministic latency, so no TTFT/TBT. Still a DL/LLM-adjacent serving system and used as a baseline in later LLM work; kept in scope. Motivation uses mean and P99 latency; the system objective is attainment.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "trace replay (Azure MAF1, MAF2) with swept rate scale, burstiness (CV) and SLO scale; Gamma processes for synthetic traffic (§6.1)",
+  "repass_log": [
+    "E2E constraint entry demoted: its quote was the abstract headline result; the SLO latency requirement is already carried by the SLO_ATT design entries",
+    "both SLO_ATT entries design",
+    "load_class online-arrivals"
+  ]
+}

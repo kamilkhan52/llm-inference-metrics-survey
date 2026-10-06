@@ -1,0 +1,54 @@
+{
+ "key": "arxiv_2411.00136",
+ "title": "LLM-Inference-Bench: Inference Benchmarking of Large Language Models on AI Accelerators",
+ "first_author": "Chitty-Venkata",
+ "year": 2024,
+ "venue": "arXiv preprint (SC workshop paper)",
+ "url": "https://arxiv.org/abs/2411.00136",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: hardware/framework benchmark suite (A100/H100/GH200/MI250/MI300X/Gaudi2/SN40L; vLLM/TRT-LLM/DS-MII/llama.cpp) reporting offline fixed-batch throughput (input+output tokens/s), TTFT, ITL, power and tokens/s/W",
+ "layer": "other",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2411.00136.txt",
+ "optimized_metrics": [
+  {"metric": "THR_TOK", "stat": "mean", "role": "objective",
+   "evidence": "Benchmarking the performance of LLMs across diverse hardware platforms is crucial to understanding their scalability and throughput characteristics.",
+   "locator": "abstract"},
+  {"metric": "ENERGY", "stat": "mean", "role": "objective",
+   "evidence": "we compare the performance per watt (measured in tokens/sec/watt) across GPUs, which is the number of tokens processed per second for unit consumption of power.",
+   "locator": "§III.5(e)"}
+ ],
+ "headline_claim": {"text": "Our benchmarking results reveal the strengths and limitations of various models, hardware platforms, and inference frameworks. We provide an interactive dashboard to help identify configurations for optimal performance for a given hardware platform.",
+  "metrics": ["THR_TOK"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "THR_TOK", "stat": "mean (input+output tokens/s)", "where": "Fig 1, 6-19, 23-25"},
+  {"metric": "TTFT", "stat": "mean", "where": "Fig 21"},
+  {"metric": "OTHER:ITL", "stat": "mean", "where": "Fig 22"},
+  {"metric": "ENERGY", "stat": "mean power (W), tokens/s/W (Nvidia only)", "where": "Fig 16"},
+  {"metric": "QUALITY", "stat": "perplexity", "where": "Fig 10"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "Time to First Token (TTFT)", "canonical": "TTFT", "definition_quote": "Time to First Token (TTFT) is the amount of time required to produce the first output token after receiving an input prompt. It represents how quickly the users can see the LLM's output after submitting their query. We measure TTFT by setting the maximum output to one token and recording the time to generate this output.", "locator": "§III.5(b)", "notes": "measured offline with batch, no queueing (benchmark is fixed-batch, not an online arrival process)"},
+  {"term_as_written": "Inter Token Latency (ITL)", "canonical": "TPOT", "definition_quote": "Inter Token Latency (ITL) refers to the average time interval between generating consecutive tokens. It measures how quickly the model can produce each subsequent token after the previous one. ITL = (End-to-End Latency − TTFT) / (Batch Size × (Output Tokens − 1))", "locator": "§III.5(c), Eq. 1", "notes": "named ITL but computed as a per-request mean (= TPOT-style); divided by Batch Size x (Output Tokens-1), so it is aggregate-batch normalized, not a per-stream per-token interval"},
+  {"term_as_written": "Throughput", "canonical": "THR_TOK", "definition_quote": "In this paper, we define throughput as the total number of tokens (both input and output) processed by the hardware per second. We first calculate the end-to-end latency, the time elapsed between the input prompt provided to LLM, and the generation of the final output token. We convert latency to throughput using Equation 2. throughput = Batch Size × (Input + Output Tokens) / End-to-End Latency", "locator": "§III.5(d), Eq. 2", "notes": "input+output tokens, per device-set (not per GPU), fixed batch"},
+  {"term_as_written": "Average Power / Performance per watt", "canonical": "ENERGY", "definition_quote": "We report the power consumed only by the accelerators, not host and other peripherals. We use Average Power as a performance metric, which is calculated as the ratio of total work done to the total time taken and is measured in watts. Also, we compare the performance per watt (measured in tokens/sec/watt) across GPUs", "locator": "§III.5(e)", "notes": "accelerator-only scope; Nvidia GPUs only via pynvml; no energy-per-token reported"},
+  {"term_as_written": "Perplexity", "canonical": "QUALITY", "definition_quote": "Perplexity quantifies the model's level of surprise when encountering new data to generate a new token. A lower perplexity indicates better performance and is calculated as an exponent of the model's loss", "locator": "§III.5(a)", "notes": ""}
+ ],
+ "metric_critiques": [
+  {"target_metric": "THR_TOK", "critique_quote": "The chat-based applications prioritize the rapid display of output tokens to enable immediate reading, making Time to First Token (TTFT) crucial. As new tokens are generated and read by users, Inter Token Latency (ITL) becomes increasingly significant to maintain a smooth conversational flow.", "locator": "§V (accelerator comparison)"},
+  {"target_metric": "TTFT", "critique_quote": "while SN40L exhibits higher TTFT compared to other hardware, it demonstrates lower ITL, indicating faster token generation after the initial output.", "locator": "§V (Fig 21-22)"}
+ ],
+ "recommended_practice": [
+  {"quote": "In this work, we consider input and output lengths of 128, 256, 512, 1024, and 2048 and batch sizes of 1, 16, 32, and 64.", "locator": "§III.3"},
+  {"quote": "We report the power consumed only by the accelerators, not host and other peripherals.", "locator": "§III.5(e)"}
+ ],
+ "slo_spec": null,
+ "load_regime": "offline fixed batch size sweep (1/16/32/64) x input/output length grid (128-2048); no arrival process",
+ "tradeoff_acknowledged": "Throughput increases with batch size until resources saturate; SN40L has higher TTFT but lower ITL; output length dominates throughput (14.6x between {1024,128} and {128,1024})",
+ "eval_type": "real-system",
+ "hardware": "A100, H100, GH200, MI250, MI300X, Gaudi2, SN40L (SambaNova)",
+ "models": "LLaMA-2-7B, LLaMA-3-8B, LLaMA-3-70B, Mistral-7B, Mixtral-8x7B, Qwen",
+ "workloads": "synthetic fixed-length input/output sweeps",
+ "confidence": "high",
+ "extractor_notes": "Pure characterization; no metric proposed, headline measurements recorded. Only mean statistics, no percentiles or SLOs. Throughput counts input+output tokens (inflates prefill-heavy shapes). ITL formula divides by Batch Size x (Output-1), which differs from conventional per-request TPOT."
+}

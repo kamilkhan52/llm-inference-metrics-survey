@@ -1,0 +1,397 @@
+{
+ "id": "def_variants",
+ "rows": [
+  {
+   "row_id": "TTFT|T1",
+   "metric": "TTFT",
+   "variant_code": "T1",
+   "label": "from arrival, queueing included",
+   "n": 16,
+   "keys": [
+    "arxiv_2310.07240",
+    "arxiv_2402.01869",
+    "arxiv_2403.02310",
+    "arxiv_2406.03243",
+    "arxiv_2407.00079",
+    "arxiv_2407.07000",
+    "arxiv_2412.17246",
+    "arxiv_2502.05370",
+    "arxiv_2503.14649",
+    "arxiv_2504.19867",
+    "arxiv_2507.17769",
+    "arxiv_2508.01989",
+    "arxiv_2510.18672",
+    "arxiv_2512.04013",
+    "arxiv_2602.16603",
+    "mlsys2025_sola"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T2",
+   "metric": "TTFT",
+   "variant_code": "T2",
+   "label": "= prefill duration",
+   "n": 15,
+   "keys": [
+    "arxiv_2310.07240",
+    "arxiv_2311.01282",
+    "arxiv_2401.09670",
+    "arxiv_2403.19708",
+    "arxiv_2405.06856",
+    "arxiv_2405.16444",
+    "arxiv_2406.01566",
+    "arxiv_2410.01228",
+    "arxiv_2410.18038",
+    "arxiv_2411.01783",
+    "arxiv_2504.07494",
+    "arxiv_2506.02634",
+    "arxiv_2510.09665",
+    "arxiv_2510.18672",
+    "arxiv_2512.18194"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T2a",
+   "metric": "TTFT",
+   "variant_code": "T2a",
+   "label": "\u2026then measured under load",
+   "n": 5,
+   "keys": [
+    "arxiv_2401.09670",
+    "arxiv_2410.18038",
+    "arxiv_2504.07494",
+    "arxiv_2510.09665",
+    "arxiv_2512.18194"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T3",
+   "metric": "TTFT",
+   "variant_code": "T3",
+   "label": "offline / one request",
+   "n": 7,
+   "keys": [
+    "arxiv_2310.07240",
+    "arxiv_2311.01282",
+    "arxiv_2311.04934",
+    "arxiv_2411.00136",
+    "arxiv_2411.01783",
+    "arxiv_2411.15100",
+    "arxiv_2502.14866"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T5",
+   "metric": "TTFT",
+   "variant_code": "T5",
+   "label": "includes KV loading",
+   "n": 4,
+   "keys": [
+    "arxiv_2310.07240",
+    "arxiv_2405.16444",
+    "arxiv_2407.00079",
+    "arxiv_2508.18572"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T6",
+   "metric": "TTFT",
+   "variant_code": "T6",
+   "label": "whole pre-generation pipeline",
+   "n": 3,
+   "keys": [
+    "arxiv_2503.14649",
+    "arxiv_2504.08784",
+    "arxiv_2510.18672"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T7",
+   "metric": "TTFT",
+   "variant_code": "T7",
+   "label": "includes scale-up wait",
+   "n": 2,
+   "keys": [
+    "arxiv_2412.17246",
+    "sosp2025_aegaeon"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|T8",
+   "metric": "TTFT",
+   "variant_code": "T8",
+   "label": "queueing kept separate",
+   "n": 1,
+   "keys": [
+    "arxiv_2506.02634"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "TTFT|unstated",
+   "metric": "TTFT",
+   "variant_code": "unstated",
+   "label": "no start point stated",
+   "n": 23,
+   "keys": [
+    "arxiv_2311.03285",
+    "arxiv_2311.18677",
+    "arxiv_2312.07104",
+    "arxiv_2401.00588",
+    "arxiv_2401.08671",
+    "arxiv_2401.11181",
+    "arxiv_2401.14351",
+    "arxiv_2404.16283",
+    "arxiv_2405.05465",
+    "arxiv_2407.00023",
+    "arxiv_2407.00047",
+    "arxiv_2408.00741",
+    "arxiv_2408.13510",
+    "arxiv_2409.17264",
+    "arxiv_2411.19379",
+    "arxiv_2501.01005",
+    "arxiv_2501.14808",
+    "arxiv_2503.24000",
+    "arxiv_2508.16449",
+    "arxiv_2602.11688",
+    "arxiv_2603.13358",
+    "arxiv_2606.00946",
+    "arxiv_2607.03948"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP1",
+   "metric": "GOODPUT",
+   "variant_code": "GP1",
+   "label": "max rate at X % attainment",
+   "n": 13,
+   "keys": [
+    "arxiv_2302.11665",
+    "arxiv_2305.05920",
+    "arxiv_2401.09670",
+    "arxiv_2404.09526",
+    "arxiv_2412.20993",
+    "arxiv_2504.07494",
+    "arxiv_2504.08784",
+    "arxiv_2504.19867",
+    "arxiv_2507.17769",
+    "arxiv_2508.01989",
+    "arxiv_2602.16603",
+    "mlsys2025_sola",
+    "sosp2025_aegaeon"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP1a",
+   "metric": "GOODPUT",
+   "variant_code": "GP1a",
+   "label": "\u2026per GPU",
+   "n": 2,
+   "keys": [
+    "arxiv_2401.09670",
+    "arxiv_2504.08784"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP1b",
+   "metric": "GOODPUT",
+   "variant_code": "GP1b",
+   "label": "\u2026single SLO only",
+   "n": 4,
+   "keys": [
+    "arxiv_2302.11665",
+    "arxiv_2412.20993",
+    "arxiv_2602.16603",
+    "sosp2025_aegaeon"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP2",
+   "metric": "GOODPUT",
+   "variant_code": "GP2",
+   "label": "measured rate of SLO-meeting requests",
+   "n": 5,
+   "keys": [
+    "arxiv_2401.08671",
+    "arxiv_2410.14257",
+    "arxiv_2412.17246",
+    "arxiv_2504.20068",
+    "arxiv_2512.04013"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP3",
+   "metric": "GOODPUT",
+   "variant_code": "GP3",
+   "label": "SLO-meeting tokens/s",
+   "n": 3,
+   "keys": [
+    "arxiv_2410.14257",
+    "arxiv_2501.12162",
+    "arxiv_2504.20068"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP4",
+   "metric": "GOODPUT",
+   "variant_code": "GP4",
+   "label": "a fraction, not a rate",
+   "n": 1,
+   "keys": [
+    "arxiv_2409.17264"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP5",
+   "metric": "GOODPUT",
+   "variant_code": "GP5",
+   "label": "no SLO (accepted tokens/s)",
+   "n": 1,
+   "keys": [
+    "arxiv_2406.14066"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP6",
+   "metric": "GOODPUT",
+   "variant_code": "GP6",
+   "label": "completed requests only",
+   "n": 1,
+   "keys": [
+    "arxiv_2407.00079"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP7",
+   "metric": "GOODPUT",
+   "variant_code": "GP7",
+   "label": "applications by deadline",
+   "n": 1,
+   "keys": [
+    "arxiv_2506.14851"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "GOODPUT|GP8",
+   "metric": "GOODPUT",
+   "variant_code": "GP8",
+   "label": "smooth goodput",
+   "n": 1,
+   "keys": [
+    "arxiv_2410.14257"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "THR_TOK|K1",
+   "metric": "THR_TOK",
+   "variant_code": "K1",
+   "label": "input + output",
+   "n": 7,
+   "keys": [
+    "arxiv_2401.00588",
+    "arxiv_2404.09526",
+    "arxiv_2404.14527",
+    "arxiv_2408.12757",
+    "arxiv_2410.01228",
+    "arxiv_2411.00136",
+    "arxiv_2411.01142"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "THR_TOK|K2",
+   "metric": "THR_TOK",
+   "variant_code": "K2",
+   "label": "output, over prefill + decode time",
+   "n": 13,
+   "keys": [
+    "arxiv_2303.06865",
+    "arxiv_2306.14048",
+    "arxiv_2310.19102",
+    "arxiv_2402.05099",
+    "arxiv_2405.04532",
+    "arxiv_2406.01566",
+    "arxiv_2411.11217",
+    "arxiv_2502.04563",
+    "arxiv_2502.07903",
+    "arxiv_2507.07120",
+    "arxiv_2508.18572",
+    "arxiv_2510.18672",
+    "arxiv_2512.15705"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "THR_TOK|K3",
+   "metric": "THR_TOK",
+   "variant_code": "K3",
+   "label": "decode phase only",
+   "n": 8,
+   "keys": [
+    "arxiv_2211.05102",
+    "arxiv_2303.06865",
+    "arxiv_2308.16369",
+    "arxiv_2405.04437",
+    "arxiv_2410.21465",
+    "arxiv_2504.02263",
+    "arxiv_2506.12708",
+    "arxiv_2507.19427"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "THR_TOK|K4",
+   "metric": "THR_TOK",
+   "variant_code": "K4",
+   "label": "prefill / input only",
+   "n": 8,
+   "keys": [
+    "arxiv_2211.05102",
+    "arxiv_2311.18677",
+    "arxiv_2403.19708",
+    "arxiv_2404.09526",
+    "arxiv_2405.04437",
+    "arxiv_2407.05858",
+    "arxiv_2503.24000",
+    "arxiv_2506.12708"
+   ],
+   "population": "147 full-text records"
+  },
+  {
+   "row_id": "THR_TOK|K5",
+   "metric": "THR_TOK",
+   "variant_code": "K5",
+   "label": "not stated",
+   "n": 8,
+   "keys": [
+    "arxiv_2207.00032",
+    "arxiv_2308.16369",
+    "arxiv_2401.15077",
+    "arxiv_2402.02750",
+    "arxiv_2403.00579",
+    "arxiv_2501.14808",
+    "arxiv_2503.01840",
+    "arxiv_2505.11329"
+   ],
+   "population": "147 full-text records"
+  }
+ ]
+}

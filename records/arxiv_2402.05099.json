@@ -1,0 +1,79 @@
+{
+  "key": "arxiv_2402.05099",
+  "title": "Hydragen: High-Throughput LLM Inference with Shared Prefixes",
+  "first_author": "Juravsky",
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2402.05099",
+  "cluster": "D3",
+  "technique": "Exact attention decomposition into shared-prefix and unique-suffix parts; prefix attention batched across sequences (matrix-matrix products) to cut redundant KV reads; supports hierarchical (tree) sharing",
+  "layer": "kernels/attention",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2402.05099.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "In this paper, we investigate improving the throughput of batched text generation when the sequences in the batch share a common prefix.",
+      "locator": "§2.3 (txt line 198-199)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Our method can improve end-to-end CodeLlama-13b throughput by up to 32x against competitive baselines, with speedup growing with the batch size and shared prefix length.",
+    "metrics": [
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 3 (decoding throughput, tokens/s, vs batch size and prefix length)"
+    },
+    {
+      "metric": "OTHER:attention_kernel_speedup",
+      "stat": "n/a",
+      "where": "Fig 4 (Hydragen attention speedup over FlashAttention)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 5 (time to answer questions on 20K-token document), Fig 6 (total time for APPS evaluation)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "end-to-end decoding throughput (TPS)",
+      "canonical": "THR_TOK",
+      "definition_quote": "Left: End-to-end decoding throughput in tokens per second (TPS) with CodeLlama-13b when generating multiple completions from a prompt containing 2048 tokens.",
+      "locator": "Fig 3 caption (§4.1)",
+      "notes": "Tokens/s over the whole 8-GPU tensor-parallel group (not normalized per GPU); generated tokens only (128 per completion); shared prompt prefill excluded or not specified. Offline fixed batch."
+    },
+    {
+      "term_as_written": "processing time",
+      "canonical": "E2E",
+      "definition_quote": "Time to answer questions about a 19947 token-long document when benchmarking Yi-6B-200k on four A100-40GB GPUs. ... Time to process prefix is excluded.",
+      "locator": "Fig 5 caption",
+      "notes": "Wall-clock for a batch of questions; shared-prefix prefill excluded."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline batch; fixed prefix length with batch-size sweep, and fixed batch with prefix-length sweep",
+  "tradeoff_acknowledged": "Gains shrink for small batches, short prefixes, long suffixes, or GQA/MQA models where attention is not the bottleneck; proof-of-concept not a full serving system.",
+  "eval_type": "real-system",
+  "hardware": "A100-40GB (8x for CodeLlama-13b TP; 4x for Yi-6B; single GPU microbenchmarks; L40S in appendix)",
+  "models": "CodeLlama-13b, CodeLlama-7b, Yi-6B-200k",
+  "workloads": "synthetic shared-prefix batch sampling, War-and-Peace long-doc QA, APPS competitive programming (120 problems x 128 candidates)",
+  "confidence": "high",
+  "extractor_notes": "Pure throughput paper; no latency/TTFT/TPOT/SLO. Baselines include 'No Attention' ceiling. Notably vLLM comparison was done with detokenization disabled variant too. Exactness (no accuracy change) is a property, not a measured metric.",
+  "load_class": "offline-batch",
+  "load_class_quote": "We benchmark end-to-end LLM throughput in the setting where many completions are sampled from a single prompt. (§4.1; batch-size and prefix-length sweeps)",
+  "repass_log": [
+    "THR_TOK: evidence/locator replaced with design statement (was: 'Our method can improve end-to-end CodeLlama-13b throughput b...')",
+    "E2E: demoted to reported_metrics (headline only; no design statement found)",
+    "load_class = offline-batch"
+  ]
+}

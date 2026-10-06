@@ -1,0 +1,104 @@
+{
+  "key": "arxiv_2211.17192",
+  "title": "Fast Inference from Transformers via Speculative Decoding",
+  "first_author": "Yaniv Leviathan",
+  "year": 2022,
+  "venue": "ICML'23",
+  "url": "https://arxiv.org/abs/2211.17192",
+  "cluster": "D4",
+  "technique": "speculative decoding: small approximation model drafts gamma tokens, target verifies in parallel with rejection sampling preserving output distribution",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2211.17192.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Specifically, we are able to accelerate inference without changing the model architectures, without changing the training-procedures or needing to re-train the models, and without changing the model output distribution.",
+      "locator": "§1 (txt line 36-39)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "without changing the model output distribution",
+      "locator": "§1 (txt line 38-39)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "we get meaningful 2X-3X speedups in practice vs T5X, a popular optimized implementation.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "§5 Discussion"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Table 2 (walltime improvement, batch 1, TPU-v4)"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Table 3 empirical alpha values"
+    },
+    {
+      "metric": "OTHER:arithmetic_ops_increase",
+      "stat": "n/a",
+      "where": "Fig 4, Table 1 (increase in total arithmetic operations)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "expected walltime improvement factor",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Theorem 3.8. The expected improvement factor in total walltime by Algorithm 1 is",
+      "locator": "§3.3",
+      "notes": "Speedup of wall-clock decoding time vs standard decoding of the same output; batch size 1. Formula (1-alpha^(gamma+1))/((1-alpha)(gamma c+1)) follows in text."
+    },
+    {
+      "term_as_written": "acceptance rate beta / alpha",
+      "canonical": "ACCEPT",
+      "definition_quote": "Definition 3.1. The acceptance rate beta_{x<t}, given a prefix x<t, is the probability of accepting x_t ~ q(x_t|x<t) by speculative sampling",
+      "locator": "§3.1",
+      "notes": "alpha = E(beta) (Def 3.3 / Corollary 3.6: alpha = 1 - E(D_LK(p,q)) = E(min(p,q)))"
+    },
+    {
+      "term_as_written": "cost coefficient c",
+      "canonical": "OTHER:cost_coefficient",
+      "definition_quote": "Definition 3.7. Let c, the cost coefficient, be the ratio between the time for a single run of Mq and the time for a single run of Mp.",
+      "locator": "§3.3",
+      "notes": "Hardware/implementation dependent."
+    },
+    {
+      "term_as_written": "increase in arithmetic operations",
+      "canonical": "OTHER:arithmetic_ops_increase",
+      "definition_quote": "Theorem 3.11. The expected factor of increase in the number of total operations of Algorithm 1 is",
+      "locator": "§3.4",
+      "notes": "The cost side of the trade-off. Formula follows in text."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 (single TPU-v4), per task test set",
+  "tradeoff_acknowledged": "latency is improved through increased concurrency at the cost of an increased number of arithmetic operations (e.g. Table 1); not helpful when additional compute is unavailable",
+  "eval_type": "both",
+  "hardware": "single TPU-v4",
+  "models": "T5-XXL (11B) target with T5-small/base/large drafters; GPT-like 97M, LaMDA 137B alpha measurements",
+  "workloads": "WMT EnDe translation, CNN/DM summarization (T5X baseline)",
+  "confidence": "high",
+  "extractor_notes": "Analytical + small empirical. Paper uses 'latency' / 'walltime' for the speed metric; no serving throughput. The headline is per-request decoding speedup (improvement factor), batch 1. alpha measured also for LaMDA and GPT-like models without end-to-end implementation.",
+  "load_class": "single-sequence",
+  "load_class_quote": "We measure walltime improvements with a batch size of 1 on a single TPU-v4 (§4.1)",
+  "repass_log": [
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'We demonstrate it on T5-XXL and show a 2X-3X acceleration co...')",
+    "TOKEN_LAT: walltime speedup; no statistic stated",
+    "TOKEN_LAT: stat 'mean' -> n/a (unspecified)",
+    "QUALITY: evidence/locator replaced with design statement (was: 'without changing the distribution / with identical outputs...')",
+    "load_class = single-sequence"
+  ]
+}

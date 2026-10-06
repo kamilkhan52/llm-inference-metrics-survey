@@ -1,0 +1,147 @@
+{
+  "key": "arxiv_2410.01228",
+  "title": "ConServe: Fine-Grained GPU Harvesting for LLM Online and Offline Co-Serving",
+  "first_author": "Yifan Qiao",
+  "year": 2024,
+  "venue": "arXiv preprint (v2, Sep 2025)",
+  "url": "https://arxiv.org/abs/2410.01228",
+  "cluster": "D1",
+  "technique": "co-serve online + offline requests: latency-aware token-level scheduler sized by a profiled cost model, sub-iteration layer-wise preemption, incremental KV checkpointing for near-zero-cost preempt/resume",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2410.01228.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "an online chatbot may set a 99th-percentile (P99) TTFT SLO of 1.5 seconds and a P99 TBT SLO of 100 milliseconds",
+      "locator": "§2 Background (raw txt line 254)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "an online chatbot may set a 99th-percentile (P99) TTFT SLO of 1.5 seconds and a P99 TBT SLO of 100 milliseconds"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "precisely sizes offline batches and tokens to fit within online latency objectives",
+      "locator": "abstract / §4.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "an online chatbot may set a 99th-percentile (P99) TTFT SLO of 1.5 seconds and a P99 TBT SLO of 100 milliseconds"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "ConServe is a new LLM co-serving system that achieves high throughput and strong online latency guarantees by managing resources at finer granularities.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "LLM serving demands low latency and high throughput, but high load variability makes it challenging to achieve high GPU utilization.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "ConServe delivers an average of 2.2x higher throughput and reduces online serving tail latency by 2.9x on average compared to state-of-the-art systems.",
+    "metrics": [
+      "THR_TOK",
+      "TTFT",
+      "TBT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Fig 3, §6.2 online latency"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "where": "Fig 3, §6.2 online latency"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "offline throughput, §6"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "§6.3 TTFT/TBT attainment vs SLO scale"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "Fig 2 GPU utilization vs P99 TTFT"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT / TBT",
+      "canonical": "TTFT",
+      "definition_quote": "an LLM's serving latency is defined by two key metrics: time to first token (TTFT), which is the duration of the prefill phase, and time between tokens (TBT), which is the execution time of each step in the decode phase",
+      "locator": "§2",
+      "notes": "TTFT described as duration of prefill phase (queueing not explicitly mentioned); TBT = per-step execution time"
+    },
+    {
+      "term_as_written": "TBT vs TPOT",
+      "canonical": "TBT",
+      "definition_quote": "Note that TBT is measured per token and is stricter than time per output token (TPOT), which averages the TBT across all tokens per request.",
+      "locator": "§2 footnote 1",
+      "notes": "explicit TBT vs TPOT distinction"
+    },
+    {
+      "term_as_written": "online metrics",
+      "canonical": "TTFT",
+      "definition_quote": "For online serving, following prior work [1], we measure each request's P99 TTFT and TBT.",
+      "locator": "§6.1 Metrics",
+      "notes": "P99 across requests"
+    },
+    {
+      "term_as_written": "offline throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "For offline serving, we evaluate throughput by measuring the number of tokens processed per second, including both prefill and decode tokens.",
+      "locator": "§6.1 Metrics",
+      "notes": "input+output tokens, per system (single deployment)"
+    },
+    {
+      "term_as_written": "GPU utilization",
+      "canonical": "UTIL",
+      "definition_quote": "Utilization is defined as the offered load relative to the GPU's maximum achievable load.",
+      "locator": "Fig 2 caption",
+      "notes": "load-based utilisation, not SM busy %"
+    }
+  ],
+  "slo_spec": "Example SLO: P99 TTFT 1.5 s, P99 TBT 100 ms. In evaluation, 'ConServe's target SLOs based on the P99 latencies achieved by Online-Only' scaled by an SLO scale factor s (attainment reported for s sweeps).",
+  "load_regime": "request-rate sweep with synthetic Gamma arrivals (CV 0.5; 4096 in / 256 out) plus BurstGPT trace replay; offline backlog always present",
+  "tradeoff_acknowledged": "Simple preemptive co-serving: online P99 TTFT x3.59 and TBT x3.01 worse, offline throughput 4.27x lower (motivation); non-preemptive: online latency up to 3x, offline throughput down up to 4x.",
+  "eval_type": "real-system",
+  "hardware": "8x H100 (NVLink) server",
+  "models": "Llama-3.1 8B, Qwen-2.5 14B, Llama-3.1 70B (TP4)",
+  "workloads": "BurstGPT (online); DuReader, MultiNews, VCSUM (offline); synthetic Gamma arrivals",
+  "confidence": "high",
+  "extractor_notes": "Dual-class objective: online latency percentiles are constraints, offline token throughput the objective. 'tail latency' in abstract = P99 TTFT/TBT. Offline throughput counts prefill+decode tokens (unlike output-only definitions). SLOs relative to Online-Only P99 baseline.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT @ P99 (1.5 s), TBT @ P99 (100 ms)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "a synthetic online workload (Gamma process, CV=0.5, 2 req/s) alongside sufficient offline requests (§3); BurstGPT trace replay; offline backlog always present",
+  "repass_log": [
+    "TTFT/TBT: design (online SLO constraints); stat P99 explicit",
+    "THR_TOK, UTIL: stated design aims (abstract describes goal of high throughput with latency guarantees); evidence_kind design",
+    "load_class online-arrivals (online arrivals + always-backlogged offline queue)"
+  ]
+}

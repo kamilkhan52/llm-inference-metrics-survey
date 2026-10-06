@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2506.03887",
+ "title": "Pre$^3$: Enabling Deterministic Pushdown Automata for Faster Structured LLM Generation",
+ "first_author": "Junyi Chen",
+ "year": 2025,
+ "venue": "ACL'25",
+ "url": "https://arxiv.org/abs/2506.03887",
+ "cluster": "D6",
+ "technique": "deterministic pushdown automata precomputation for grammar-constrained decoding",
+ "layer": "other",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "reducing time per output token (TPOT) by up to 40%",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "increasing throughput by up to 36%",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Pre$^3$ can be seamlessly integrated into standard LLM inference frameworks, reducing time per output token (TPOT) by up to 40% and increasing throughput by up to 36% in our experiments",
+  "metrics": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

@@ -1,0 +1,46 @@
+{
+ "key": "arxiv_2601.05109",
+ "title": "Nalar: Workflow-Aware Management of Agentic Applications",
+ "first_author": "Saurabh Agarwal",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2601.05109",
+ "cluster": "D6",
+ "technique": "workflow-aware agent runtime: futures, two-level control, workflow-aware KV cache",
+ "layer": "agent/compound-serving",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Nalar reduces tail latency by 34-74% and achieves up to 3.38x speedups",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Across three agentic workloads, Nalar reduces tail latency by 34-74% and achieves up to 3.38x speedups",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"tail latency\" percentile and unit (per-request vs per-workflow) not specified; PROGRAM_JCT is plausible."
+}

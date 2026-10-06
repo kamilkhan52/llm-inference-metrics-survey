@@ -1,0 +1,83 @@
+{
+ "key": "arxiv_2411.01783",
+ "title": "Context Parallelism for Scalable Million-Token Inference",
+ "first_author": "Yang",
+ "year": 2025,
+ "venue": "MLSys'25",
+ "url": "https://arxiv.org/abs/2411.01783",
+ "cluster": "D5",
+ "technique": "context parallelism with lossless ring attention (pass-KV / pass-Q) and load-balanced sharding for long-context prefill and decode",
+ "layer": "long-context",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2411.01783.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Latency is critical for user experience in real-time inference. To optimize latency in multi-turn conversations, we developed pass-KV and pass-Q ring attention variants",
+   "locator": "§1 contributions",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Average Latency (s)",
+   "stat_note": "figure axis label for the prefill latency scaling plots (txt lines 630, 665); text does not otherwise state a statistic"
+  }
+ ],
+ "headline_claim": {
+  "text": "1M context prefill with Llama3 405B model in 77s (93% parallelization efficiency, 63% FLOPS utilization) and 128K context prefill in 3.8s",
+  "metrics": [
+   "TTFT",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 6-8, Tables 4, 6, 7"
+  },
+  {
+   "metric": "TBT",
+   "stat": "mean",
+   "where": "Tables 6-7 (TTIT)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract: 63% FLOPS utilization; parallelization efficiency"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "Time-to-first-token: latency for prefilling the whole input tokens",
+   "locator": "Fig 2 legend",
+   "notes": "Pure prefill latency (batch size 1); no queueing."
+  },
+  {
+   "term_as_written": "TTIT",
+   "canonical": "TBT",
+   "definition_quote": "Time-to-incremental-token: latency for decoding each output token",
+   "locator": "Fig 2 legend",
+   "notes": "Paper's own name for TBT/TPOT; reported in ms."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch size 1 per configuration; sweep over context length (128K-1M) and KV-cache miss rate; no request arrivals",
+ "tradeoff_acknowledged": "Explicit: 'CP drastically improves the prefill latency, at the expense of decode latency regression'; TTIT 47 ms for TP scaling vs growth with CP.",
+ "eval_type": "real-system",
+ "hardware": "up to 16 nodes x 8 H100 (Grand Teton Training, RDMA; Grand Teton Inference, TCP)",
+ "models": "Llama3 405B (+ 70B)",
+ "workloads": "synthetic long prompts; multi-turn partial prefill (persistent KV)",
+ "confidence": "high",
+ "extractor_notes": "Single-request latency study; no throughput or tail metric. Uses 'TTIT' rather than TPOT/TBT.",
+ "load_class": "single-sequence",
+ "load_class_quote": "\"We used max batch size 1 and tested how the full prefill latency for context lengths 2K to 128K vary with respect to the addition of more CP nodes.\" (§4.2.1, txt line 558-559)",
+ "repass_log": [
+  "duplicate TTFT entry (abstract result quote) merged into the design entry (§1 'Optimization for latency')",
+  "remaining TTFT: design; stat_basis explicit only via 'Average Latency (s)' axis label (weak)",
+  "load_class single-sequence"
+ ]
+}

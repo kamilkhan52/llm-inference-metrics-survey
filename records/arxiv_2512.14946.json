@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2512.14946",
+ "title": "EVICPRESS: Joint KV-Cache Compression and Eviction for Efficient LLM Serving",
+ "first_author": "Feng",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2512.14946",
+ "cluster": "D3",
+ "technique": "joint lossy compression + eviction placement across storage tiers via a utility function",
+ "layer": "KV-compression",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "minimize average generation latency without hurting quality",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "while preserving high generation quality",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "EVICPRESS achieves up to 2.19x faster time-to-first-token (TTFT) at equivalent generation quality",
+  "metrics": [
+   "QUALITY",
+   "TTFT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Objective stated as \"average generation latency\"/delay; the measured result is TTFT."
+}

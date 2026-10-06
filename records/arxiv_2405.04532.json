@@ -1,0 +1,100 @@
+{
+  "key": "arxiv_2405.04532",
+  "title": "QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving",
+  "first_author": "Yujun Lin",
+  "year": 2024,
+  "venue": "MLSys'25 (arXiv v3)",
+  "url": "https://arxiv.org/abs/2405.04532",
+  "cluster": "D4",
+  "technique": "W4A8KV4 quantization (QoQ: progressive group quantization, SmoothAttention) with QServe kernels (compute-aware weight reorder, register-level parallel dequantization, KV4 attention)",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2405.04532.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "max",
+      "role": "objective",
+      "evidence": "To achieve optimal LLM serving throughput, We introduce QoQ (Quattuor-Octo-Quattuor, or 4-8-4 in Latin) algorithm which quantizes LLMs to W4A8KV4 precision",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "SmoothAttention to effectively mitigate the accuracy degradation incurred by 4-bit KV quantization; perplexity/accuracy compared against W4A4 and W8A8 baselines",
+      "locator": "abstract / §6.2",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "The primary metric for system evaluation is the maximum achievable throughput within the same memory constraints (80GB on A100 and 48GB on L40S)",
+      "locator": "§6.1",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "QServe improves the maximum achievable serving throughput of Llama-3-8B by 1.2x on A100, 1.4x on L40S; and Qwen1.5-72B by 2.4x on A100, 3.5x on L40S, compared to TensorRT-LLM. Remarkably, QServe on L40S GPU can achieve even higher throughput than TensorRT-LLM on A100.",
+    "metrics": [
+      "THR_TOK",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "max",
+      "where": "Fig 15, Table 4 absolute tokens/s; Fig 17 same-batch throughput at batch 4-64"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Table 2 WikiText2 perplexity, Table 3 zero-shot accuracy"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "mean",
+      "where": "Fig 3 roofline; dequantization overhead Fig 16"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "kernel latency ablations (e.g. 0.48ms to 0.44ms); latency ratio of attention vs GEMM Fig 2a"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "maximum achievable throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "The primary metric for system evaluation is the maximum achievable throughput within the same memory constraints, where we use an input sequence length of 1024 and output sequence length of 512.",
+      "locator": "§6.1",
+      "notes": "Tokens/second (Table 4 unit); artifact appendix: 'Output: Generation throughput (tokens/second)'. Batch size is raised until memory is exhausted; whether prefill tokens are counted and per-GPU normalization are not stated."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline max-throughput: batch size increased to the memory limit with fixed 1024 in / 512 out; additional same-batch comparison at batch 4-64 on L40S; no request arrivals or latency SLO",
+  "tradeoff_acknowledged": "Accuracy: 4-bit KV/weights add perplexity vs FP16/W8A8 (Table 2) though less than W4A4 baselines; KV4 attention without optimization was 1.2x slower on A100 (Table 1); existing INT4 methods incur 20-90% dequantization overhead.",
+  "eval_type": "real-system",
+  "hardware": "A100-80GB, L40S-48GB",
+  "models": "Llama-3-8B, Llama-2-7B/13B, Llama-30B, Mistral-7B, Yi-34B, Qwen1.5-72B (seven throughput models)",
+  "workloads": "1024-in/512-out synthetic; WikiText2 perplexity; 5 zero-shot tasks",
+  "confidence": "medium",
+  "extractor_notes": "Latency is never an optimization target or end-to-end reported metric; serving metric is peak throughput at a memory-limited batch size. Per-GPU normalisation and whether input tokens count are not stated in the text (artifact appendix says 'Generation throughput (tokens/second)').",
+  "load_class": "offline-batch",
+  "load_class_quote": "The primary metric for system evaluation is the maximum achievable throughput within the same memory constraints, where we use an input sequence length of 1024 and output sequence length of 512. (§6.1)",
+  "repass_log": [
+    "THR_TOK: abstract result replaced with §1 design statement",
+    "COST: result-only (abstract/Fig 1 caption), no design statement; demoted to reported_metrics",
+    "QUALITY/MEMORY: design (constraints)",
+    "load_class offline-batch"
+  ]
+}

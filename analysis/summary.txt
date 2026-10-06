@@ -1,0 +1,118 @@
+records=202 core_optimizers=192 full=137 abstract=55 metric_papers=10 out_of_scope=0
+
+## Full-read optimizers by year
+{2022: 8, 2023: 26, 2024: 57, 2025: 40, 2026: 6}
+
+## Full-read optimizers by layer
+[('request-scheduling', 23), ('agent/compound-serving', 16), ('parallelism/offloading/hardware-mapping', 13), ('speculative/decoding-algorithm', 13), ('cluster-routing/placement', 13), ('kernels/attention', 8), ('prefix/context-caching', 8), ('PD-disaggregation', 8), ('quantization/sparsity/model-compression', 7), ('KV-compression', 7), ('KV-memory', 5), ('long-context', 5), ('energy/cost', 4), ('MoE-serving', 4), ('LoRA/multi-model', 3)]
+
+## FULL: share of papers with metric as OBJECTIVE / as CONSTRAINT (n=137)
+  QUALITY                obj   3 (   2%)  con  36 (  26%)
+  TTFT                   obj  18 (  13%)  con  20 (  15%)
+  MEMORY                 obj  22 (  16%)  con  11 (   8%)
+  THR_TOK                obj  30 (  22%)  con   0 (   0%)
+  THR_REQ                obj  27 (  20%)  con   2 (   1%)
+  TOKEN_LAT              obj  24 (  18%)  con   2 (   1%)
+  UTIL                   obj  22 (  16%)  con   1 (   1%)
+  TPOT                   obj   5 (   4%)  con  15 (  11%)
+  SLO_ATT                obj  15 (  11%)  con   3 (   2%)
+  COST                   obj  17 (  12%)  con   1 (   1%)
+  GOODPUT                obj  14 (  10%)  con   0 (   0%)
+  E2E                    obj   9 (   7%)  con   4 (   3%)
+  TBT                    obj   2 (   1%)  con  11 (   8%)
+  PROGRAM_JCT            obj  10 (   7%)  con   1 (   1%)
+  NORM_LAT               obj   4 (   3%)  con   6 (   4%)
+  QUEUE                  obj   7 (   5%)  con   0 (   0%)
+  OTHER:batch_time       obj   5 (   4%)  con   1 (   1%)
+  ACCEPT                 obj   5 (   4%)  con   0 (   0%)
+  FAIRNESS               obj   2 (   1%)  con   3 (   2%)
+  ENERGY                 obj   4 (   3%)  con   0 (   0%)
+  OTHER:kernel_speedup   obj   4 (   3%)  con   0 (   0%)
+  QOE                    obj   2 (   1%)  con   0 (   0%)
+  OTHER:cache_hit_rate   obj   2 (   1%)  con   0 (   0%)
+  OTHER:recovery_time_under_failure obj   1 (   1%)  con   0 (   0%)
+  OTHER:num_served_adapters obj   1 (   1%)  con   0 (   0%)
+  OTHER:pipeline_bubble_time obj   1 (   1%)  con   0 (   0%)
+  OTHER:model_startup_latency obj   1 (   1%)  con   0 (   0%)
+  OTHER:portability_programming_effort obj   1 (   1%)  con   0 (   0%)
+  OTHER:pipeline_bubbles obj   1 (   1%)  con   0 (   0%)
+  OTHER:expert_hit_rate  obj   1 (   1%)  con   0 (   0%)
+  OTHER:token_hit_rate   obj   1 (   1%)  con   0 (   0%)
+  OTHER:prefill_latency  obj   1 (   1%)  con   0 (   0%)
+  OTHER:kendall_tau      obj   1 (   1%)  con   0 (   0%)
+  OTHER:scale_time       obj   1 (   1%)  con   0 (   0%)
+  TPS_USER               obj   1 (   1%)  con   0 (   0%)
+  OTHER:prefix_cache_hit_rate obj   1 (   1%)  con   0 (   0%)
+  OTHER:HBM_accesses     obj   1 (   1%)  con   0 (   0%)
+  OTHER:kv_size          obj   1 (   1%)  con   0 (   0%)
+  OTHER:batch_scalability obj   1 (   1%)  con   0 (   0%)
+  OTHER:spec_goodput     obj   1 (   1%)  con   0 (   0%)
+  OTHER:attn_kernel_runtime obj   1 (   1%)  con   0 (   0%)
+  OTHER:iteration_latency obj   1 (   1%)  con   0 (   0%)
+  OTHER:quantization_time obj   1 (   1%)  con   0 (   0%)
+  OTHER:mask_gen_latency_per_token obj   1 (   1%)  con   0 (   0%)
+  OTHER:flash_io_volume  obj   1 (   1%)  con   0 (   0%)
+
+## ABSTRACT: share of papers with metric as OBJECTIVE / as CONSTRAINT (n=55)
+  E2E                    obj  18 (  33%)  con   2 (   4%)
+  THR_TOK                obj  19 (  35%)  con   0 (   0%)
+  TOKEN_LAT              obj  10 (  18%)  con   1 (   2%)
+  QUALITY                obj   0 (   0%)  con   8 (  15%)
+  SLO_ATT                obj   4 (   7%)  con   3 (   5%)
+  MEMORY                 obj   6 (  11%)  con   0 (   0%)
+  UTIL                   obj   5 (   9%)  con   0 (   0%)
+  THR_REQ                obj   5 (   9%)  con   0 (   0%)
+  COST                   obj   2 (   4%)  con   2 (   4%)
+  TTFT                   obj   3 (   5%)  con   1 (   2%)
+  GOODPUT                obj   3 (   5%)  con   0 (   0%)
+  TPOT                   obj   2 (   4%)  con   1 (   2%)
+  ENERGY                 obj   2 (   4%)  con   0 (   0%)
+  OTHER:GCD_preprocessing_time obj   1 (   2%)  con   0 (   0%)
+  OTHER:servers_per_power_budget obj   1 (   2%)  con   0 (   0%)
+  OTHER:online_mask_computation_time obj   0 (   0%)  con   1 (   2%)
+  OTHER:attn_kernel_speed obj   1 (   2%)  con   0 (   0%)
+  OTHER:service_gain     obj   1 (   2%)  con   0 (   0%)
+  PROGRAM_JCT            obj   1 (   2%)  con   0 (   0%)
+  OTHER:GEMM_kernel_speedup obj   1 (   2%)  con   0 (   0%)
+  NORM_LAT               obj   1 (   2%)  con   0 (   0%)
+  TBT                    obj   0 (   0%)  con   1 (   2%)
+
+## FULL: layer x objective-family (count of papers)
+  layer                                 throughp latency- latency- latency- latency-      slo cost/ene   memory  quality fairness      qoe utilizat    other   n
+  request-scheduling                          14        6        2        0        0        9        1        1        0        2        1        5        4   23
+  agent/compound-serving                       4        5        0        0       10        3        3        2        2        0        0        2        1   16
+  parallelism/offloading/hardware-mappin       7        0        0        5        0        0        2        3        0        0        0        7        3   13
+  cluster-routing/placement                    4        6        1        0        0        3        4        0        0        0        0        2        2   13
+  speculative/decoding-algorithm               4        1        0        9        0        2        0        1        0        0        0        0        6   13
+  PD-disaggregation                            4        2        1        0        0        4        1        0        0        0        0        0        1   8
+  kernels/attention                            1        0        1        1        0        0        0        1        0        0        0        5        6   8
+  prefix/context-caching                       3        5        0        0        0        0        1        1        0        0        0        0        3   8
+  KV-compression                               2        1        0        4        0        0        0        4        1        0        0        0        2   7
+  quantization/sparsity/model-compressio       2        0        0        3        0        0        0        4        0        0        0        0        2   7
+  long-context                                 4        3        2        1        0        1        0        1        0        0        0        0        1   5
+  KV-memory                                    4        1        0        0        0        0        0        3        0        0        0        0        2   5
+  energy/cost                                  0        1        0        0        0        0        4        0        0        0        0        0        0   4
+  MoE-serving                                  2        1        1        1        0        0        2        0        0        0        0        1        1   4
+  LoRA/multi-model                             1        1        0        0        0        2        1        1        0        0        1        0        2   3
+
+## FULL: objective-family share by year bucket (papers)
+  <=2023   n= 34 throughput=38%, latency-request=18%, latency-single-seq=35%, latency-program=3%, slo=6%, cost/energy=12%, memory=35%, quality=6%, qoe=3%, utilization=18%, other=32% | any SLO/latency-constraint=12%
+  2024     n= 57 throughput=42%, latency-request=21%, latency-token=9%, latency-single-seq=16%, latency-program=5%, slo=14%, cost/energy=14%, memory=12%, fairness=2%, qoe=2%, utilization=16%, other=33% | any SLO/latency-constraint=25%
+  2025-26  n= 46 throughput=41%, latency-request=33%, latency-token=7%, latency-single-seq=7%, latency-program=13%, slo=30%, cost/energy=15%, memory=7%, quality=2%, fairness=2%, utilization=15%, other=13% | any SLO/latency-constraint=46%
+
+## FULL: statistic of LATENCY objectives/constraints (metric@stat counts)
+[('n/a', 55), ('mean', 39), ('attainment', 33), ('P99', 14), ('P90', 2), ('P95', 2), ('median', 1)]
+papers with a TAIL latency OBJECTIVE: 2/137; with a TAIL latency CONSTRAINT: 10/137
+  tail-objective papers: arxiv_2502.13965, arxiv_2602.11688
+
+## FULL: eval_type
+[('real-system', 113), ('both', 19), ('simulation', 5)]
+
+## FULL: number of objective metrics per paper
+[(1, 40), (2, 66), (3, 22), (4, 8), (5, 1)]
+
+## FULL: tradeoff acknowledged (non-null)
+131 / 137
+
+## OTHER: codes used
+[('OTHER:batch_time', 11), ('OTHER:kernel_speedup', 8), ('OTHER:cache_hit_rate', 6), ('OTHER:kernel_latency', 4), ('OTHER:attn_kernel_speed', 3), ('OTHER:HBM_accesses', 2), ('OTHER:training_step_time', 2), ('OTHER:quantization_time', 2), ('OTHER:servers_per_power_budget', 2), ('OTHER:pipeline_bubble_time', 2), ('OTHER:kv_size', 2), ('OTHER:flash_io_volume', 2), ('OTHER:model_startup_latency', 2), ('OTHER:prefill_latency', 2), ('OTHER:fluid_token_generation_rate', 2), ('OTHER:fluidity_index', 2), ('OTHER:kendall_tau', 2), ('OTHER:smooth_goodput', 2), ('OTHER:mask_gen_latency_per_token', 2), ('OTHER:token_hit_rate', 2), ('OTHER:scale_time', 2), ('OTHER:GCD_preprocessing_time', 2), ('OTHER:online_mask_computation_time', 2), ('OTHER:expert_hit_rate', 2), ('OTHER:iteration_latency', 2), ('OTHER:QTTFT', 2), ('OTHER:kv_cache_hit_ratio', 2), ('OTHER:GEMM_kernel_speedup', 2), ('OTHER:TTFVT', 2), ('OTHER:service_gain', 2), ('OTHER:training_wallclock', 1), ('OTHER:matmul_speedup', 1), ('OTHER:arithmetic_ops_increase', 1), ('OTHER:avg_batch_length', 1), ('OTHER:failure_recollection_ratio', 1), ('OTHER:length_prediction_error', 1), ('OTHER:decode_throughput', 1), ('OTHER:encode_decode_overhead', 1), ('OTHER:union_sparsity', 1), ('OTHER:num_served_adapters', 1), ('OTHER:prefill_tokens', 1), ('OTHER:kv_transfer_time_fraction', 1), ('OTHER:loading_throughput', 1), ('OTHER:attention_kernel_speedup', 1), ('OTHER:recovery_time_under_failure', 1), ('OTHER:makespan', 1), ('OTHER:pipeline_bubbles', 1), ('OTHER:gpu_time', 1), ('OTHER:predictor_accuracy_F1', 1), ('OTHER:predictor_overhead', 1), ('OTHER:norm_input_latency', 1), ('OTHER:norm_output_latency', 1), ('OTHER:tokens_per_dollar', 1), ('OTHER:TDS', 1), ('OTHER:portability_programming_effort', 1), ('OTHER:alloc_api_latency', 1), ('OTHER:migration_downtime', 1), ('OTHER:spec_goodput', 1), ('OTHER:kv_load_volume', 1), ('OTHER:rejected_requests', 1), ('OTHER:scheduling_delay', 1), ('OTHER:user_idle_latency', 1), ('OTHER:reading_speed_token_deadline_SLO', 1), ('OTHER:attn_kernel_runtime', 1), ('OTHER:ITL', 1), ('OTHER:mask_preprocessing_time', 1), ('OTHER:flop_efficiency', 1), ('OTHER:kernel_TFLOPs', 1), ('OTHER:prefix_cache_hit_rate', 1), ('OTHER:response_length_difference', 1), ('OTHER:M2N_comm_latency', 1), ('OTHER:requests_in_system_over_time', 1), ('OTHER:avg_power_W', 1), ('OTHER:arrival_CV_burstiness', 1), ('OTHER:instances_provisioned_over_under', 1), ('OTHER:inference_latency_excl_queue', 1), ('OTHER:target_efficiency', 1), ('OTHER:kv_lifespan', 1), ('OTHER:batch_scalability', 1), ('OTHER:cache_hit_ratio', 1), ('OTHER:transfer_bandwidth', 1), ('OTHER:token_velocity', 1), ('OTHER:involuntary_exit_stay', 1), ('OTHER:preemption_blocking_time', 1), ('OTHER:predictor_error', 1), ('OTHER:routing_overhead_ms', 1), ('OTHER:router_latency', 1), ('OTHER:slo_column', 1), ('OTHER:autoscaling_latency', 1)]

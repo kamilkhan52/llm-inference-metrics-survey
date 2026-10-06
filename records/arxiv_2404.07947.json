@@ -1,0 +1,90 @@
+{
+ "key": "arxiv_2404.07947",
+ "title": "ExeGPT: Constraint-Aware Resource Scheduling for LLM Inference",
+ "first_author": "Oh",
+ "year": 2024,
+ "venue": "ASPLOS'24",
+ "url": "https://arxiv.org/abs/2404.07947",
+ "cluster": "D1",
+ "technique": "Offline branch-and-bound search (monotonic optimization over XSimulator estimates) for batch sizes, decoder micro-batches, partial tensor parallelism and encoding frequency under two policies (RRA, WAA) that maximize throughput subject to a latency bound; reschedules when sequence-length distribution drifts",
+ "layer": "request-scheduling",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2404.07947.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Our optimization problem is to maximize the inference throughput under a given latency constraint by finding the optimal values of the control variables for the given scheduling policy.",
+   "locator": "§5 Constraint-Aware Scheduling Algorithm",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "role": "constraint",
+   "evidence": "LBound is the latency bound for the given sequence length.",
+   "locator": "§5 problem formulation; §7.1: 'we used the sequence length at the 99th percentile (pctl in short) in the distribution'",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "we applied the same latency bound to generating ... the 99th pctl in the distribution."
+  }
+ ],
+ "headline_claim": {
+  "text": "Compared to FasterTransformer, ExeGPT achieves up to 15.2× improvements in throughput and 6× improvements in latency. Overall, ExeGPT achieves an average throughput gain of 2.9× across twenty evaluation scenarios.",
+  "metrics": [
+   "THR_REQ",
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Figs 6-8, Table (Tput seq./sec.)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "where": "Figs 11-12 (99th percentile latency of all queries under distribution shift)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "latency bound LB",
+   "canonical": "E2E",
+   "definition_quote": "LB is for generating 99th pctl-length sequence.",
+   "locator": "Fig 6/8 captions",
+   "notes": "Latency = time to run encode+decode for one sequence of the 99th-percentile output length (worst-case execution), i.e. a bound on per-sequence generation time, set per model/task."
+  },
+  {
+   "term_as_written": "latency SLA (a),(b)",
+   "canonical": "E2E",
+   "definition_quote": "We assumed two specific SLAs for the latency constraint: (a) ensuring that 99% of all queries are completed within a given timeframe and (b) ensuring that a sequence of a prespecified length (e.g. 99th pctl-length) is completed within a given time constraint.",
+   "locator": "§7.4 (sequence-distribution shift)",
+   "notes": "Paper notes no LLM provider defines explicit latency constraints in SLAs; these are introduced for evaluation."
+  },
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_REQ",
+   "definition_quote": "Tput (seq./sec.)",
+   "locator": "Table of selected schedules (§7)",
+   "notes": "Sequences per second (output sequences, not tokens); not formally defined otherwise. Synthetic sequences are forced to fixed generated lengths (no EOS)."
+  }
+ ],
+ "slo_spec": "Four latency bounds per task from FasterTransformer runs: bottom 10%, 30%, 70% of FT latencies across batch sizes, and infinity; bound applied to generating the 99th-percentile-length sequence (worst-case).",
+ "load_regime": "synthetic input/output length distributions (truncated normal) with decoding forced to given length; throughput at a latency bound; no arrival process",
+ "tradeoff_acknowledged": "Larger batch / fewer micro-batches raises throughput at the cost of latency; under distribution shift a non-adjusted schedule can violate the latency constraint.",
+ "eval_type": "real-system",
+ "hardware": "A40 cluster (48 GPUs, PCIe) and A100 cluster (16 GPUs, NVLink)",
+ "models": "T5, OPT, GPT-3 (six configs, up to 175B)",
+ "workloads": "summarization, translation, code generation, two conversational QA tasks; synthetic length distributions based on datasets; a subset on WMT, Alpaca, CNN",
+ "confidence": "high",
+ "extractor_notes": "TAIL IN CONSTRAINT: the latency bound is a worst-case / 99th-percentile-LENGTH sequence latency (not a percentile of measured request latencies), except SLA (a) in the shift experiment (99% of queries within a timeframe). Objective is throughput, so the paper is not a tail-latency optimizer. No online arrivals or queueing: scheduler assumes a saturated stream, hence load_class offline-batch (steady-state throughput, no queueing delay in latency). 'latency 6x improvement' is at equal throughput vs FasterTransformer.",
+ "load_class": "offline-batch",
+ "load_class_quote": "we generated input/output sequences with truncated normal distribution using average and variance parameters that reflect those of the datasets corresponding to the tasks.",
+ "repass_log": [
+  "new record"
+ ]
+}

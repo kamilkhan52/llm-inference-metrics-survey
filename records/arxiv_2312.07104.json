@@ -1,0 +1,128 @@
+{
+  "key": "arxiv_2312.07104",
+  "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+  "first_author": "Zheng",
+  "year": 2023,
+  "venue": "arXiv preprint (NeurIPS 2024)",
+  "url": "https://arxiv.org/abs/2312.07104",
+  "cluster": "D3",
+  "technique": "RadixAttention (radix-tree LRU KV reuse across calls) + cache-aware scheduling + compressed FSM for constrained decoding + API speculative execution, with a frontend DSL for LM programs",
+  "layer": "prefix/context-caching",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2312.07104.txt",
+  "optimized_metrics": [
+    {
+      "metric": "OTHER:cache_hit_rate",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We design a cache-aware scheduling algorithm to increase the cache hit rate.",
+      "locator": "\u00a73 Cache-aware scheduling",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "executing LM programs is inefficient due to redundant computation and memory usage; requests with the same prompt prefix can reuse the KV cache, reducing redundant computation and memory usage",
+      "locator": "\u00a71; \u00a73 (RadixAttention rationale)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "SGLang achieves up to 6.4x higher throughput compared to state-of-the-art inference systems on various large language and multi-modal models on tasks including agent control, logical reasoning, few-shot learning benchmarks, JSON decoding, retrieval-augmented generation pipelines, and multi-turn chat.",
+    "metrics": [
+      "THR_REQ"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 5, 7, 12 (programs/s, normalized)"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "mean",
+      "where": "Fig 6 (normalized latency, one program at a time)"
+    },
+    {
+      "metric": "OTHER:cache_hit_rate",
+      "stat": "n/a",
+      "where": "Fig 8, 13; Chatbot Arena deployment 52.4% / 74.1%"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 8a/b 'first token latency'; Chatbot Arena 1.7x reduction"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 8a/b 'total latency'"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 8, Fig 9/ablations (tokens/s)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "constrained decoding / API speculative execution accuracy (\u00a76, appendix)"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "n/a",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "For throughput, we run a sufficiently large batch of program instances to compute the maximum throughput, comparing the number of program instances executed per second (programs per second, p/s).",
+      "locator": "\u00a76.1 Metrics",
+      "notes": "Unit is LM programs/s (each program has several LLM calls), not tokens/s; offline max-throughput regime."
+    },
+    {
+      "term_as_written": "latency",
+      "canonical": "PROGRAM_JCT",
+      "definition_quote": "For latency, we execute a single program at a time without batching and report the average latency for multiple instances.",
+      "locator": "\u00a76.1 Metrics",
+      "notes": "Batch-1, no queueing: whole-program latency, not per-request TTFT/TPOT."
+    },
+    {
+      "term_as_written": "cache hit rate",
+      "canonical": "OTHER:cache_hit_rate",
+      "definition_quote": "We define the cache hit rate as number of cached prompt tokens / number of prompt tokens.",
+      "locator": "\u00a73 Cache-aware scheduling; appendix: sum over requests of cached prefill tokens / sum of prefill tokens",
+      "notes": "Token-weighted, not request-weighted."
+    },
+    {
+      "term_as_written": "first token latency",
+      "canonical": "TTFT",
+      "definition_quote": "RadixAttention also reduces the computation of prefill, thus decreasing the first token latency.",
+      "locator": "\u00a76.2",
+      "notes": "Used (Fig 8, production) without a formal definition."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline batch (large batch of program instances for throughput); batch=1 sequential for latency; no request-rate sweep",
+  "tradeoff_acknowledged": "Greedy cache-aware (longest-shared-prefix-first) scheduling 'can lead to starvation' (fairness), left as future work; in latency-sensitive settings only limited re-ordering tolerated.",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA A10G and A100 GPUs",
+  "models": "Llama-7B/70B, Mistral/Mixtral-8x7B, LLaVA-v1.5-7B, LLaVA-NeXT-34B",
+  "workloads": "MMLU, HellaSwag, ReAct/agent, tree-of-thought, JSON decoding, DSPy RAG, multi-turn chat, ShareGPT; Chatbot Arena production",
+  "confidence": "high",
+  "extractor_notes": "Throughput unit is programs/s, unusual vs tokens/s in the other papers. Latency is batch-1 whole-program mean. First-token latency used in Fig 8 and production claim without definition. Optimizes cache-hit rate as an intermediate proxy.",
+  "load_class": "offline-batch",
+  "load_class_quote": "For throughput, we run a sufficiently large batch of program instances to compute the maximum throughput ... For latency, we execute a single program at a time without batching and report the average latency for multiple instances (\u00a76.1)",
+  "repass_log": [
+    "PROGRAM_JCT (batch-1 single-program latency; abstract/\u00a76.2 result only, no design statement) -> demoted to reported_metrics",
+    "THR_REQ (programs/s, headline result only) -> demoted to reported_metrics",
+    "MEMORY: evidence replaced by \u00a71/\u00a73 design rationale; cache_hit_rate design kept ('We design a cache-aware scheduling algorithm to increase the cache hit rate')",
+    "added load_class mixed (offline-batch throughput + single-program latency)",
+    "orchestrator (architect flag): load_class mixed -> offline-batch; components are batch-1 and fixed-batch/concurrency runs, no arrival process"
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "key": "arxiv_2401.15077",
+  "title": "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty",
+  "first_author": "Yuhui Li",
+  "year": 2024,
+  "venue": "ICML'24",
+  "url": "https://arxiv.org/abs/2401.15077",
+  "cluster": "D4",
+  "technique": "feature-level (second-to-top layer) autoregressive draft head with shifted token sequence to resolve feature uncertainty; tree drafts; lossless speculative sampling",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.15077.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Like other speculative sampling-based methods, EAGLE primarily focuses on latency rather than throughput.",
+      "locator": "§4.1 Metrics (txt line 371)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "The key to enhancing acceleration in speculative sampling lies in reducing the time overhead and improving the acceptance rate of the draft by the original LLM",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "doubled throughput, while maintaining the distribution of the generated text",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "For LLaMA2-Chat 70B, EAGLE achieved a latency speedup ratio of 2.7x-3.5x, doubled throughput, while maintaining the distribution of the generated text.",
+    "metrics": [
+      "TOKEN_LAT",
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 1-2, Table 1 walltime speedup; Table 3 tokens/s"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Table 1-2, 5-6 tau and n-alpha"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Table 7 (max-batch throughput, 1.97x/1.99x)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Walltime speedup ratio",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Walltime speedup ratio: The actual test speedup ratio relative to vanilla autoregressive decoding.",
+      "locator": "§4.1",
+      "notes": "single-stream at bs=1 in main results"
+    },
+    {
+      "term_as_written": "Average acceptance length tau",
+      "canonical": "ACCEPT",
+      "definition_quote": "Average acceptance length τ: The average number of tokens accepted per forward pass of the target LLM.",
+      "locator": "§4.1",
+      "notes": ""
+    },
+    {
+      "term_as_written": "throughput (Table 7)",
+      "canonical": "THR_TOK",
+      "definition_quote": "We calculated the throughput for different bs and selected the maximum value. Both vanilla autoregressive decoding and EAGLE achieve maximum throughput at their respective maximum bs.",
+      "locator": "§4.4",
+      "notes": "throughput ratio vs vanilla, each at its memory-limited max batch size (7 vs 8 on RTX 3090 for Vicuna 7B; 4 vs 5 for 70B on 4xA100); units not stated"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 for main results (\"experiments with a batch size of 1\"); small fixed batch sizes 1-4 and max-memory batch in §4.4; no request-rate load",
+  "tradeoff_acknowledged": "Speedup diminishes as batch size grows (Vicuna 7B 2.90x at bs1 -> 2.76x at bs4; 70B 3.01x -> 2.40x); EAGLE needs slightly more CUDA memory so max batch is 7 vs 8.",
+  "eval_type": "real-system",
+  "hardware": "RTX 3090 24GB (7B/13B/33B); 4x A100 40GB (70B)",
+  "models": "Vicuna 7B/13B/33B, LLaMA2-Chat 7B/13B/70B, Mixtral 8x7B Instruct",
+  "workloads": "MT-Bench, HumanEval, GSM8K, Alpaca",
+  "confidence": "high",
+  "extractor_notes": "Abstract 'doubled throughput' is the Table 7 ratio at max batch size, a secondary result; method objective is single-sequence latency. Speedup ratios in figures copied from Medusa/Lookahead reports for comparison.",
+  "load_class": "single-sequence",
+  "load_class_quote": "Speculative sampling (Leviathan et al., 2023) conducted experiments with a batch size of 1, a setting subsequently adopted by other works ... Similarly, the majority of our experiments also adopted this setting. Experiments with a batch size greater than 1 are presented in Section 4.4. (§4.1)",
+  "repass_log": [
+    "TOKEN_LAT: design ('EAGLE primarily focuses on latency rather than throughput'); stat n/a (walltime speedup ratio, statistic unspecified)",
+    "ACCEPT: metric-definition quote replaced with §1 design sentence",
+    "QUALITY: design",
+    "load_class single-sequence (bs=1 main; §4.4 fixed-batch throughput secondary)"
+  ]
+}

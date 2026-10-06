@@ -1,0 +1,116 @@
+{
+  "key": "arxiv_2311.15566",
+  "title": "SpotServe: Serving Generative Large Language Models on Preemptible Instances",
+  "first_author": "Xupeng Miao",
+  "year": 2023,
+  "venue": "ASPLOS'24 (arXiv v1)",
+  "url": "https://arxiv.org/abs/2311.15566",
+  "cluster": "D2",
+  "technique": "dynamic reparallelization (D,P,M,B) on spot instances, Kuhn-Munkres device mapping/migration planning, token-level stateful inference recovery within cloud grace period, mixing on-demand instances",
+  "layer": "energy/cost",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2311.15566.txt",
+  "optimized_metrics": [
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "This paper aims to reduce the monetary cost for serving LLMs by leveraging preemptible GPU instances on modern clouds",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Overall, the optimizer minimizes the end-to-end inference latency l_req(C) while maintaining a throughput higher than alpha_t",
+      "locator": "§3.2 Algorithm 1 discussion (txt l.~428)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "C_{t+1} <- argmin_{C | phi(C) >= alpha_t} l_req(C) else C_{t+1} <- argmax_C phi(C)   [Algorithm 1: pick the lowest-latency config whose throughput phi(C) covers arrival rate alpha_t, else maximize throughput]",
+      "locator": "Alg. 1 / §3.1 (Fig 3)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "SpotServe can reduce the P99 tail latency by 2.4-9.1x compared with the best existing LLM serving systems. We also show that SpotServe can leverage the price advantage of preemptive instances, saving 54% monetary cost compared with only using on-demand instances.",
+    "metrics": [
+      "E2E",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean/P90/P98/P99 (latency CDF stats)",
+      "where": "Figs 6, 8, 9 (average and P99 latency)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "monetary cost vs on-demand (54% saving), Fig 7"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "overload (dashed lines) when serving capability < arrival rate"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "end-to-end inference latency l_req",
+      "canonical": "E2E",
+      "definition_quote": "For each inference request, its end-to-end inference latency l_req is divided into two parts: the scheduling overhead l_sch and the execution latency l_exe.",
+      "locator": "§2/§3",
+      "notes": "includes queueing/scheduling delay; l_exe(S_out|S_in) = t_exe(S_in) + sum_i t_exe(S_in+i) i.e. whole-request prefill+decode time (Eq. 1); no TTFT/TBT/TPOT"
+    },
+    {
+      "term_as_written": "P99 tail latency",
+      "canonical": "E2E",
+      "definition_quote": "Taking the P99 latency as an example, SpotServe outperforms Reparallelization and Rerouting around 1.34-2.43x and 2.14-9.13x respectively on the largest LLaMA-30B model.",
+      "locator": "§6.2",
+      "notes": "per-request end-to-end latency distribution over the trace; no explicit formula for P99 beyond percentile"
+    },
+    {
+      "term_as_written": "monetary cost",
+      "canonical": "COST",
+      "definition_quote": "SpotServe can utilize spot instance to reduce the monetary cost for serving LLMs by up to 54% compared with the on-demand instance while preserving close average inference latency",
+      "locator": "§1/§6.2",
+      "notes": "dollar cost of instances (spot vs on-demand price); not per token"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "trace replay of 12-hour AWS g4dn spot availability trace (two 20-min segments); stable Gamma arrivals (CV 6; 1.5/0.35/0.2 req/s for OPT-6.7B/GPT-20B/LLaMA-30B) and fluctuating MAF trace",
+  "tradeoff_acknowledged": "balances throughput, latency and monetary cost; spot-only saves 54% cost at <18% higher average latency and 90% higher P99 than on-demand (abstract/§6.2); overload when preemption leaves capacity below arrival rate",
+  "eval_type": "real-system",
+  "hardware": "AWS g4dn.12xlarge (4x NVIDIA Tesla T4 per instance), up to 16+ GPUs; built over FasterTransformer",
+  "models": "OPT-6.7B, GPT-20B, LLaMA-30B",
+  "workloads": "request arrival Gamma process CV=6 (stable) and Microsoft Azure Functions trace MAF (fluctuating); input/output 512/128 tokens",
+  "confidence": "high",
+  "extractor_notes": "No TTFT/TBT/TPOT; latency is whole-request. P99 is the headline reported/optimized stat, though the algorithm's controller minimizes l_req (modeled latency) subject to a throughput covering the arrival rate. Layer coded energy/cost since the core motivation is monetary cost; could also be parallelism. Text extraction of the PDF contains embedded-font garbage in figures (use grep -a). | TAIL AUDIT 2026-10-06: E2E tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "E2E P99 (headline only); design minimizes request latency l_req(C) subject to throughput >= arrival rate",
+    "correction": "Demote E2E P99 'objective' to headline/reported. Objective is cost + (mean) latency in Algorithm 1.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "stable Gamma arrivals (1.5/0.35/0.2 req/s by model) and fluctuating MAF trace replay over 20-min segments of a spot-availability trace (§6.1)",
+  "repass_log": [
+    "E2E quote replaced: P99 headline -> design statement (optimizer minimizes E2E inference latency l_req(C), a modeled quantity, no percentile); stat P99/n/a -> n/a unspecified, per tail_audit",
+    "COST and THR_REQ constraint kept as design",
+    "load_class online-arrivals"
+  ]
+}

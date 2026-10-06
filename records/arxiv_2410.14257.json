@@ -1,0 +1,69 @@
+{
+ "key": "arxiv_2410.14257",
+ "title": "Revisiting Service Level Objectives and System Level Metrics in Large Language Model Serving",
+ "first_author": "Wang",
+ "year": 2024,
+ "venue": "arXiv preprint (v2, Oct 2025)",
+ "url": "https://arxiv.org/abs/2410.14257",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: critiques TBT/TPOT/E2E SLOs and goodput/SLO attainment (gameable by output delay and request abandonment); proposes reading-speed token-deadline SLO (d_i = V*i) and smooth goodput with user idle latency penalty",
+ "layer": "other",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2410.14257.txt",
+ "optimized_metrics": [
+  {"metric": "OTHER:smooth_goodput", "stat": "mean", "role": "objective",
+   "evidence": "we introduce smooth goodput, a novel performance metric that balances the benefits of token generation against the penalty for user idle time during token delivery.",
+   "locator": "§1 Introduction"},
+  {"metric": "OTHER:user_idle_latency", "stat": "max", "role": "objective",
+   "evidence": "User experience will get worse if the user idle latency is large.",
+   "locator": "§4.3 (Eq. 9)"},
+  {"metric": "OTHER:reading_speed_token_deadline_SLO", "stat": "attainment", "role": "constraint",
+   "evidence": "we propose a new SLO metric to define the deadlines of each token relative to the commitment of a request, rather than relative to the previous token, which aligns more closely with how users process information.",
+   "locator": "§1 contributions; §3.3 Eq. 5"}
+ ],
+ "headline_claim": {"text": "Evaluation results show that our metric framework provides a more comprehensive view of token delivery and request processing, and effectively captures the optimal point of user experience and system performance with different serving strategies.",
+  "metrics": ["OTHER:smooth_goodput"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "THR_TOK", "stat": "n/a", "where": "Fig 5"},
+  {"metric": "TTFT", "stat": "mean", "where": "Fig 5"},
+  {"metric": "TPOT", "stat": "median/mean", "where": "Fig 5"},
+  {"metric": "TBT", "stat": "median/tail", "where": "Fig 5, 8, 9"},
+  {"metric": "OTHER:smooth_goodput", "stat": "mean", "where": "Fig 6, 11"},
+  {"metric": "QUEUE", "stat": "n/a", "where": "Fig 5"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "unified SLO (token deadline)", "canonical": "SLO_ATT", "definition_quote": "We define the deadline of the i-th output token of a request as d_i, while t_i is the actual generation time of the i-th output token. Therefore, the SLO constraints can be formulated as: ∀i, t_i ≤ d_i.", "locator": "§3.1 Eq. 1", "notes": "every SLO is expressed as per-token deadlines"},
+  {"term_as_written": "TTFT and TBT SLO", "canonical": "TBT", "definition_quote": "d_i = TTFT_θ for i = 1; d_i = t_{i-1} + TBT_θ for i > 1 ... The SLO is met if the generation time of the first token is less than TTFT_θ, and the generation time interval between adjacent tokens is less than TBT_θ. Note that the deadline of the i-th token is determined by the generation time of the previous token, which, as we will show, is not aligned with user experience.", "locator": "§3.1 Eq. 2", "notes": "deadline chained to previous token"},
+  {"term_as_written": "TPOT", "canonical": "TPOT", "definition_quote": "TPOT reflects the average time taken to generate a token (excluding the first token). ... d_i = TTFT_θ for i = 1; d_i = t_1 + (n − 1) * TPOT_θ for i > 1 ... In other words, only the first and last tokens are subject to timing constraints.", "locator": "§3.1 Eq. 3", "notes": "mean over decode tokens excl. first"},
+  {"term_as_written": "End-to-end latency", "canonical": "E2E", "definition_quote": "E2E latency reflects the total time taken for a request (or a batch of requests) from commited by users to when it completed. With our framework, we can define the SLO on E2E latency as: d_i = E2E_θ", "locator": "§3.1 Eq. 4", "notes": "TPOT seen as generalization of E2E"},
+  {"term_as_written": "new SLO (reading-speed deadline)", "canonical": "OTHER:reading_speed_token_deadline_SLO", "definition_quote": "d_i = V × i, where V is the output information processing speed of the user, and i is the index of the output words. d_i constraints the deadline of the i-th token, after which the user will perceive a pause in the output stream.", "locator": "§3.3 Eq. 5", "notes": "deadline relative to request commitment, not previous token; early tokens build buffer"},
+  {"term_as_written": "SLO attainment", "canonical": "SLO_ATT", "definition_quote": "SLO attainment = Σ_{r∈R} 1(∀i, t_i ≤ d_i) / |R| ... Based on it, capacity is defined as the maximum request rate under the constraint of certain SLO attainment.", "locator": "§4.1 Eq. 6", "notes": ""},
+  {"term_as_written": "Goodput", "canonical": "GOODPUT", "definition_quote": "Goodput is defined as the number of completed requests that meet the SLOs per second in a service. ... Goodput = Σ_{r∈R} 1(∀i, t_i ≤ d_i) · n_r / T, where T is the time interval of serving the requests in R, and n_r is the number of tokens that the request r generates.", "locator": "§4.1 Eq. 7", "notes": "text says requests/s but formula weights by n_r tokens, i.e. SLO-meeting output tokens/s; all-or-nothing per request"},
+  {"term_as_written": "user idle latency", "canonical": "OTHER:user_idle_latency", "definition_quote": "The user idle latency is cumulative duration during which a user is idle and waiting for new tokens to be generated due to the lower generation speed. Formally, the user idle latency l of a request r is defined as: l_r = max_{i=1..n} (t_i − d_i)", "locator": "§4.3 Eq. 9", "notes": "maximum token slowdown vs. deadline (not sum); contrasted with Andes' average token slowdown"},
+  {"term_as_written": "smooth goodput", "canonical": "OTHER:smooth_goodput", "definition_quote": "The smooth goodput is defined as the service benefit per unit of time. ... benefit(r) = n_r − α · f(l_r) ... smooth_goodput = Σ_{r∈R} benefit(r) / T, where T is the time interval of serving the requests committed by the users denoted by R", "locator": "§4.3 Eq. 10-11", "notes": "n_r tokens generated; f maps idle latency to fraction of benefit lost; α weight (experiments: α=2.5, consumption speed 5 tokens/s); all requests contribute, no abandonment incentive"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "TBT", "critique_quote": "Limitation 1: In existing SLOs, TBT is too tight for overall user experience while TPOT and E2E latency are too loose. ... if a system delivers 10 tokens in the first second, then stalls for 1 second, users reading at 4 tokens per second will still have a good experience, although the TBT is up to 1 second.", "locator": "§1"},
+  {"target_metric": "TPOT", "critique_quote": "if only 2 tokens are delivered before a 1-second stall, users will suffer from the waiting time, although the TPOT is only 0.1s. In other words, the cost of high latency iterations is shared with previous iterations.", "locator": "§1"},
+  {"target_metric": "TPOT", "critique_quote": "TPOT measures the average time between tokens in a request, while it is too loose to reflect the user experience, as a long stall in the middle of the request can be averaged out by short intervals between other tokens", "locator": "§1"},
+  {"target_metric": "TBT", "critique_quote": "Counterintuitive Example 1: ... consider the trick that will manually delay the delivery of all tokens to the TBT threshold. ... For the user, the arrival time of each token is no earlier than it would be under the strategy of immediate delivery upon generation. This obviously results in a worse experience, yet it achieves better performance under the existing SLO framework", "locator": "§1; §5.3 Fig 9"},
+  {"target_metric": "TBT", "critique_quote": "the chunked-prefills smooths the TBT by slicing the prefill phase and fusing them with the decode phases of other requests ... we observe that the absolute latency from decode tokens of request B will not benefit from the optimization.", "locator": "§3.2"},
+  {"target_metric": "GOODPUT", "critique_quote": "Limitation 2: In existing SLMs, Goodput and SLO attainment are not able to reflect the benefits of requests that exceed the SLO. ... existing metrics definitions ignore the contribution of requests that are missed. Therefore, the optimal strategy seems to be to give up or reject the requests that have already missed the SLOs", "locator": "§1"},
+  {"target_metric": "SLO_ATT", "critique_quote": "if a request does not meet the SLOs, its contribution to SLO attainment and goodput is 0. This approach, when optimizing for the system level metrics, often leads to abandoning requests that cannot meet the SLOs. ... we argue that the existing goodput and SLO attainment metrics are not suitable to serve as the optimization objectives for LLM serving systems.", "locator": "§4.2"},
+  {"target_metric": "OTHER:existing_metric_suite", "critique_quote": "existing metrics provide a comprehensive overview of service performance, they prioritize throughput and hardware efficiency over the actual user experience. There is no clear indication of a balanced operating point that considers both throughput and the waiting time perceived by users.", "locator": "§5.2"}
+ ],
+ "recommended_practice": [
+  {"quote": "we can set the constraint of each request according to the response delay that users can tolerate and the speed of processing output information, such as reading the output of the chatbot, understanding the summary of long text, listening, etc.", "locator": "§3.3"},
+  {"quote": "For interactive applications with stringent latency requirements, a higher value of α should be chosen to ensure that idle latency is minimized. In practical deployments, the parameters of the benefit function can be calibrated using historical workload data, including request latency metrics and user behaviors (e.g., cancellations and complaints)", "locator": "§4.3"},
+  {"quote": "we set the information consumption speed to 5 tokens per second and α = 2.5", "locator": "§5.2"}
+ ],
+ "slo_spec": "Reading-speed deadline d_i = V*i with V = 5 tokens/s in experiments (Fig 2 uses 4.5 tokens/s; Fig 10 30 tokens/s reference); smooth-goodput weight alpha=2.5; threshold values for TTFT/TBT/TPOT left as generic thresholds",
+ "load_regime": "request-rate (QPS) sweep, Poisson arrivals and real-world trace",
+ "tradeoff_acknowledged": "Throughput vs user idle time: smooth goodput peaks at an intermediate QPS and declines as idle time dominates; larger alpha lowers the optimal QPS (Fig 11). Chunked prefills shift the peak to higher QPS.",
+ "eval_type": "real-system",
+ "hardware": "1x A100-80GB",
+ "models": "LLaMA-3.1-8B-Instruct, Qwen2.5-14B",
+ "workloads": "ShareGPT, LooGLE, real-world trace",
+ "confidence": "high",
+ "extractor_notes": "Metric paper. Eq. 1 text for f(.) not specified beyond 'maps idle latency to percentage of benefit'. Goodput text says 'completed requests per second' but Eq. 7 weights by tokens. Extraction read via non-layout pdftotext because two-column layout interleaved in the .txt."
+}

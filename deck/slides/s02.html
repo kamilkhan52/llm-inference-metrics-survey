@@ -1,0 +1,41 @@
+<section class="slide" id="s02" data-title="Method">
+<style>
+#s02 .pipe { display: grid; grid-template-columns: 1fr 26px 1.2fr 26px 1.1fr 26px 1.55fr 26px 1fr; align-items: stretch; height: 262px; }
+#s02 .st { border: 1px solid var(--ink-3); border-radius: 6px; background: var(--bg); padding: 10px 12px; font-size: 13.5px; line-height: 1.38; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+#s02 .st.key { border: 2px solid var(--ink); background: var(--panel); }
+#s02 .st h3 { margin: 0; font-size: 14px; color: var(--ink); font-weight: 600; }
+#s02 .st .no { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: .06em; }
+#s02 .st b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+#s02 .st ul { padding-left: 14px; margin: 0; }
+#s02 .st li { margin-bottom: 3px; }
+#s02 .arr { align-self: center; }
+#s02 .arr svg { width: 26px; height: 16px; }
+#s02 .brk { display: grid; grid-template-columns: 1fr 26px 1.2fr 26px 1.1fr 26px 1.55fr 26px 1fr; margin-top: 4px; }
+#s02 .brk .line { grid-column: 5 / 10; border: 1px solid var(--ink-3); border-top: none; height: 10px; }
+#s02 .brk .cap { grid-column: 5 / 10; text-align: center; margin-top: 3px; }
+#s02 .body { margin-top: 22px; max-width: 1060px; }
+</style>
+<header class="slide-head">
+  <div class="kicker">02 · Method</div>
+  <h2>We coded 137 optimizer papers from full text and checked the coding blind.</h2>
+  <div class="sub">Purposive sample of 2022–26 papers across 15 technique layers; every objective needs a verbatim design quote.</div>
+</header>
+<div class="slide-body">
+  <div class="pipe" role="img" aria-label="Five-step pipeline: discovery of 210 unique papers by 6 search agents; purposive selection of 137 full-text optimizers; extraction by 16 agents; blind checks with 28 of 30 primary objectives matching and kappa 0.76 on tail tiers; analysis over 16 metric families.">
+    <div class="st"><span class="no">1</span><h3>Discovery</h3><div><b>6</b> search agents · <b>210</b> unique papers</div></div>
+    <div class="arr"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8H20M15 3l6 5-6 5" fill="none" stroke="var(--ink-3)" stroke-width="1.5"/></svg></div>
+    <div class="st"><span class="no">2</span><h3>Selection (purposive)</h3>
+      <ul><li><b>137</b> optimizers read in full (133 + 4 added after review)</li><li><b>10</b> metric/benchmark papers</li><li><b>55</b> abstract-only, kept separate (of 60; 5 unclear)</li><li><b>7</b> excluded</li></ul></div>
+    <div class="arr"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8H20M15 3l6 5-6 5" fill="none" stroke="var(--ink-3)" stroke-width="1.5"/></svg></div>
+    <div class="st"><span class="no">3</span><h3>Extraction</h3><div><b>16</b> agents · one JSON record per paper · re-pass demoted ~<b>48</b> headline-only entries</div></div>
+    <div class="arr"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8H20M15 3l6 5-6 5" fill="none" stroke="var(--ink-3)" stroke-width="1.5"/></svg></div>
+    <div class="st key"><span class="no">4</span><h3>Blind checks</h3>
+      <ul><li>re-extraction of <b>30</b> papers: primary objective <b>28/30</b>, Jaccard <b>0.74</b>, exact sets <b>14/30</b></li><li>tail tiers recoded blind: <b>25/30</b>, κ = <b>0.76</b></li><li>tail audit of <b>40</b> papers</li><li><b>181</b> definition quotes verified</li></ul></div>
+    <div class="arr"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8H20M15 3l6 5-6 5" fill="none" stroke="var(--ink-3)" stroke-width="1.5"/></svg></div>
+    <div class="st"><span class="no">5</span><h3>Analysis</h3><div><b>16</b> metric families · Wilson 95 % CIs · scripted counts</div></div>
+  </div>
+  <div class="brk"><div class="line"></div><div class="cap tiny">five adversarial review rounds of the synthesis (R1–R5)</div></div>
+  <p class="small body">Objective: what a method is designed to improve. Constraint: what it must respect. Reported: evaluated but not targeted. Primary objectives are reliable; exact objective and constraint sets are noisier.</p>
+</div>
+<footer class="slide-foot"><div class="sources">[D] SELECTION.tsv tracks; SYNTHESIS v6.1 §1; ORCH_NOTES (corpus, QA); qa/QA_COMPARISON_v2.txt (summary line); qa/TIER_QA_COMPARISON.txt; qa/TAIL_AUDIT.md; notes/DEFINITIONS.md header (quote check) · RESEARCH_LOG.md (re-pass)</div><div class="pageno">02 / 14</div></footer>
+</section>

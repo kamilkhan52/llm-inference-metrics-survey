@@ -1,0 +1,134 @@
+{
+  "key": "arxiv_2305.05920",
+  "title": "Fast Distributed Inference Serving for Large Language Models",
+  "first_author": "Wu",
+  "year": 2023,
+  "venue": "arXiv preprint (v3 Sep 2024)",
+  "url": "https://arxiv.org/abs/2305.05920",
+  "cluster": "D1",
+  "technique": "token-level preemptive scheduling with skip-join Multi-Level Feedback Queue + proactive KV-cache swap between GPU and host",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2305.05920.txt",
+  "optimized_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "use preemptive scheduling to eliminate head-of-line blocking problem and minimize latency",
+      "locator": "§1 (txt lines ~106-107)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "although FastServe is designed to reduce average latency; average per-token latency is calculated as the mean of every job's end-to-end latency divided by its output length"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "we want the maximum throughput as high as possible under a certain latency requirement",
+      "locator": "§2.3 requirements (txt line ~247)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "compared to the state-of-the-art solution vLLM, FastServe improves the throughput by up to 31.4x and 17.9x under the same average and tail latency requirements, respectively",
+    "metrics": [
+      "THR_REQ",
+      "NORM_LAT",
+      "E2E"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "where": "Fig 11 (average per-token latency)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P95",
+      "where": "Fig 12 (tail latency)"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "P95",
+      "where": "Fig 13 (P95 goodput under 5x/10x/20x SLO)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "max throughput under SLO, Fig 11/12"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P95",
+      "where": "headline/evaluation (demoted by tail audit)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "headline only (re-pass); tail-audit: E2E not a separate target, duplicates NORM_LAT mean"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "P95",
+      "where": "headline only (re-pass); tail-audit: P95 goodput is an evaluation metric, not a design target"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "average per-token latency",
+      "canonical": "NORM_LAT",
+      "definition_quote": "average per-token latency is calculated as the mean of every job's end-to-end latency divided by its output length.",
+      "locator": "§6.1 Evaluation metrics",
+      "notes": "normalized by output length only; includes queueing; mean over jobs"
+    },
+    {
+      "term_as_written": "tail latency",
+      "canonical": "E2E",
+      "definition_quote": "In addition, we also report the P95 tail latency.",
+      "locator": "§6.1",
+      "notes": "P95 of the same per-token (normalized) latency, presumably; not stated whether normalized"
+    },
+    {
+      "term_as_written": "P95 goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "we measure the P95 goodput, defined as the throughput when 95% of jobs can be completed within the SLO of the initialization phase and the decoding phase.",
+      "locator": "§6.2",
+      "notes": "two-phase SLO (initialization/prefill and decoding); SLO = 5x/10x/20x the latency of the phase under light load"
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "compare the maximum throughput each system can achieve under the SLO",
+      "locator": "§6.1",
+      "notes": "throughput is the max request rate (req/s) sustained under the latency SLO; unit not explicitly defined"
+    }
+  ],
+  "slo_spec": "Latency SLO set to 10x the latency of a single decoding iteration (= 0.3 s based on profiling) for latency curves; for goodput, SLO of both phases = 5x/10x/20x of the per-phase latency under light load; starvation threshold alpha tuned from user SLO (default 300 ms).",
+  "load_regime": "Poisson request-rate sweep; ShareGPT and Alpaca; also a fixed-length synthetic workload",
+  "tradeoff_acknowledged": "preemption may hurt tail latency of long jobs (mitigated by starvation prevention); paper says tail latency improved too",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA A100 GPUs (up to 16 for OPT-175B)",
+  "models": "OPT-13B, OPT-66B, OPT-175B",
+  "workloads": "ShareGPT, Alpaca, fixed-length",
+  "confidence": "high",
+  "extractor_notes": "'Latency' in the headline is per-token normalized latency (e2e/output length) while 'throughput' is request throughput at an SLO on that latency; the SLO is a latency threshold of 0.3 s on the per-token measure (inferred). Goodput is also reported. | TAIL AUDIT 2026-10-06: E2E tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "E2E/NORM_LAT mean (target); P95 latency + P95 goodput (reported/eval)",
+    "correction": "Demote E2E P95 'objective' to reported. GOODPUT P95 is an evaluation metric (throughput at which 95% of jobs meet SLO), not a design target; the scheduler minimizes mean JCT (skip-join MLFQ). Keep NORM_LAT mean + THR_REQ under latency requirement.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "request arrival ... generated using a Poisson process parameterized by the arrival rate (§6.1); latency vs request rate curves (Fig 11-12)",
+  "repass_log": [
+    "NORM_LAT: abstract quote replaced by §1 design statement; stat mean now explicit ('designed to reduce average latency')",
+    "E2E: moved to reported (result-only abstract quote; tail-audit correction)",
+    "THR_REQ: design (§2.3 goal)",
+    "GOODPUT P95: moved to reported (tail-audit correction: evaluation metric)",
+    "load_class online-arrivals"
+  ]
+}

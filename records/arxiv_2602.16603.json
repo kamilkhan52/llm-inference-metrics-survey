@@ -1,0 +1,122 @@
+{
+  "key": "arxiv_2602.16603",
+  "title": "FlowPrefill: Decoupling Preemption from Prefill Scheduling Granularity to Mitigate Head-of-Line Blocking in LLM Serving",
+  "first_author": "Chia-chi Hsieh",
+  "year": 2026,
+  "venue": "arXiv preprint (ACM format, conference TBD)",
+  "url": "https://arxiv.org/abs/2602.16603",
+  "cluster": "D1",
+  "technique": "operator-level prefill preemption + event-driven slack-aware EDF scheduling and SLO-aware batching to avoid head-of-line blocking",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2602.16603.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "we propose FlowPrefill, a TTFT-goodput-optimized serving system",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Since FlowPrefill performs preemption only during the prefill phase, we focus on TTFT SLO attainment as the primary metric.",
+      "locator": "§6.1 Metrics",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we focus on TTFT SLO attainment as the primary metric"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "heterogeneous latency requirements. To maximize goodput, we adopt an SLO-aware batching strategy",
+      "locator": "§5 (scheduler)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Evaluation on real-world production traces shows that FlowPrefill improves maximum goodput by up to 5.6x compared to state-of-the-art systems while satisfying heterogeneous SLOs.",
+    "metrics": [
+      "GOODPUT",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Figs 9-14 (vs request rate and SLO scale)"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "Fig 9 vertical lines (max goodput at 90%)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Figs 11, 14 (throughput under batch token budgets / single-SLO)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean/P99",
+      "where": "§6.2 text (average and tail latencies)"
+    },
+    {
+      "metric": "OTHER:preemption_blocking_time",
+      "stat": "n/a",
+      "where": "§6.4 runtime analysis"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "goodput, defined as the maximum sustainable request rate under an SLO attainment goal (e.g., 90%)",
+      "locator": "§1",
+      "notes": "request-rate based goodput; evaluation: 'We define goodput as the maximum sustainable request rate at 90% SLO attainment.' (§6.1). TTFT SLO only; decode latency not an SLO"
+    },
+    {
+      "term_as_written": "TTFT SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "we focus on TTFT SLO attainment as the primary metric",
+      "locator": "§6.1 Metrics",
+      "notes": "attainment fraction of requests meeting per-task TTFT SLO"
+    },
+    {
+      "term_as_written": "preemption blocking time",
+      "canonical": "OTHER:preemption_blocking_time",
+      "definition_quote": "We define the preemption blocking time as the interval between the moment a higher-priority request sends a preemption signal and the moment the new request can be submitted (i.e., when the ACK is received in Figure 7).",
+      "locator": "§6.4",
+      "notes": "system-internal responsiveness metric"
+    },
+    {
+      "term_as_written": "slack",
+      "canonical": "OTHER:slack",
+      "definition_quote": "slack = deadline - current_time - predicted TTFT ... The deadline is the request arrival time plus its TTFT SLO",
+      "locator": "§5.2 Eq. 3",
+      "notes": "TTFT is measured from arrival, i.e. includes queueing; predicted by offline fitted model"
+    }
+  ],
+  "slo_spec": "Per-task TTFT SLOs (Table 2), e.g. Llama3-8B text 0.25s, image 0.5s, search 4.0s, file 6.0s; Qwen2.5-14B 0.4/0.8/6.5/9.0s; Llama3-70B 1.0/2.0/15.0/18.0s; assigned from prior work and application semantics; SLO scale parameter linearly scales them; goodput at 90% attainment",
+  "load_regime": "trace replay with request-rate scale and SLO-scale sweeps (QwenTrace)",
+  "tradeoff_acknowledged": "chunk size: smaller improves responsiveness but degrades computational efficiency/throughput; larger maximizes throughput but exacerbates blocking (motivation). FlowPrefill matches baseline throughput in single-SLO workload (Fig 14).",
+  "eval_type": "real-system",
+  "hardware": "8x NVIDIA A800-SXM4-80GB (NVLink 200GB/s); motivation experiments on A100-40GB",
+  "models": "Llama3-8B, Qwen2.5-14B, Llama3-70B (TP 1/2/4), Qwen3-30B-A3B (MoE)",
+  "workloads": "QwenTrace production trace (text, image, search, file task types), single-turn, random tokens of matching lengths",
+  "confidence": "high",
+  "extractor_notes": "Optimization is prefill/TTFT only; TPOT/decode latency not optimized or constrained. Two-column PDF; read via pdftotext (non-layout). Percentile of TTFT not used; attainment-based.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "SLO-scale and request-rate sweeps over trace replay (QwenTrace): 'trace replay with request-rate scale and SLO-scale sweeps' (§6.1)",
+  "repass_log": [
+    "GOODPUT, TTFT(SLO), SLO_ATT all kept as design (system goal / SLO / batching to maximize goodput)",
+    "TTFT stat_basis explicit (attainment)",
+    "load_class online-arrivals"
+  ]
+}

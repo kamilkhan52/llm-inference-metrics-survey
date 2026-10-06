@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2501.14794",
+ "title": "Characterizing Mobile SoC for Accelerating Heterogeneous LLM Inference",
+ "first_author": "Le Chen",
+ "year": 2025,
+ "venue": "SOSP 2025",
+ "url": "https://arxiv.org/abs/2501.14794",
+ "cluster": "D5",
+ "technique": "GPU-NPU heterogeneous parallel execution on mobile SoC",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "1.34\u00d7 to 6.02\u00d7 end-to-end speedup over state-of-the-art GPU-only and NPU-only LLM engines",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "HeteroInfer delivers a 1.34\u00d7 to 6.02\u00d7 end-to-end speedup over state-of-the-art GPU-only and NPU-only LLM engines",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. End-to-end speedup of single-device inference; metric (latency vs tokens/s) not specified."
+}

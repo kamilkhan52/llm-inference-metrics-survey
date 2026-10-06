@@ -1,0 +1,120 @@
+{
+  "key": "arxiv_2403.01876",
+  "title": "DejaVu: KV-cache Streaming for Fast, Fault-tolerant Generative LLM Serving",
+  "first_author": "Foteini Strati",
+  "year": 2024,
+  "venue": "ICML 2024 (arXiv v1)",
+  "url": "https://arxiv.org/abs/2403.01876",
+  "cluster": "D2",
+  "technique": "KV-cache streaming library enabling prompt/token disaggregation in pipeline-parallel serving, microbatch swapping GPU<->CPU, and KV state replication for fault tolerance",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2403.01876.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "the throughput of the disaggregated system should be maximized, and ideally be higher than the throughput of the non-disaggregated system",
+      "locator": "§4.2.1 (planner), txt ~line 370",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:recovery_time_under_failure",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "failures are detected and mitigated quickly to minimize recovery time",
+      "locator": "§4.3 / fault-tolerance requirements (txt l.~235, 537)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "optimizes the number of machines for each stage to satisfy GPU memory capacity constraints and avoid GPU idle times",
+      "locator": "§1 Introduction",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "DéjàVu improves LLM serving throughput by up to 2× compared to FasterTransformer ... improve throughput by up to 1.8× ... reduces microbatch latency by 1.54× compared to non-fault-tolerant systems",
+    "metrics": [
+      "THR_REQ",
+      "E2E"
+    ],
+    "locator": "§1 Introduction"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "P50",
+      "where": "Fig 12 (median normalized latency vs request rate)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 13 (req/s with/without swapping), Fig 12 sustained rate"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 14 cumulative latency of a microbatch under failure; Fig 15 runtime under failures"
+    },
+    {
+      "metric": "OTHER:makespan",
+      "stat": "n/a",
+      "where": "Figs 20-24 (simulator, Appendix B)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Figs 20-23 normalized total cost"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "normalized latency (seconds/token)",
+      "canonical": "NORM_LAT",
+      "definition_quote": "we report normalized latency (seconds/token) for each request rate. To compute the normalized latency for each request, we divide its end-to-end latency by the number of generated tokens. Figure 12 shows the median normalized latency",
+      "locator": "§5.2.1",
+      "notes": "divides by generated tokens only; median across requests; Orca/vLLM style"
+    },
+    {
+      "term_as_written": "inverse throughput",
+      "canonical": "OTHER:inverse_throughput",
+      "definition_quote": "First, we compute the inverse throughput (I) of the baseline.",
+      "locator": "§4.2.1",
+      "notes": "analytical planner quantity used to size prompt vs token machines; derivation in §4.2.1"
+    },
+    {
+      "term_as_written": "Makespan and Normalized total cost",
+      "canonical": "OTHER:makespan",
+      "definition_quote": "Figures 20-23 show the Makespan and Normalized total cost (with respect to the hourly cost of a single VM) for various numbers of available machines for our trace.",
+      "locator": "Appendix B",
+      "notes": "simulator-based; makespan = time to finish a fixed trace; cost normalised to hourly cost of one VM"
+    },
+    {
+      "term_as_written": "recovery time",
+      "canonical": "OTHER:recovery_time_under_failure",
+      "definition_quote": "failures are detected and mitigated quickly to minimize recovery time",
+      "locator": "txt l.~235",
+      "notes": "re-pass: time to resume after a failure; reported as cumulative microbatch latency under failures"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep (single open-loop Poisson client, fixed 1000-token prompt, output lengths from LMSys); fixed homogeneous requests for failure experiments",
+  "tradeoff_acknowledged": "Streaming/swapping add KV transfer overhead (single-batch latency slowdown, Fig 11); swapping bottlenecked by PCIe time to bring KV back; paper notes potential negative impact on throughput from differing prompt/token machine counts",
+  "eval_type": "both",
+  "hardware": "A100-80GB and V100-16GB VMs (2 GPUs/stage), simulator for larger clusters",
+  "models": "OPT-13B/30B/66B, BLOOM-176B",
+  "workloads": "LMSys-derived output lengths, fixed prompt size 1000; homogeneous requests (500 prompt/1000 gen) for failures",
+  "confidence": "high",
+  "extractor_notes": "Throughput units not specified precisely (req/s in Fig 13). TTFT/TBT not used. Failure-recovery latency is reported as cumulative microbatch latency, not a percentile. No SLO.",
+  "load_class": "mixed",
+  "load_class_quote": "throughput experiments use 'a single open-loop Poisson client ... with varying request rates' (online-arrivals, txt l.~652); failure-recovery experiments use fixed homogeneous requests (offline-style)",
+  "repass_log": [
+    "second THR_REQ entry (result headline 'improves throughput by up to 2x') dropped as duplicate of the planner design entry; throughput already in reported_metrics",
+    "E2E entry recoded to OTHER:recovery_time_under_failure with design quote (fault-tolerance goal); microbatch latency added to reported as E2E",
+    "load_class mixed"
+  ]
+}

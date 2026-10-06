@@ -1,0 +1,14 @@
+{"key":"arxiv_2312.17238","title":"Fast Inference of Mixture-of-Experts Language Models with Offloading","first_author":"Eliseev","year":2023,"venue":"arXiv preprint","url":"https://arxiv.org/abs/2312.17238","cluster":"D4",
+"technique":"MoE expert offloading with LRU expert cache, speculative expert pre-loading, and mixed HQQ quantization (attention 4-bit, experts 2/3-bit)",
+"layer":"parallelism/offloading/hardware-mapping","read_level":"full","fulltext_path":"fulltext/arxiv_2312.17238.txt",
+"optimized_metrics":[
+{"metric":"TPS_USER","stat":"mean","role":"objective","evidence":"we focus on the task of generating tokens interactively, i.e. generate multiple tokens per second at batch size 1","locator":"§3 (txt line ~162)"},
+{"metric":"MEMORY","stat":"n/a","role":"constraint","evidence":"we study the problem of running large MoE language models on consumer hardware with limited accelerator memory","locator":"abstract"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"Based on these evaluations, we chose two quantization schemes ... that offer favourable performance-size trade-offs within the target hardware constraints.","locator":"§4.2 (Table 1 perplexity/MMLU)"}],
+"headline_claim":{"text":"we build can run Mixtral-8x7B with mixed quantization on desktop hardware and free-tier Google Colab instances. [...] run this model interactively at 2-3 tokens per second","metrics":["TPS_USER","MEMORY"],"locator":"abstract / §1"},
+"reported_metrics":[{"metric":"TPS_USER","stat":"mean","where":"Table 2 (tokens/s, batch 1, 4 hardware setups)"},{"metric":"QUALITY","stat":"n/a","where":"Table 1 (Wiki2/C4 perplexity, MMLU)"},{"metric":"MEMORY","stat":"n/a","where":"Table 1 model size"}],
+"metric_definitions":[
+{"term_as_written":"tokens per second (inference speed)","canonical":"TPS_USER","definition_quote":"measuring the average number of tokens generated per second with batch size 1","locator":"§4.3","notes":"batch=1 generation speed on OpenAssistant conversations; sampling without temperature"}],
+"slo_spec":null,"load_regime":"batch=1 interactive generation","tradeoff_acknowledged":"quantization lowers quality (perplexity) for smaller size; 2-bit experts degrade perplexity",
+"eval_type":"real-system","hardware":"free-tier Colab T4, RTX 3080 Mobile, RTX 3060, A100","models":"Mixtral-8x7B, Mixtral-8x7B-Instruct","workloads":"OpenAssistant conversations; WikiText2, C4, MMLU for quality",
+"confidence":"high","extractor_notes":"Throughput not claimed; no formal objective or SLO. Metric is single-user generation speed (TOKEN_LAT-like). Mapped to TPS_USER; TOKEN_LAT is a defensible alternative."}

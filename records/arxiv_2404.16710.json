@@ -1,0 +1,110 @@
+{
+  "key": "arxiv_2404.16710",
+  "title": "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding",
+  "first_author": "Mostafa Elhoushi",
+  "year": 2024,
+  "venue": "ACL'24 (arXiv v4)",
+  "url": "https://arxiv.org/abs/2404.16710",
+  "cluster": "D4",
+  "technique": "layer dropout + early-exit loss training recipe; self-speculative decoding that drafts with early layers and verifies with remaining layers sharing KV cache",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.16710.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We present LayerSkip, an end-to-end solution to speed-up inference of large language models (LLMs).",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "speedup is calculated as the acceleration of average inference time per token compared to the \"Autoregressive\" baseline on the same setting"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The advantage of speculative decoding is that it leads to faster inference compared to the main model, but requires a larger memory footprint and complexity in implementation to maintain key-value (KV) cache in two different models. ... this paper also proposes combining exiting early with speculative decoding to propose a self-speculative decoding approach that does not require an additional model or auxiliary layers.",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "self-speculative decoding ... has no drop in accuracy; training recipe increases the accuracy of early exit at earlier layers; last-layer accuracy should be maintained",
+      "locator": "abstract / §6",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "We implement our inference solution and show speedups of up to 2.16x on summarization for CNN/DM documents, 1.82x on coding, and 2.0x on TOPv2 semantic parsing task.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Tables 3-8 speedup, token latency ms (TOPv2)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Tables: 'Acc. per Sec.' tokens/s per sample (single stream)"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "token acceptance rate columns"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "ROUGE-2, EM, perplexity, early-exit accuracy per layer (Fig 8-11)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "speedup",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Following Zhang et al. (2023), speedup is calculated as the acceleration of average inference time per token compared to the \"Autoregressive\" baseline on the same setting.",
+      "locator": "§6.2",
+      "notes": "single-sequence per-token time ratio vs HuggingFace autoregressive baseline"
+    },
+    {
+      "term_as_written": "throughput (Acc. per Sec.)",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "throughput measured as tokens per second averaged over the sampled dataset",
+      "locator": "§6.2",
+      "notes": "per-sample generation rate, not system throughput"
+    },
+    {
+      "term_as_written": "token acceptance rate",
+      "canonical": "ACCEPT",
+      "definition_quote": "token acceptance rate for the self speculation algorithm (how often verification accepts each of the draft tokens)",
+      "locator": "§6.2",
+      "notes": ""
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "per-sample generation, greedy, max 512 new tokens; batch size not stated (single-sequence latency setting implied); no serving load",
+  "tradeoff_acknowledged": "Early exit trades accuracy for latency; training recipe can slightly drop last-layer accuracy (e.g. 3% on TOPv2 without escale tuning; larger drop for Llama3 continual pretraining).",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA H100 (continual pretraining, TOPv2), A100 (code finetuning)",
+  "models": "Llama2 7B/13B/70B, Llama3 8B, Llama3.2 1B, 1.5B from-scratch models",
+  "workloads": "CNN/DM, XSUM, HumanEval, MBPP, TOPv2, NaturalQuestions etc.",
+  "confidence": "medium",
+  "extractor_notes": "Primary metric is wall-clock speedup of single-stream decoding; batch size not specified in what I read (grep found no inference batch size). Includes training-side contributions (layer dropout).",
+  "load_class": "single-sequence",
+  "load_class_quote": "All experiments were performed with greedy decoding and generated a maximum of 512 tokens for each sample; throughput measured as tokens per second averaged over the sampled dataset (§5; batch size not stated, single-stream per-sample latency)",
+  "repass_log": [
+    "TOKEN_LAT: abstract result replaced with abstract design statement; stat mean, explicit ('average inference time per token')",
+    "MEMORY: result-style abstract quote replaced with §1 design motivation",
+    "QUALITY: design",
+    "load_class single-sequence (batch size not stated; inferred)"
+  ]
+}

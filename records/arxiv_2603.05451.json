@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2603.05451",
+ "title": "FlashAttention-4: Algorithm and Kernel Pipelining Co-Design for Asymmetric Hardware Scaling",
+ "first_author": "Ted Zadouri",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2603.05451",
+ "cluster": "D5",
+ "technique": "Blackwell-specific attention kernel pipelining",
+ "layer": "kernels/attention",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "reaching up to 1613 TFLOPs/s (71% utilization)",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "FlashAttention-4, achieves up to 1.3$\\times$ speedup over cuDNN 9.13 and 2.7$\\times$ over Triton on B200 GPUs with BF16",
+  "metrics": [
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "OTHER:attn_kernel_speed",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Kernel-level speedup / TFLOPs/s, not a serving metric. Also reports compile time."
+}

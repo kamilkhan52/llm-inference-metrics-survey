@@ -1,0 +1,113 @@
+{
+  "key": "arxiv_2504.07347",
+  "title": "Throughput-Optimal Scheduling Algorithms for LLM Inference and AI Agents",
+  "first_author": "J.G. Dai",
+  "year": 2025,
+  "venue": "arXiv preprint (v3, stat.ML, May 2026)",
+  "url": "https://arxiv.org/abs/2504.07347",
+  "cluster": "D1",
+  "technique": "queueing-theoretic proof that work-conserving (K-FCFS) batch schedulers achieve maximal stable throughput; classifies Orca/Sarathi-Serve as throughput-optimal, FasterTransformer/vanilla vLLM as not",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.07347.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We prove that a large class of 'work-conserving' scheduling algorithms achieve maximum throughput for both individual requests and AI-agent workloads",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "What is the maximal throughput of an LLM inference system, and which batch scheduling algorithms can achieve it?",
+      "locator": "\u00a73 (txt line 575)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Orca and Sarathi-Serve are throughput-optimal, reassuring practitioners, while FasterTransformer and vanilla vLLM are not maximally stable and should be used with caution.",
+    "metrics": [
+      "THR_REQ"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "OTHER:requests_in_system_over_time",
+      "stat": "n/a",
+      "where": "Fig 1 (queue/instability)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P50/P90/P99 (CCDF)",
+      "where": "Table 3, Fig 15"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "percentiles",
+      "where": "Table 3, Fig 15 (prefill time)"
+    },
+    {
+      "metric": "TBT",
+      "stat": "percentiles",
+      "where": "Table 3"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "Throughput measures the token generation rate within a given timeframe.",
+      "locator": "\u00a71.1 Inference goal",
+      "notes": "informal; the formal notion is queueing-stability throughput: 'A scheduling algorithm is said to achieve throughput \u03bb if the associated DTMC {X(n), n \u2208 N} is irreducible and positive recurrent when the arrival rate is \u03bb' (\u00a73.2) - i.e. max sustainable request arrival rate (THR_REQ)"
+    },
+    {
+      "term_as_written": "inference latency",
+      "canonical": "E2E",
+      "definition_quote": "Inference latency represents the time required to complete a request from start to finish; common latency metrics include TTFT (time to first token, measuring prefill latency) and TBT (time between tokens, measuring decoding latency).",
+      "locator": "\u00a71.1",
+      "notes": "TTFT/TBT given only parenthetical glosses"
+    },
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "SLO attainment measures the percentage (e.g., 99%) of requests fulfilled within a predefined latency target.",
+      "locator": "\u00a71.1",
+      "notes": "explicitly left to future work"
+    },
+    {
+      "term_as_written": "work-conserving",
+      "canonical": "OTHER:work_conserving",
+      "definition_quote": "a scheduling algorithm \u03c0 is said to be work-conserving if \u03c0(x) forms a batch of token load b = bmax whenever possible.",
+      "locator": "\u00a73.2",
+      "notes": "scheduler property, not a metric"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep / fixed Poisson arrival rate (14 QPS, Fig 1) and trace replay (1.2 QPS coding trace); stability analysis",
+  "tradeoff_acknowledged": "Table 3: Sarathi-Serve best E2E and prefill latency but FasterTransformer has lowest TBT - 'a trade-off between prefill responsiveness and decode smoothness'; small token budget (128) adds chunked-prefill overhead",
+  "eval_type": "both",
+  "hardware": "A100 (TP-1/2/4)",
+  "models": "CodeLlama-34B, Llama-70B",
+  "workloads": "Poisson synthetic (129 prefill / 112 decode tokens), production conversation and coding traces (Splitwise), ShareGPT for batch-time fits",
+  "confidence": "high",
+  "extractor_notes": "Primarily theory. Paper says 'This paper focuses on throughput and leaves the study of SLO attainment to future work.' Throughput = stability region (max arrival rate), not measured tokens/s; coded THR_REQ. Latency (E2E/TTFT/TBT) only a preliminary appendix-style study (Table 3).",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "E2E/TTFT/TBT median/P90/P95/P99 in appendix experiment table only; tail-latency objectives listed as future work",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "Main claim is a stability proof; 'In our experiments, we use measured batch processing times directly.' (\u00a74 txt l.559); Poisson-arrival Fig 1 (A100, CodeLlama-34B) and a simulated queueing network (l.1267) only illustrate it | orchestrator R2: appendix experiments simulate Poisson arrivals",
+  "repass_log": [
+    "both THR_REQ entries marked design (theorem statement and problem question); no latency entries so no stat_basis",
+    "load_class set",
+    "orchestrator R2: load_class analytical-or-simulated-only -> online-arrivals (simulated Poisson arrivals)"
+  ]
+}

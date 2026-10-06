@@ -1,0 +1,147 @@
+{
+  "key": "arxiv_2501.14312",
+  "title": "Locality-aware Fair Scheduling in LLM Serving",
+  "first_author": "Shiyi Cao",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2501.14312",
+  "cluster": "D1",
+  "technique": "Deficit Longest Prefix Match (DLPM): deficit-counter fair scheduler that keeps prefix-cache locality; D2LPM extends it to multi-worker with double deficit counters balancing fairness, locality and load balance (on SGLang)",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2501.14312.txt",
+  "optimized_metrics": [
+    {
+      "metric": "FAIRNESS",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "goal is to achieve the classic max-min fairness [50], where the fair scheduling ensures each client receives at least 1/n of the resources",
+      "locator": "§2.1 (txt line ~113)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "service providers want to maximize system efficiency to improve throughput and reduce cost. Unfortunately, existing scheduling algorithms for LLM serving fall short of achieving these dual goals",
+      "locator": "§1 (txt lines ~43-46)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:prefix_cache_hit_rate",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Double Deficit LPM (D2LPM) that builds on top of DLPM to preserve high per-GPU prefix locality with a global fairness guarantee in a distributed setting",
+      "locator": "§1 (txt lines ~91-94)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "ensuring fairness while maintaining high throughput (up to 2.87x higher than VTC) and low per-client (up to 7.18x lower than state-of-the-art distributed LLM serving system) latency.",
+    "metrics": [
+      "FAIRNESS",
+      "THR_TOK",
+      "E2E"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 1 (token/s), Fig 7, 8 throughput"
+    },
+    {
+      "metric": "FAIRNESS",
+      "stat": "n/a",
+      "where": "Jain's Fairness Index on per-client service rate (Fig 1, 7, 8)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P50",
+      "where": "client response time / program completion time (Fig 7, 8)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "client response time / program completion time"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "long-context QA clients"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "headline only (re-pass); tail-audit correction: objective is fairness + throughput + cache hit; latency is a reported result"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "service (cost function)",
+      "canonical": "FAIRNESS",
+      "definition_quote": "Our prefix-aware version of the cost function is then defined as W(t1,t2) = we * ne(t1,t2) + wq * nq(t1,t2). ... Here we and wq are set to be 1 and 2, inspired by OpenAI's pricing for GPT4.",
+      "locator": "§3 Measurement of Service",
+      "notes": "ne = extend tokens = input tokens excluding prefix-cached tokens; nq = output tokens. Prefix tokens counted only once."
+    },
+    {
+      "term_as_written": "Service Rate",
+      "canonical": "FAIRNESS",
+      "definition_quote": "We measure the clients' service as a weighted sum of the number of input tokens and the number of output tokens, following VTC [42]. As discussed in §3, the weight for input token is 1 and the weight for output token is 2.",
+      "locator": "§6.1 Metrics",
+      "notes": "weighted token count per client"
+    },
+    {
+      "term_as_written": "Jain's Fairness Index",
+      "canonical": "FAIRNESS",
+      "definition_quote": "J(x1,...,xn) = (sum x_i)^2 / (n sum x_i^2), where xi represents the allocation for the ith client, and n is the total number of clients. ... In our context, we compute the Jain's Fairness Index by letting xi denote the service rate of client i. The calculation is based on the time interval during which all clients are active",
+      "locator": "§6.1 Metrics",
+      "notes": "range 1/n..1"
+    },
+    {
+      "term_as_written": "P50 and P99 Latency",
+      "canonical": "E2E",
+      "definition_quote": "We assess the scheduler's effectiveness in maintaining service quality for well-behaved clients by measuring their P50 and P99 latency. We measure latency using the end-to-end completion time for program evaluation. We use the TTFT (Time to First Token) latency metric for long-context QA tasks.",
+      "locator": "§6.1 Metrics",
+      "notes": "latency of well-behaved clients only; metric type depends on workload (program completion time vs TTFT); Fig 7 caption says 'reported latency represents the average latency for well-behaved clients' (mean, not P50/P99)"
+    },
+    {
+      "term_as_written": "backlogged client",
+      "canonical": "OTHER:backlog",
+      "definition_quote": "A client u is backlogged if dispatching additional requests cannot further increase throughput and can only incur additional queueing delay.",
+      "locator": "Definition 3.1",
+      "notes": "used in max-min fairness guarantee |W_f - W_g| <= delta"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "multi-client workloads with misbehaving clients (more requests / longer prefixes); synthetic traces + real traces; 1-8 GPUs; throughput measured under saturation",
+  "tradeoff_acknowledged": "Explicit three-way trade-off: fairness vs prefix locality (cache hit rate / throughput) vs load balancing; DLPM hyperparameter Q relaxes the fairness bound to gain throughput (Pareto frontier in Fig 1). Appendix: slight effect on Jain's index.",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA A100 80GB (up to 8) and A10G (up to 4) GPUs",
+  "models": "Llama-3.1-8B, Llama-3.2-3B",
+  "workloads": "synthetic misbehaving-client workloads (Long-Context QA, Tree-of-Thoughts, LLM-as-Judge); real traces (e.g. LMSYS Chatbot Arena)",
+  "confidence": "high",
+  "extractor_notes": "Fairness is over weighted-token service (w_in=1, w_out=2 with prefix tokens excluded), not latency; max-min fairness bound is a theoretical guarantee (delta). Abstract's 'per-client latency' is for well-behaved clients under P50/P99 (or average per Fig 7 caption). Throughput units token/s, token types not defined. No SLOs. | TAIL AUDIT 2026-10-06: E2E tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "E2E P50/P99 latency of well-behaved clients (reported)",
+    "correction": "Demote E2E P99 'objective' to reported. Objective is fairness (service bound) + throughput + cache hit.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "we generate synthetic client request traces following the Gamma process ... Real-world Traces For real-world multi-turn conversation (§6.1)",
+  "repass_log": [
+    "FAIRNESS: abstract quote replaced by §2.1 design goal (max-min fairness)",
+    "THR_TOK: abstract result replaced by §1 design goal",
+    "prefix_cache_hit_rate: abstract replaced by §1 design statement (preserve per-GPU prefix locality)",
+    "E2E: moved to reported (headline-only; tail-audit correction applied literally)",
+    "load_class online-arrivals"
+  ]
+}

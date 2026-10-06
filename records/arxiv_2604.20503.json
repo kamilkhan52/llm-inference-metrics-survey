@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2604.20503",
+ "title": "FASER: Fine-Grained Phase Management for Speculative Decoding in Dynamic LLM Serving",
+ "first_author": "Wenyan Chen",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2604.20503",
+ "cluster": "D4",
+ "technique": "per-request speculative length, early pruning, verification/draft overlap",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves throughput by up to 53%",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "reduces latency by up to 1.92$\\times$",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Our FASER prototype in vLLM improves throughput by up to 53% and reduces latency by up to 1.92$\\times$ compared to state-of-the-art systems",
+  "metrics": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"latency\" unspecified."
+}

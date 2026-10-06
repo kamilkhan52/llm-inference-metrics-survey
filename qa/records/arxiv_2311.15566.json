@@ -1,0 +1,105 @@
+{
+ "key": "arxiv_2311.15566",
+ "title": "SpotServe: Serving Generative Large Language Models on Preemptible Instances",
+ "first_author": "Xupeng Miao",
+ "year": 2023,
+ "venue": "ASPLOS'24 (arXiv)",
+ "url": "https://arxiv.org/abs/2311.15566",
+ "cluster": "D2",
+ "technique": "dynamic reparallelization under spot preemptions, bipartite-matching (Kuhn-Munkres) instance migration, stateful token-level inference recovery during grace period",
+ "layer": "cluster-routing/placement",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2311.15566.txt",
+ "optimized_metrics": [
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "This paper aims to reduce the monetary cost for serving LLMs by leveraging preemptible GPU instances",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "role": "objective",
+   "evidence": "SpotServe can reduce the P99 tail latency by 2.4 - 9.1x compared with the best existing LLM serving systems.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "the optimizer minimizes the end-to-end inference latency l_req(C) while maintaining a throughput higher than alpha_t",
+   "locator": "\u00a74.1 Adaptive configuration optimizer"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "minimizes the end-to-end inference latency l_req(C) while maintaining a throughput higher than alpha_t (request arrival rate); otherwise maximizes the overall serving throughput",
+   "locator": "\u00a74.1 Algorithm 1"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "other targets are also feasible, such as meeting the requirements of pre-defined SLO (i.e., l_req(C) <= l_SLO)",
+   "locator": "\u00a74.1"
+  }
+ ],
+ "headline_claim": {
+  "text": "reduce the P99 tail latency by 2.4-9.1x compared with the best existing LLM serving systems ... saving 54% monetary cost compared with only using on-demand instances",
+  "metrics": [
+   "E2E",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 6,8"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "where": "Fig 6,8,9"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P90",
+   "where": "Fig 6 (other percentiles)"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "Fig 7 (per-token cost)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end inference latency",
+   "canonical": "E2E",
+   "definition_quote": "minimizes the end-to-end inference latency l_req(C)",
+   "locator": "\u00a74.1",
+   "notes": "request latency including queueing, interruption and migration overhead; no formal TTFT/TPOT used"
+  },
+  {
+   "term_as_written": "monetary cost (per-token cost)",
+   "canonical": "COST",
+   "definition_quote": "Figure 7 presents the per-token costs of all baseline systems ... on-demand instance ... 3.9 USD/h v.s. 1.9 USD/h",
+   "locator": "\u00a76.3",
+   "notes": "price per token from instance hours"
+  }
+ ],
+ "slo_spec": "optional l_SLO bound in optimizer; no attainment-based evaluation",
+ "load_regime": "trace replay of real AWS spot availability (two 20-min segments) with Gamma arrivals (CV 6) at fixed rates per model, plus MAF production trace for dynamic workloads",
+ "tradeoff_acknowledged": "throughput, latency and monetary cost trade-off; on-demand cheaper-latency trade (lower cost raises latency)",
+ "eval_type": "real-system",
+ "hardware": "AWS g4dn.12xlarge (4x T4 per instance)",
+ "models": "OPT-6.7B, GPT-20B, LLaMA-30B",
+ "workloads": "Gamma arrivals with CV 6, MAF trace",
+ "confidence": "high",
+ "extractor_notes": "Primary measurable objective is P99 request latency under preemption; cost is the stated motivation. Models OPT-6.7B, GPT-20B, LLaMA-30B (parameter table ~line 580)."
+}

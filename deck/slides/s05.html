@@ -1,0 +1,67 @@
+<section class="slide" id="s05" data-title="What is optimized">
+<style>
+#s05 .slide-body{display:flex;flex-direction:column}
+#s05 .chartwrap{flex:0 0 auto}
+#s05 .cap{font-size:12.5px;color:var(--ink-3);margin:2px 0 4px}
+#s05 .bodyline{margin:0;font-size:15px;line-height:1.35}
+#s05 svg text.rowlbl{font-size:13px;fill:var(--ink-2)}
+#s05 svg text.rowlbl.b{font-weight:600;fill:var(--ink)}
+#s05 svg text.val{font-size:11.5px;fill:var(--ink);font-variant-numeric:tabular-nums}
+#s05 svg text.hdr{font-size:13px;font-weight:600}
+</style>
+<header class="slide-head">
+<div class="kicker">05 · What is optimized</div>
+<h2>Throughput is the commonest objective; token pace and quality are mostly constraints.</h2>
+<div class="sub">Share of 137 full-text optimizers with each metric family as objective or as constraint; a paper can count in several families.</div>
+</header>
+<div class="slide-body">
+<script type="application/json" id="s05-data">{"id":"obj_con_by_family","rows":[{"row_id":"throughput","label":"throughput (tokens, requests)","n":137,"obj_n":57,"obj_pct":41.605839416058394,"obj_ci_lo":33.7,"obj_ci_hi":50.0,"con_n":2,"con_pct":1.4598540145985401,"con_ci_lo":0.4,"con_ci_hi":5.2,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"slo-goodput","label":"goodput / SLO attainment","n":137,"obj_n":24,"obj_pct":17.51824817518248,"obj_ci_lo":12.1,"obj_ci_hi":24.7,"con_n":3,"con_pct":2.18978102189781,"con_ci_lo":0.7,"con_ci_hi":6.2,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"first-token","label":"first token (TTFT)","n":137,"obj_n":19,"obj_pct":13.86861313868613,"obj_ci_lo":9.1,"obj_ci_hi":20.6,"con_n":20,"con_pct":14.598540145985401,"con_ci_lo":9.7,"con_ci_hi":21.5,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"token-pace","label":"token pace (TPOT, TBT)","n":137,"obj_n":8,"obj_pct":5.839416058394161,"obj_ci_lo":3.0,"obj_ci_hi":11.1,"con_n":26,"con_pct":18.978102189781023,"con_ci_lo":13.3,"con_ci_hi":26.4,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"request-latency","label":"request latency (E2E, normalized, queueing)","n":137,"obj_n":19,"obj_pct":13.86861313868613,"obj_ci_lo":9.1,"obj_ci_hi":20.6,"con_n":10,"con_pct":7.299270072992701,"con_ci_lo":4.0,"con_ci_hi":12.9,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"program-latency","label":"program latency (JCT)","n":137,"obj_n":10,"obj_pct":7.299270072992701,"obj_ci_lo":4.0,"obj_ci_hi":12.9,"con_n":1,"con_pct":0.7299270072992701,"con_ci_lo":0.1,"con_ci_hi":4.0,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"single-seq-speed","label":"single-sequence speed","n":137,"obj_n":25,"obj_pct":18.248175182481752,"obj_ci_lo":12.7,"obj_ci_hi":25.6,"con_n":2,"con_pct":1.4598540145985401,"con_ci_lo":0.4,"con_ci_hi":5.2,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"memory","label":"memory","n":137,"obj_n":24,"obj_pct":17.51824817518248,"obj_ci_lo":12.1,"obj_ci_hi":24.7,"con_n":11,"con_pct":8.02919708029197,"con_ci_lo":4.5,"con_ci_hi":13.8,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"hw-efficiency","label":"hardware efficiency","n":137,"obj_n":24,"obj_pct":17.51824817518248,"obj_ci_lo":12.1,"obj_ci_hi":24.7,"con_n":1,"con_pct":0.7299270072992701,"con_ci_lo":0.1,"con_ci_hi":4.0,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"cost-energy","label":"cost / energy","n":137,"obj_n":19,"obj_pct":13.86861313868613,"obj_ci_lo":9.1,"obj_ci_hi":20.6,"con_n":1,"con_pct":0.7299270072992701,"con_ci_lo":0.1,"con_ci_hi":4.0,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"quality","label":"quality","n":137,"obj_n":3,"obj_pct":2.18978102189781,"obj_ci_lo":0.7,"obj_ci_hi":6.2,"con_n":36,"con_pct":26.277372262773724,"con_ci_lo":19.6,"con_ci_hi":34.2,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"mechanism/other","label":"mechanism / other","n":137,"obj_n":15,"obj_pct":10.94890510948905,"obj_ci_lo":6.7,"obj_ci_hi":17.3,"con_n":1,"con_pct":0.7299270072992701,"con_ci_lo":0.1,"con_ci_hi":4.0,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"cache-proxy","label":"cache hit rate","n":137,"obj_n":5,"obj_pct":3.6496350364963503,"obj_ci_lo":1.6,"obj_ci_hi":8.3,"con_n":0,"con_pct":0.0,"con_ci_lo":0.0,"con_ci_hi":2.7,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"fairness","label":"fairness","n":137,"obj_n":2,"obj_pct":1.4598540145985401,"obj_ci_lo":0.4,"obj_ci_hi":5.2,"con_n":3,"con_pct":2.18978102189781,"con_ci_lo":0.7,"con_ci_hi":6.2,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"system-op-latency","label":"start-up / scale time","n":137,"obj_n":2,"obj_pct":1.4598540145985401,"obj_ci_lo":0.4,"obj_ci_hi":5.2,"con_n":0,"con_pct":0.0,"con_ci_lo":0.0,"con_ci_hi":2.7,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"user-perceived","label":"user-perceived QoE","n":137,"obj_n":2,"obj_pct":1.4598540145985401,"obj_ci_lo":0.4,"obj_ci_hi":5.2,"con_n":0,"con_pct":0.0,"con_ci_lo":0.0,"con_ci_hi":2.7,"src":"records","loc":"summary_v3.txt family shares","tag":"D","unc":"exact count; Wilson 95 % CI"},{"row_id":"objectives_per_paper@1","k":49,"n":137,"src":"records","loc":"count of objective families per paper","tag":"D","unc":"exact count"},{"row_id":"objectives_per_paper@2","k":62,"n":137,"src":"records","loc":"count of objective families per paper","tag":"D","unc":"exact count"},{"row_id":"objectives_per_paper@3","k":19,"n":137,"src":"records","loc":"count of objective families per paper","tag":"D","unc":"exact count"},{"row_id":"objectives_per_paper@4","k":7,"n":137,"src":"records","loc":"count of objective families per paper","tag":"D","unc":"exact count"}]}</script>
+<div class="chartwrap"><svg id="s05-chart" role="img" aria-label="Diverging bars for 16 metric families across 137 papers. Throughput is the objective in 57 papers (42 percent) and a constraint in 2. Token pace is an objective in 8 papers and a constraint in 26. Quality is an objective in 3 papers and a constraint in 36 (26 percent)."></svg></div>
+<div class="cap">Families group canonical metric codes (scripts/aggregate.py); counts are papers, from records re-passed after review R1; whiskers = Wilson 95 % CI.</div>
+<p class="bodyline small">Papers have 1 objective family in 49 cases, 2 in 62, 3–4 in 26. TTFT splits evenly: an objective for prefix caching and some routers, a constraint for schedulers and P/D systems. Only 20 of the 57 throughput-objective papers also state a latency constraint.</p>
+</div>
+<footer class="slide-foot"><div class="sources">[D] data/obj_con_by_family.json (16 family rows; objectives_per_paper@1–4); TTFT by layer: data/layer_family_heatmap.json · [Syn] SYNTHESIS v6.1 §0.1, §3</div><div class="pageno">05 / 14</div></footer>
+</section>
+<script>
+(function(){
+var root=document.getElementById('s05');if(!root)return;
+var data=JSON.parse(root.querySelector('#s05-data').textContent);
+var rows=data.rows.filter(function(r){return r.obj_n!==undefined});
+rows.sort(function(a,b){return b.obj_n-a.obj_n||b.con_n-a.con_n});
+var NS='http://www.w3.org/2000/svg';
+var W=1160,LBL=300,X0=740,S=8.4,RH=19.5,TOP=24,H=TOP+rows.length*RH+24;
+var svg=root.querySelector('#s05-chart');
+svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('width',W);svg.setAttribute('height',H);
+function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;svg.appendChild(e);return e}
+var bottom=TOP+rows.length*RH;
+for(var p=0;p<=50;p+=10){
+ [-1,1].forEach(function(s){if(p===0&&s===-1)return;
+  var x=X0+s*p*S;
+  el('line',{x1:x,x2:x,y1:TOP-4,y2:bottom,stroke:p===0?'#111418':'#e3e6ea','stroke-width':p===0?1.2:1});
+  el('text',{x:x,y:bottom+16,'text-anchor':'middle','class':'axis'},p+(p===50?'\u00a0%':''));});
+}
+el('text',{x:X0-8,y:12,'text-anchor':'end','class':'hdr label-far',fill:'#eb6834'},'\u2190 constraint').style.fill='#eb6834';
+el('text',{x:X0+8,y:12,'class':'hdr label-near'},'objective \u2192').style.fill='#2a78d6';
+var bold={'throughput':1,'token-pace':1,'quality':1};
+function pct(r){return Math.round(r)+'\u00a0%'}
+rows.forEach(function(r,i){
+ var y=TOP+i*RH,cy=y+RH/2,bh=12;
+ var t=el('text',{x:LBL,y:cy+4.5,'text-anchor':'end','class':'rowlbl'+(bold[r.row_id]?' b':'')},r.label);
+ if(r.obj_n>0){var w=r.obj_pct*S;
+  el('rect',{x:X0,y:cy-bh/2,width:w,height:bh,fill:'#2a78d6'});
+  var hi=r.obj_ci_hi*S,lo=r.obj_ci_lo*S,end=w;
+  if(r.obj_n>=5){el('line',{x1:X0+lo,x2:X0+hi,y1:cy,y2:cy,stroke:'#4a5059','stroke-width':1});
+   el('line',{x1:X0+lo,x2:X0+lo,y1:cy-3,y2:cy+3,stroke:'#4a5059','stroke-width':1});
+   el('line',{x1:X0+hi,x2:X0+hi,y1:cy-3,y2:cy+3,stroke:'#4a5059','stroke-width':1});end=Math.max(w,hi);}
+  var lt=r.obj_n+' ('+pct(r.obj_pct)+')';if(X0+end+70>W){el('text',{x:X0+lo-8,y:cy+4,'text-anchor':'end','class':'val',style:'fill:#fff;font-weight:600'},lt);}else{el('text',{x:X0+end+6,y:cy+4,'class':'val'},lt);}}
+ if(r.con_n>0){var w2=r.con_pct*S;
+  el('rect',{x:X0-w2,y:cy-bh/2,width:w2,height:bh,fill:'#eb6834'});
+  var hi2=r.con_ci_hi*S,lo2=r.con_ci_lo*S,end2=w2;
+  if(r.con_n>=5){el('line',{x1:X0-lo2,x2:X0-hi2,y1:cy,y2:cy,stroke:'#4a5059','stroke-width':1});
+   el('line',{x1:X0-lo2,x2:X0-lo2,y1:cy-3,y2:cy+3,stroke:'#4a5059','stroke-width':1});
+   el('line',{x1:X0-hi2,x2:X0-hi2,y1:cy-3,y2:cy+3,stroke:'#4a5059','stroke-width':1});end2=Math.max(w2,hi2);}
+  el('text',{x:X0-end2-6,y:cy+4,'text-anchor':'end','class':'val'},r.con_n+' ('+pct(r.con_pct)+')');}
+ if(window.DeckTip){var g=[r.row_id,r.src,r.loc,r.unc].join(' | ');window.DeckTip.attach(t.node||t,g);}
+});
+})();
+</script>

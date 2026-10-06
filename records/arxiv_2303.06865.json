@@ -1,0 +1,117 @@
+{
+ "key": "arxiv_2303.06865",
+ "title": "High-throughput Generative Inference of Large Language Models with a Single GPU (FlexGen)",
+ "first_author": "Sheng",
+ "year": 2023,
+ "venue": "ICML'23 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2303.06865",
+ "cluster": "D5",
+ "technique": "LP-searched offloading policy over GPU/CPU/disk for weights, KV cache and activations with zig-zag block schedule; 4-bit group-wise compression of weights and KV cache",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2303.06865.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Motivated by the emerging demand for latency-insensitive tasks with batched processing, this paper initiates the study of high-throughput LLM inference using limited resources, such as a single commodity GPU.",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "We configure these systems to achieve maximum throughput under various latency constraints and draw their latency-throughput trade-off curves in Fig. 1.",
+   "locator": "§6.2 Latency-throughput trade-off (txt line 579-581); LP 'flexibly extended to include latency constraints' (§4.2)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "the inference throughput can be greatly boosted with negligible accuracy loss by allowing some approximations, because LLMs are typically robust to careful approximations. This section introduces two such approximations: group-wise quantization and sparse attention.",
+   "locator": "§5 (txt line 438-441)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "At any time, the total size of tensors stored on a device cannot exceed its memory capacity. The goal is to find a valid path that minimizes the total execution time",
+   "locator": "§3 (problem formulation)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "when running OPT-175B on a single 16GB GPU, FlexGen achieves significantly higher throughput compared to state-of-the-art offloading systems, reaching a generation throughput of 1 token/s for the first time with an effective batch size of 144.",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Table 2-4, Fig 1, Fig 5 (generation and decoding throughput, token/s)"
+  },
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "where": "Fig 1 and Table 2: block latency in seconds (e.g. 5000 s, 12000 s)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Table 5 (accuracy, perplexity under 4-bit compression); HELM"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "§6 GPU compute utilization 82% / 13%"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "latency / generation throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Considering an effective batch size b, an input sequence length s, and an output sequence length of n, the latency t is defined as the total number of seconds spent to process the prompts and generate all the bn tokens. The generation throughput is defined as bn/t.",
+   "locator": "§3",
+   "notes": "Throughput counts OUTPUT tokens only (bn), divided by time including prefill; 'latency' is whole-block (batch) completion time in thousands of seconds, not per-request TTFT/TPOT"
+  },
+  {
+   "term_as_written": "decoding throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Generation throughput (token/s) counts the time cost of both prefill and decoding while decoding throughput only counts the time cost of decoding assuming prefill is done.",
+   "locator": "Table 3 caption",
+   "notes": "Two throughput variants; decoding throughput excludes prefill time"
+  },
+  {
+   "term_as_written": "latency (block latency)",
+   "canonical": "OTHER:batch_time",
+   "definition_quote": "Fig. 1 shows the latency-throughput trade-off of three inference systems with offloading on a single NVIDIA T4 (16 GB) GPU.",
+   "locator": "§1 (txt line 130-131)",
+   "notes": "Recoded from E2E: latency is wall-clock time of a whole offline block/batch (thousands of seconds), not per-request latency"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "offline batch (large effective batch, fixed input 512/1024, output 32/256)",
+ "tradeoff_acknowledged": "Explicit latency-for-throughput trade: 'In throughput-oriented scenarios, we can sacrifice latency by using a large batch size'; FlexGen reaches 100x higher max throughput at latency of ~12000 s per block; Fig 1 shows Pareto frontier.",
+ "eval_type": "real-system",
+ "hardware": "T4 16GB + 208GB CPU DRAM + 1.5TB SSD; 4xT4; also A100/L4 variants",
+ "models": "OPT-6.7B/30B/175B",
+ "workloads": "synthetic prompts (512/1024 input, 32 output); HELM subset; data wrangling",
+ "confidence": "high",
+ "extractor_notes": "Explicitly latency-insensitive: objective is throughput (output tokens/total time); latency only appears as an optional LP constraint and as an axis in the Pareto plot (block latency in thousands of seconds). Throughput counts output tokens only. No TTFT/TPOT/SLO.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"Motivated by the emerging demand for latency-insensitive tasks with batched processing\" (abstract); \"As our focus is throughput-oriented\" (txt line 259)",
+ "repass_log": [
+  "THR_TOK: design (abstract goal)",
+  "E2E constraint recoded to OTHER:batch_time (block latency of an offline batch, thousands of s); evidence replaced with §6.2 protocol (max throughput under latency constraints); also recoded in reported_metrics; definition added",
+  "QUALITY: result quote replaced with §5 design statement",
+  "MEMORY: design (problem formulation §3)",
+  "load_class offline-batch"
+ ]
+}

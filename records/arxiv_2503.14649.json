@@ -1,0 +1,130 @@
+{
+ "key": "arxiv_2503.14649",
+ "title": "RAGO: Systematic Performance Optimization for Retrieval-Augmented Generation Serving",
+ "first_author": "Wenqi Jiang",
+ "year": 2025,
+ "venue": "arXiv preprint (ISCA'25)",
+ "url": "https://arxiv.org/abs/2503.14649",
+ "cluster": "D6",
+ "technique": "RAGSchema abstraction plus exhaustive analytical search over task placement, resource allocation and batching policies for RAG pipelines, producing a TTFT vs QPS/chip Pareto frontier",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2503.14649.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "schedules to identify Pareto frontier for key performance metrics ... such as TTFT and QPS/Chip.",
+   "locator": "§6.2 (txt lines 847-849)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "average latency from request"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "RAGO performs an exhaustive search across potentially millions of schedules to identify Pareto frontier for key performance metrics such as TTFT and QPS/Chip.",
+   "locator": "§7.1 (txt line 1819-1822)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "[QPS/Chip] Queries-Per-Second/Chip ↦ QPS normalized by chip count, reflecting system cost efficiency.",
+   "locator": "§4 Performance metrics (txt line 836-837)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "these two phases affect different performance metrics with different SLAs: time-to-first-token (TTFT) for the prefix phase and time-per-output-token (TPOT) for the decode phase.",
+   "locator": "§2 (txt line 328-330); TPOT studied via batching policies in §5/§8",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "RAGO achieves up to a 2× increase in QPS per chip and a 55% reduction in time-to-first-token latency compared to RAG systems built on LLM-system extensions.",
+  "metrics": [
+   "THR_REQ",
+   "TTFT",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 5-8, 15-18 Pareto plots"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "QPS and QPS/Chip, Fig 5-8, 15-18"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "max",
+   "where": "§5.3 / Fig 9-10 decode batch & retrieval frequency"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "[TTFT] Time-to-First-Token ↦ average latency from request reception to the generation of the first output token.",
+   "locator": "§4 Performance metrics (txt line 831-832)",
+   "notes": "In RAG, TTFT covers the whole pre-generation pipeline (query rewrite, retrieval, rerank, prefix), not only LLM prefill; computed analytically/by simulator. Prefix stage is deterministic so exact TTFT is reported."
+  },
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "[TPOT] Time-Per-Output-Token ↦ average latency between generating each output token in a sequence.",
+   "locator": "§4",
+   "notes": "Because of continuous batching they report the worst-case TPOT: 'we report the worst-case TPOT latency' since sequences are at different generation stages."
+  },
+  {
+   "term_as_written": "QPS",
+   "canonical": "THR_REQ",
+   "definition_quote": "[QPS] Queries-Per-Second ↦ maximum throughput, or the number of requests the system can process per second.",
+   "locator": "§4",
+   "notes": "Footnote: 'queries' here is end-to-end RAG requests, not retrieval queries. End-to-end QPS is set by the slowest pipeline stage (the paper's formula is written QPS_RAG = max(QPS_i), apparently a typo for min)."
+  },
+  {
+   "term_as_written": "QPS/Chip",
+   "canonical": "COST",
+   "definition_quote": "[QPS/Chip] Queries-Per-Second/Chip ↦ QPS normalized by chip count, reflecting system cost efficiency.",
+   "locator": "§4",
+   "notes": "Per-XPU-chip throughput as cost-efficiency proxy; chips = ML accelerators (CPU servers for retrieval not counted in chip denominator)."
+  }
+ ],
+ "slo_spec": "No fixed SLO; Pareto frontier over TTFT vs QPS/Chip; user-defined performance objectives select the schedule; TTFT/TPOT SLAs mentioned generically.",
+ "load_regime": "analytical/simulated max-throughput with batch-size sweeps (retrieval, prefix, decode batch); not a request-rate sweep",
+ "tradeoff_acknowledged": "Larger batch sizes improve retrieval and prefix throughput but may stall decoding (TPOT up); throughput vs TTFT Pareto trade-off; iterative-retrieval batching causes decode idleness (up to 2.77x normalized decode latency).",
+ "eval_type": "simulation",
+ "hardware": "modeled XPU (generic systolic-array accelerator, TPU v5e-like) plus CPU retrieval servers (ScaNN model)",
+ "models": "Llama-style 1B/8B/70B/405B generative LLMs; encoder, rewriter, reranker models in RAGSchema",
+ "workloads": "four RAG paradigms: hyperscale retrieval, long-context via RAG, iterative retrieval, query rewriter + reranker",
+ "confidence": "high",
+ "extractor_notes": "Optimizer outputs a Pareto frontier rather than a single scalar; TTFT and QPS/chip are the two frontier axes. TPOT is reported (worst case) and drives batching analysis but is not a frontier axis in main results. Request-level RAG pipeline latency, not multi-call agent PROGRAM_JCT. Quality not part of objective (RAGSchema fixes the algorithm). | TAIL AUDIT 2026-10-06: TPOT stat max->n/a",
+ "tail_role": "NONE",
+ "tail_audit": {
+  "class": "NONE",
+  "metrics": "TPOT worst-case across continuous-batch sequences (modeling convention), TTFT deterministic",
+  "correction": "Change TPOT stat 'max' to 'n/a' (worst case within a decode batch used as analytical conservative bound, not a request-latency tail). No percentile anywhere; TTFT is a deterministic model value.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "analytical-or-simulated-only",
+ "load_class_quote": "cost of each operator is calculated by a roofline model [§4/§7: analytical roofline performance model with exhaustive schedule search; max-throughput and batch-size sweeps, no arrival process]",
+ "repass_log": [
+  "TTFT: headline result replaced by §6.2 design statement (search Pareto frontier over TTFT and QPS/Chip); stat explicit (TTFT defined as average latency)",
+  "THR_REQ: already design quote (§6.2 Pareto search)",
+  "COST: QPS/Chip is a Pareto-search axis (metric-definition quote); kept as design",
+  "TPOT: SLA constraint kept; stat n/a (tail_audit correction already applied: max -> n/a)"
+ ]
+}

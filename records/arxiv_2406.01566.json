@@ -1,0 +1,91 @@
+{
+  "key": "arxiv_2406.01566",
+  "title": "Helix: Serving Large Language Models over Heterogeneous GPUs and Network via Max-Flow",
+  "first_author": "Yixuan Mei",
+  "year": 2025,
+  "venue": "ASPLOS'25 (arXiv v2)",
+  "url": "https://arxiv.org/abs/2406.01566",
+  "cluster": "D2",
+  "technique": "Max-flow formulation of LLM serving over heterogeneous GPUs/network; MILP for model placement plus per-request flow-based pipeline scheduling (IWRR)",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2406.01566.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Helix then uses a mixed integer linear programming (MILP) algorithm to discover highly optimized strategies ... maximizes the max flow, thus maximizing serving throughput.",
+      "locator": "abstract; §4 (txt line ~371)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Helix improves serving throughput by up to 3.3× and reduces prompting and decoding latency by up to 66% and 24%, respectively, compared to existing approaches.",
+    "metrics": [
+      "THR_TOK",
+      "TTFT",
+      "TPOT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Figs 6-10 average decode throughput (offline and online)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Figs 6, 7 average prompt latency (online)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "Figs 6, 7 average decode latency (online)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "headline only (re-pass)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "average decode throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "For offline serving, we report average decode throughput, which is the number of tokens generated per second.",
+      "locator": "§6.2 Metrics",
+      "notes": "output tokens only; whole-cluster throughput, not per GPU"
+    },
+    {
+      "term_as_written": "prompt latency / decode latency",
+      "canonical": "TTFT",
+      "definition_quote": "For online serving, we further report average prompt latency and decode latency, which is the average latency for parsing user input and generating new tokens, respectively.",
+      "locator": "§6.2 Metrics",
+      "notes": "prompt latency ~ TTFT-like and decode latency ~ per-token latency but definition is brief; whether queueing is included not stated"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "online: Azure Conversation arrival times scaled to 75% of cluster peak throughput; offline: requests arrive at rate that fully utilizes the cluster",
+  "tradeoff_acknowledged": "Helix trades some latency for throughput in places: e.g. decode latency 10-16% higher than Swarm in some single-cluster/geo cases because of higher GPU utilization; SP baseline has lower average latency in some settings because it serves mostly on fast GPUs",
+  "eval_type": "both",
+  "hardware": "heterogeneous clusters of 24-42 nodes (A100, L4, T4 and others, up to 7 node types), real cluster plus simulator (avg decode-throughput error <5%)",
+  "models": "LLaMA-1 30B, LLaMA-2 70B",
+  "workloads": "Azure Conversation arrivals, offline dataset inference",
+  "confidence": "high",
+  "extractor_notes": "Optimization target is max serving throughput (max-flow value); latency is claimed in the abstract and evaluated but is not in the MILP objective, so latency entries are weak/derived (see locators). Both latencies are averages; no tail percentiles.",
+  "load_class": "mixed",
+  "load_class_quote": "'We refer to the two settings as online and offline serving.' (§6.1): offline = requests at the rate needed to fully utilize the cluster; online = Azure Conversation arrivals at 75% of peak",
+  "repass_log": [
+    "THR_TOK second entry (result headline 'improves serving throughput by up to 3.3x') dropped as duplicate of MILP/max-flow design entry",
+    "TTFT (prompt latency) and TPOT (decode latency) demoted to reported: only abstract 'low-latency' claim; latency not in MILP objective and paper asks 'Does Helix sacrifice latency for throughput?' (Sec. 6.3); reported as averages ('average prompt latency and decode latency')",
+    "load_class mixed (online + offline)"
+  ]
+}

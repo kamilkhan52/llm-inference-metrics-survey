@@ -1,0 +1,147 @@
+{
+ "key": "arxiv_2512.04013",
+ "title": "AugServe: Adaptive Request Scheduling for Augmented Large Language Model Inference Serving",
+ "first_author": "Ying Wang",
+ "year": 2025,
+ "venue": "arXiv preprint (v3, Jul 2026)",
+ "url": "https://arxiv.org/abs/2512.04013",
+ "cluster": "D6",
+ "technique": "state-aware request scheduling (value-density priority over predicted space-time cost, handling paused/external-call requests) plus dynamic batch-level token budget",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2512.04013.txt",
+ "optimized_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "Our goal is to maximize goodput in augmented LLM inference, accounting for both request service rates and queuing delays.",
+   "locator": "§5 Scheduling Objective (txt line 413)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "We present AugServe, an efficient augmented LLM inference serving framework that mitigates request queuing latency and improves effective throughput under external-call-augmented workloads.",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "SLOs are set as TTFT<1s and normalized latency<10× single-iteration time.",
+   "locator": "§6 Metrics and SLOs (txt line 803)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "SLO attainment (i.e., the ... fraction of requests meeting SLOs"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "SLOs are set as TTFT<1s and normalized latency<10× single-iteration time.",
+   "locator": "§6 Metrics and SLOs (txt line 803)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "SLO attainment (i.e., the ... fraction of requests meeting SLOs"
+  }
+ ],
+ "headline_claim": {
+  "text": "AugServe achieves 6.5× and 4.7× higher effective throughput than vLLM and INFERCEPT, respectively.",
+  "metrics": [
+   "GOODPUT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "where": "Fig 7 row 1"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 7 row 2"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 7 row 3"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P95",
+   "where": "Appendix D.7"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Appendix D.8"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "effective throughput / goodput",
+   "canonical": "GOODPUT",
+   "definition_quote": "the system’s efficiency is best characterized by effective throughput (or goodput), defined as the volume of requests processed per unit time that successfully satisfy these SLO requirements",
+   "locator": "§1 (txt line 69-72)",
+   "notes": "Unit req/s; a request counts only if it meets both TTFT and normalized-latency SLOs. Abstract says 6.5x/4.7x; §6.1 text says goodput geometric mean 7.5x vs vLLM, 5.7x vs INFERCEPT (inconsistent between abstract/intro and §6.1 in this version)."
+  },
+  {
+   "term_as_written": "goodput (metrics paragraph)",
+   "canonical": "GOODPUT",
+   "definition_quote": "goodput (number of SLO-satisfying requests per unit time)",
+   "locator": "§6 Metrics and SLOs (txt line 801)",
+   "notes": ""
+  },
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "normalized latency (end-to-end latency divided by output length)",
+   "locator": "§6 Metrics and SLOs (txt line 800)",
+   "notes": "SLO set as <10x single-iteration time."
+  },
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "TTFT reflects the queuing delay before the first token is generated.",
+   "locator": "§6.1",
+   "notes": "Includes queuing; SLO TTFT<1s."
+  },
+  {
+   "term_as_written": "SLO attainment",
+   "canonical": "SLO_ATT",
+   "definition_quote": "SLO attainment (i.e., the fraction of requests meeting SLOs, Appendix D.8)",
+   "locator": "§6.1",
+   "notes": ""
+  }
+ ],
+ "slo_spec": "TTFT < 1 s and normalized latency < 10x single-iteration time, following prior work (Gao et al. 2025; Wu et al. 2023); goodput = SLO-satisfying requests per unit time",
+ "load_regime": "request-rate sweep; W1 Poisson arrivals over 30 min; W2 Gamma arrivals with varying CV",
+ "tradeoff_acknowledged": "Throughput vs delay-awareness controlled by beta in the scheduling value; too small or too large token budgets hurt goodput (Table 1); SJF better than FCFS but suboptimal at high load.",
+ "eval_type": "real-system",
+ "hardware": "RTX 4090 24GB, H800 80GB, 2x A100 40GB, 4x A100",
+ "models": "GPT-J-6B, OPT-13B, Vicuna-13B, Llama3-70B-Instruct",
+ "workloads": "INFERCEPT dataset and ToolBench (augmented LLM requests with external API calls); Poisson and Gamma arrivals",
+ "confidence": "high",
+ "extractor_notes": "Request-level metrics (TTFT, normalized latency of a single augmented request that pauses on API calls); no program-level JCT. TTFT interplay with pauses not specified (TTFT is first token of the request, i.e. before any call). Abstract vs §6.1 goodput multipliers disagree (6.5x/4.7x vs 7.5x/5.7x). Quality not measured.",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "TTFT P95, normalized latency P95 (appendix D.7, reported)",
+  "correction": null,
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "(W1) Poisson arrivals over 30 minutes [§6; W2 Gamma arrivals with varying CV]",
+ "repass_log": [
+  "GOODPUT: already design quote (§5 objective)",
+  "QUEUE: abstract design statement kept; stat n/a",
+  "TTFT: SLO constraint kept; attainment explicit",
+  "NORM_LAT: SLO constraint kept; attainment explicit"
+ ]
+}

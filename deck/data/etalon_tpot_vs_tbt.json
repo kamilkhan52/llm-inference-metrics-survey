@@ -1,0 +1,297 @@
+{
+ "id": "etalon_tpot_vs_tbt",
+ "version": 2,
+ "slides": [
+  "s12"
+ ],
+ "title": "Etalon: TPOT vs P99 TBT vs fluidity-index",
+ "units": {
+  "throughput_tok_s": "tokens/s",
+  "capacity_qps": "queries per second (Fig 6a y axis, 'QPS/s' as labelled)"
+ },
+ "conventions": "Row ids a_* (similar TPOT, different tail TBT), b_* (capacity by criterion), c_* (fluidity-index definition). Chart reads: linear axes, bar tops measured against gridlines on 500-dpi crops.",
+ "sources": {
+  "arxiv_2407.07000": {
+   "cite": "Agrawal et al., Etalon: Holistic Performance Evaluation Framework for LLM Inference Systems, arXiv 2407.07000",
+   "path": "fulltext/arxiv_2407.07000.pdf",
+   "locator": "\u00a73.1 p.4-5; \u00a74.1 p.5-7; Fig 3b p.4; \u00a75.2 and Fig 6 p.8-9",
+   "tag": "P"
+  }
+ },
+ "rows": [
+  {
+   "row_id": "a_fig3b_vllm_tpot",
+   "system": "vLLM",
+   "metric": "TPOT-based throughput",
+   "value_tok_s": 17,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y (tok/s), \u00b10.5 tok/s",
+   "note": "TPOT-based throughput; model/hardware of Fig 3 not stated in text"
+  },
+  {
+   "row_id": "a_fig3b_sarathi_tpot",
+   "system": "Sarathi-Serve",
+   "metric": "TPOT-based throughput",
+   "value_tok_s": 20,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.5 tok/s",
+   "note": "TPOT-based throughput"
+  },
+  {
+   "row_id": "a_fig3b_vllm_tailtbt",
+   "system": "vLLM",
+   "metric": "tail TBT-based throughput",
+   "value_tok_s": 1.4,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.3 tok/s",
+   "note": "Tail (P99) TBT-based throughput = 1/P99 TBT"
+  },
+  {
+   "row_id": "a_fig3b_sarathi_tailtbt",
+   "system": "Sarathi-Serve",
+   "metric": "tail TBT-based throughput",
+   "value_tok_s": 5.5,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.3 tok/s",
+   "note": "Tail (P99) TBT-based throughput"
+  },
+  {
+   "row_id": "a_fig3b_vllm_fluid",
+   "system": "vLLM",
+   "metric": "fluid rate",
+   "value_tok_s": 3.3,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.3 tok/s",
+   "note": "Fluid token generation rate (99% of requests with fluidity-index >= 0.9)"
+  },
+  {
+   "row_id": "a_fig3b_sarathi_fluid",
+   "system": "Sarathi-Serve",
+   "metric": "fluid rate",
+   "value_tok_s": 7.0,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b, p.4",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.3 tok/s",
+   "note": "Fluid token generation rate"
+  },
+  {
+   "row_id": "a_ratio_tpot",
+   "ratio": 1.18,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b",
+   "tag": "D",
+   "unc": "20/17 = 1.18 from chart reads; uncertainty about \u00b10.06",
+   "note": "TPOT-based throughput ratio Sarathi/vLLM ('at par' in text)"
+  },
+  {
+   "row_id": "a_ratio_tailtbt",
+   "ratio": 3.9,
+   "printed_ratio_text": "3x",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 3b",
+   "tag": "D",
+   "unc": "5.5/1.4 = 3.9 from chart reads (\u00b10.9); paper text says 3x",
+   "note": "Tail-TBT throughput ratio Sarathi/vLLM; paper \u00a75.2 states 'tail TBT-based throughput for vLLM is 3x worse than Sarathi'"
+  },
+  {
+   "row_id": "a_text_tbt_1s",
+   "system": "vLLM",
+   "p99_tbt_s": 1.0,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a73.1 p.5",
+   "tag": "P",
+   "unc": "printed",
+   "note": "vLLM tail TBT of 1 second; both systems have comparable median TBTs; Sarathi-Serve P85 TBT higher than vLLM while P99 much lower (Fig 3 caption). No P99 TBT or TPOT milliseconds are printed for the two systems."
+  },
+  {
+   "row_id": "a_text_stall_10s",
+   "system": "vLLM",
+   "stall_s": 10,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a73 p.3, Fig 3a",
+   "tag": "P",
+   "unc": "printed",
+   "note": "vLLM suffers a long stall of ~10 s (Fig 3a); this barely moves TPOT or normalized latency"
+  },
+  {
+   "row_id": "a_text_similar_tpot",
+   "claim": "similar TPOT, different tail TBT",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a73.1 p.4-5",
+   "tag": "P",
+   "unc": "printed",
+   "note": "'both systems appear to perform similarly' on TPOT throughput; example is 1000 requests, ArxivSumm context; model/hardware of Fig 3 not printed (Fig 2 uses Yi-34B on 2-H100, 1.5 QPS, arxiv_summarization)"
+  },
+  {
+   "row_id": "b_fig6a_vllm_fluidity",
+   "system": "vLLM",
+   "criterion": "fluidity-index",
+   "capacity_qps": 0.6,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "99% of requests with <10% deadline miss rate, target TBT 25 ms",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y (QPS/s), \u00b10.02",
+   "note": "Capacity under fluidity-index SLO (99% of requests <10% deadline miss at 25 ms target TBT); text: 'fluidity-index based capacity is the same at 0.6 QPS'"
+  },
+  {
+   "row_id": "b_fig6a_sarathi_fluidity",
+   "system": "Sarathi-Serve",
+   "criterion": "fluidity-index",
+   "capacity_qps": 0.62,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "same as above",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.02",
+   "note": "Capacity under fluidity-index SLO"
+  },
+  {
+   "row_id": "b_fig6a_vllm_tbt",
+   "system": "vLLM",
+   "criterion": "P99 TBT",
+   "capacity_qps": 0.65,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "P99 TBT target 25 ms",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.02",
+   "note": "Capacity under P99-TBT-based SLO, target 25 ms (text: 'TPOT and P99 TBT based SLOs as baselines with the target latency of 25ms')"
+  },
+  {
+   "row_id": "b_fig6a_sarathi_tbt",
+   "system": "Sarathi-Serve",
+   "criterion": "P99 TBT",
+   "capacity_qps": 0.34,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "P99 TBT target 25 ms",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.02",
+   "note": "Capacity under P99-TBT SLO"
+  },
+  {
+   "row_id": "b_fig6a_vllm_tpot",
+   "system": "vLLM",
+   "criterion": "TPOT",
+   "capacity_qps": 0.66,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "TPOT target 25 ms",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.02",
+   "note": "Capacity under TPOT-based SLO, target 25 ms"
+  },
+  {
+   "row_id": "b_fig6a_sarathi_tpot",
+   "system": "Sarathi-Serve",
+   "criterion": "TPOT",
+   "capacity_qps": 1.16,
+   "model": "Llama3-8B",
+   "hardware": "H100",
+   "slo": "TPOT target 25 ms",
+   "src": "arxiv_2407.07000",
+   "loc": "Fig 6a, p.9",
+   "tag": "P",
+   "unc": "chart read, linear y, \u00b10.02",
+   "note": "Capacity under TPOT-based SLO"
+  },
+  {
+   "row_id": "b_text_2x",
+   "ratio_text": "2x",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a75.2 p.8-9",
+   "tag": "P",
+   "unc": "printed",
+   "note": "'Sarathi has a 2x lower token throughput compared to vLLM as measured by tail TBT-based metric'; chart reads give 0.65/0.34 = 1.9. Workload: Arxiv-Summarization requests, rope-scaling for >8192 tokens; Sarathi-Serve = vLLM with chunked prefill. Fig 6b: at capacity vLLM has higher deadline miss rate at lower percentiles."
+  },
+  {
+   "row_id": "c_deadline_def",
+   "formula": "D_i = D_p + i*D_d",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74.1 p.5",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Di = Dp + i*Dd; Dp prefill target (function of prompt length), Dd decode (TBT) deadline; deadline miss when actual generation time of token i exceeds Di; after a miss at token s deadlines are reset from completion of that token; early tokens carry forward slack (Fig 4, Algorithm 1)"
+  },
+  {
+   "row_id": "c_Dd_targets",
+   "Dd_ms": [
+    25,
+    50,
+    100
+   ],
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74.1 p.7",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Three decode targets: strict 25 ms (interactive chat), medium 50 ms, relaxed 100 ms"
+  },
+  {
+   "row_id": "c_threshold",
+   "frac_requests": 0.99,
+   "min_fluidity_index": 0.9,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a73.1 p.5 and Fig 3 caption p.4; \u00a74.2 p.7",
+   "tag": "P",
+   "unc": "printed",
+   "note": "SLO used: 99% of requests have fluidity-index >= 0.9 (i.e., <10% deadline miss) ; fluid token generation rate = inverse of minimum Dd meeting it"
+  },
+  {
+   "row_id": "c_scheduling_slack",
+   "status": "NOT FOUND",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74.1 p.6-7; \u00a76 p.9; Algorithm 1",
+   "tag": "NOT FOUND",
+   "unc": "n/a",
+   "note": "Scheduling slack SD is added to the prefill deadline (Dp = predict_prefill_time(P) + SD) and is 'a small scheduling slack ... determined empirically'; its numeric value is not printed in the paper"
+  },
+  {
+   "row_id": "c_prefill_deadline",
+   "n_profile_requests": 10,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74.1 p.6-7",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Dp is fitted from profiling vLLM prefill time vs input length on 10 requests (tunable) in isolation; no fixed numeric Dp"
+  }
+ ],
+ "extraction": {
+  "method": "Text via pdftotext; Figures 3b and 6a viewed as rendered 500-dpi crops and bar heights read against gridlines; Algorithm 1 and \u00a74.1 text read.",
+  "cross_check": {
+   "max_disagreement": "Fig 3b chart reads: vLLM tail-TBT throughput 1.4 vs 1.5, fluid rate 3.3 vs 3.5 tok/s (<=7 %); Fig 6a capacities 0.34 vs 0.35, 1.16 vs 1.17 QPS (<=3 %)",
+   "resolved": "within stated chart-read uncertainty; use printed text where available (0.6 QPS fluidity both; '3x' tail-TBT; '2x lower' P99-TBT capacity); Fig 3 model/hardware not stated by paper"
+  },
+  "agent_b_file": "etalon_tpot_vs_tbt.b.json",
+  "agent_a": "figure extractor A a96b67aafe1ad7681",
+  "agent_b": "figure extractor B a5a36aca13b454ca1 (etalon_tpot_vs_tbt.b.json)"
+ },
+ "caveats": [
+  "No numeric TPOT (ms) or P99 TBT (ms) values are printed for the vLLM vs Sarathi-Serve pair; only the 1 s vLLM tail TBT and chart-read throughputs (inverse metrics).",
+  "Model/hardware for Fig 3 not stated in the text; Fig 6 is Llama3-8B on H100, Arxiv-Summarization.",
+  "Fig 3b: paper text says 3x, chart reads give ~3.9x for tail-TBT throughput; chart ratio uncertain.",
+  "Fig 6a y-axis labelled 'Capacity (QPS/s)'.",
+  "Scheduling slack value not printed."
+ ]
+}

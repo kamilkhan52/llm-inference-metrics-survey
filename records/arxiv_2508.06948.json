@@ -1,0 +1,120 @@
+{
+  "key": "arxiv_2508.06948",
+  "title": "Kairos: Low-latency Multi-Agent Serving with Shared LLMs and Excessive Loads in the Public Cloud",
+  "first_author": "Jinyuan Chen",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2508.06948",
+  "cluster": "D6",
+  "technique": "workflow orchestrator + workflow-aware priority scheduling (by remaining end-to-end workflow latency) + memory-aware time-slot dispatching across LLM instances",
+  "layer": "agent/compound-serving",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2508.06948.txt",
+  "optimized_metrics": [
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We therefore propose Kairos, a multi-agent orchestration system that optimizes end-to-end latency for multi-agent applications.",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We report both the average"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "reduce end-to-end tail latency, Kairos prioritizes requests ... that have already experienced longer delays in prior stages.",
+      "locator": "\u00a75.2 (txt lines 616-617)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": "P90 tail latency decrease ranging from 19.1% to 28.6%"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The scheduler decides the serving priority of the requests based on their latency characteristics to reduce the overall queuing.",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    }
+  ],
+  "headline_claim": {
+    "text": "Kairos reduces end-to-end latency by 17.8% to 28.4% compared to state-of-the-art works.",
+    "metrics": [
+      "PROGRAM_JCT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "mean",
+      "where": "Fig 14-18 (program-level token latency)"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "P90",
+      "where": "Fig 14, 15"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "P95",
+      "where": "Fig 15"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "P99",
+      "where": "Fig 15 (co-located workload)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "program-level token latency (called 'latency')",
+      "canonical": "PROGRAM_JCT",
+      "definition_quote": "We adopt program-level token latency [37] as the performance metric to measure the end-to-end performance of multi-agent applications. This metric is defined as the end-to-end response time divided by the number of tokens generated, with lower values indicating better performance.",
+      "locator": "\u00a77.1 Metrics",
+      "notes": "Normalized program (application) latency in s/token, analogous to NORM_LAT but over the whole multi-agent application (all agents' tokens). Not a per-request TTFT/TPOT. Tail is P90/P95/P99 over applications."
+    },
+    {
+      "term_as_written": "remaining execution latency",
+      "canonical": "PROGRAM_JCT",
+      "definition_quote": "the remaining execution latency distribution for each agent, which reflects the time required to complete the end-to-end workflow from the current execution stage.",
+      "locator": "\u00a74 (raw line 1196 area)",
+      "notes": "Scheduler priority key: requests of agents closer to workflow end (shorter remaining latency) served first, an SRPT-like policy at program level."
+    },
+    {
+      "term_as_written": "queueing time ratio",
+      "canonical": "QUEUE",
+      "definition_quote": "the average queueing time ratio (i.e., the ratio of queueing time to end-to-end time) ranges from 0% to 90%",
+      "locator": "\u00a77.1",
+      "notes": "Used to set load: load swept so queueing ratio is 0-90%."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "trace-like inter-request interval sampling; load rate adjusted so average queueing-time ratio spans 0% to 90%; co-located multi-application workloads",
+  "tradeoff_acknowledged": null,
+  "eval_type": "real-system",
+  "hardware": "4x NVIDIA A40",
+  "models": "Llama3-8B (main), Llama2-13B",
+  "workloads": "three multi-agent applications (QA with math/humanities expert routing, report generation, code generation with HumanEval/MBPP/APPS), co-located mixes",
+  "confidence": "high",
+  "extractor_notes": "Latency is program-level (whole multi-agent application) and normalized per generated token; baselines Parrot and Ayo. No TTFT/TPOT or throughput reported. Quality not measured.",
+  "tail_role": "T-OBJ",
+  "tail_audit": {
+    "class": "T-OBJ",
+    "metrics": "multi-agent workflow E2E latency mean + P90 (tail), design targets accumulated-latency tail",
+    "correction": "Keep PROGRAM_JCT P90 but replace its evidence (currently 'We report both the average and the tail latency', a reporting quote) with the design quote. Medium/weak: intra-agent priority by cumulative latency is the tail-oriented mechanism.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "we construct the loads according ... to a production-level LLM inference trace [\u00a77.1: trace-derived inter-request intervals, load rate swept via queueing-time ratio 0-90%]",
+  "repass_log": [
+    "PROGRAM_JCT mean: abstract design aim kept; stat explicit (average)",
+    "PROGRAM_JCT P90: reporting quote replaced by design quote (tail_audit correction); stat explicit (P90 tail latency)",
+    "QUEUE: abstract design statement kept; stat n/a (no statistic stated)",
+    "orchestrator R3: PROGRAM_JCT stat P90 -> n/a (design says \"reduce tail latency\", no percentile; P90 is reported)"
+  ]
+}

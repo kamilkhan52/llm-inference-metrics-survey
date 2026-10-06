@@ -1,0 +1,158 @@
+{
+  "key": "arxiv_2407.00079",
+  "title": "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving",
+  "first_author": "Ruoyu Qin",
+  "year": 2024,
+  "venue": "arXiv preprint (v4, Sep 2025; FAST'25 version)",
+  "url": "https://arxiv.org/abs/2407.00079",
+  "cluster": "D2",
+  "technique": "KVCache-centric global scheduler (Conductor) over disaggregated prefill/decode clusters and pooled CPU/DRAM/SSD KV cache; chunked pipeline parallelism for long prompts; prediction-based early rejection under overload",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2407.00079.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "The optimization goal is to maximize overall effective throughput, which directly impacts revenue, while the constraints reflect varying levels of SLOs.",
+      "locator": "§1.1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P90",
+      "role": "constraint",
+      "evidence": "we set TTFTP90 = 10x and TBTP90 = 5x. In real deployments, we set fixed SLOs of TTFT and TBT.",
+      "locator": "§2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the 90th percentile (P90) values of TTFT and TBT as the ultimate metrics"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P90",
+      "role": "constraint",
+      "evidence": "we set TTFTP90 = 10x and TBTP90 = 5x. In real deployments, we set fixed SLOs of TTFT and TBT.",
+      "locator": "§2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the 90th percentile (P90) values of TTFT and TBT as the ultimate metrics"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our main objective is to maximize overall throughput while adhering to SLOs, a concept referred to as goodput",
+      "locator": "§ overload-oriented scheduling (txt l.~287)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Compared to the baseline method, Mooncake can achieve up to a 525% increase in throughput in certain simulated scenarios while adhering to SLOs. Under real workloads, Mooncake's innovative architecture enables Kimi to handle 75% more requests.",
+    "metrics": [
+      "THR_REQ",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "P90 (normalized to SLO)",
+      "where": "Figs 11-12"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P90 (normalized to SLO)",
+      "where": "Figs 11-12"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "max RPS meeting SLO, Figs 11-12"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 13 CDFs (TTFT 100% vs TBT 57% for vLLM-20M); TTFT SLO attainment rate in scheduling comparison"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "scheduling-algorithm comparison (average TTFT)"
+    },
+    {
+      "metric": "OTHER:rejected_requests",
+      "stat": "n/a",
+      "where": "Table 3 (4183 / 3771 / 3589 rejected)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "the prefill stage is mainly concerned with the latency between the request arrival and the generation of the first token, known as the time to first token (TTFT)",
+      "locator": "§2",
+      "notes": "measured from arrival, so includes queueing and (in disaggregated case) KV transfer: Alg. 1 TTFT = T_transfer + T_queue + T_prefill"
+    },
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "the decoding stage focuses on the latency between successive token generations for the same request, referred to as the time between tokens (TBT)",
+      "locator": "§2",
+      "notes": ""
+    },
+    {
+      "term_as_written": "SLO (relative)",
+      "canonical": "SLO_ATT",
+      "definition_quote": "a metric such as TTFTP90 = 4x indicates that 90% of inference requests will have a TTFT no greater than four times that of a single request running under the same conditions without interference. Specifically, in the end-to-end experiment of this paper (§8.1), we set TTFTP90 = 10x and TBTP90 = 5x.",
+      "locator": "§2",
+      "notes": "relative-slowdown SLO at P90"
+    },
+    {
+      "term_as_written": "goodput / effective throughput",
+      "canonical": "GOODPUT",
+      "definition_quote": "Our main objective is to maximize overall throughput while adhering to SLOs, a concept referred to as goodput in other research [8, 14]. Our approach differs in that only requests that fully complete their execution are counted in the measure of goodput. Otherwise, all previously consumed/generated tokens are not counted, and the corresponding resources are wasted.",
+      "locator": "§2",
+      "notes": "stricter than DistServe: rejected/aborted partial work counts zero; implies early rejection"
+    },
+    {
+      "term_as_written": "Metric (evaluation)",
+      "canonical": "THR_REQ",
+      "definition_quote": "we focus on the throughput performance of various systems under defined SLOs. We measure the TTFT and TBT across different RPS rates, where a higher RPS signifies improved throughput. ... we use the 90th percentile (P90) values of TTFT and TBT as the ultimate metrics ... the thresholds for TTFT and TBT are set by multiplying the lowest observed RPS values by factors of 10 and 5, respectively.",
+      "locator": "§8.1 Metric",
+      "notes": "throughput = RPS sustainable with P90 TTFT/TBT below thresholds; text says 'lowest observed RPS values' (apparently meaning lowest-load latency)"
+    },
+    {
+      "term_as_written": "load (overload scheduling)",
+      "canonical": "OTHER:SLO_based_load",
+      "definition_quote": "we use SLO satisfaction as a direct load measurement. Specifically, we define l_ttft and l_tbt as the TTFT and TBT SLO constraints for requests, respectively. The load for prefill and decoding instances is then determined by comparing the predicted maximum TTFT and TBT on an instance against l_ttft and l_tbt.",
+      "locator": "§7.1",
+      "notes": "load = predicted latency vs SLO"
+    }
+  ],
+  "slo_spec": "End-to-end experiments: TTFT P90 <= 10x and TBT P90 <= 5x of the unloaded values (normalized thresholds); overload/real-trace test: TTFT upper limit 30 s, TBT capped at 0.1 s/token; production uses fixed SLOs",
+  "load_regime": "request-rate sweep (Poisson RPS) on public and simulated datasets; real-trace replay of 23,000 requests at 2x speed for overload",
+  "tradeoff_acknowledged": "reuse of remote/lower-tier KVCache prolongs TTFT and larger batches enlarge TBT, so throughput optimizations risk SLO violations; naive early rejection causes load fluctuation (Fig 9); Mooncake-[2P+2D] has lower TBT but worse TTFT than [3P+1D]",
+  "eval_type": "both",
+  "hardware": "node: 8x NVIDIA A800-SXM4-80GB (NVLink, RDMA); clusters of 4-20 nodes",
+  "models": "dummy model with LLaMA2-70B architecture",
+  "workloads": "ArXiv Summarization, L-Eval, simulated long-context data with prefix-cache ratios, 23k-request Kimi real trace",
+  "confidence": "high",
+  "extractor_notes": "Counts only fully completed in-SLO requests as goodput (stricter than DistServe); rejection (HTTP 429) is a first-class control action. The SLO thresholds are relative multiples (P90 10x/5x). Table 3 reports rejection counts, not throughput.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT @ P90, TBT @ P90 (10x / 5x of unloaded)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep (Poisson RPS) on public/simulated datasets and 'real-trace replay of 23,000 requests' (§5)",
+  "repass_log": [
+    "THR_REQ quote replaced: result headline -> design 'main objective is to maximize overall throughput while adhering to SLOs'",
+    "TTFT/TBT SLO constraints stat_basis explicit (P90 = 10x / 5x)",
+    "load_class online-arrivals"
+  ]
+}

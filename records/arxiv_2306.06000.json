@@ -1,0 +1,114 @@
+{
+  "key": "arxiv_2306.06000",
+  "title": "S3: Increasing GPU Utilization during Generative Inference for Higher Throughput",
+  "first_author": "Jin",
+  "year": 2023,
+  "venue": "arXiv preprint (NeurIPS'23 version)",
+  "url": "https://arxiv.org/abs/2306.06000",
+  "cluster": "D1",
+  "technique": "output-length predictor (fine-tuned DistilBERT-style bucket classifier) to right-size KV memory reservation, length-aware batching, and a supervisor that handles mispredictions by preemption",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2306.06000.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "we design S3 to achieve higher throughput under those latency SLOs",
+      "locator": "§1 (txt line ~87)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "S3 is a system-algorithm co-design framework that maximizes GPU utilization with sequence length prediction to achieve higher throughput",
+      "locator": "§3 (txt line ~213)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "NORM_LAT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "For online scenarios, we assume a latency SLO set to the average reading speed of English readers, 4 words per second [12] and 0.1875 second per token [13].",
+      "locator": "§1 (txt lines 87-90); §4.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We next calculate the latency SLO for each sequence by multiplying 0.1875 by its sequence length (e.g., 11.25s for a sequence with 60 tokens)"
+    }
+  ],
+  "headline_claim": {
+    "text": "Our proposed method achieves 6.49x throughput over those systems that assume the worst case for the output sequence length.",
+    "metrics": [
+      "THR_REQ"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 4a (sequences/s, offline max batch), Fig 4b (online, under SLO)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 1, Fig 4 (latency vs throughput)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Fig 5 (GPU count)"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "Fig 2 (compute utilization)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "predictor bucket accuracy 98.61% / 77.13% / 65.6%; model perplexity unchanged"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "headline only (re-pass); GPU-count saving is an evaluation result"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "throughput (sequences per second)",
+      "canonical": "THR_REQ",
+      "definition_quote": "Fig. 4 (a) reports the maximum throughput in sequences per second for different models. We measure the throughput using the maximum batch size of each configuration.",
+      "locator": "§4.1",
+      "notes": "throughput counts sequences/s (not tokens/s), single A100 80GB; offline = max batch size"
+    },
+    {
+      "term_as_written": "latency SLO",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "we assume a latency SLO set to the average reading speed of English readers, 4 words per second [12] and 0.1875 second per token [13].",
+      "locator": "§1",
+      "notes": "effectively a per-token (per-iteration) latency bound of 0.1875 s; a 60-token generation is the Fig 1 workload (vertical SLO line is for reading a 60-token sequence)"
+    }
+  ],
+  "slo_spec": "Online scenario: latency SLO equals average reading speed, 0.1875 s per token (4 words/s); offline: loose SLO (throughput only).",
+  "load_regime": "offline batch with max batch size; online = max batch size meeting SLO; no arrival-rate trace",
+  "tradeoff_acknowledged": "explicit latency-throughput trade-off (Fig 1): larger batch raises throughput at the cost of higher latency; S3 aims to exploit slack below the SLO",
+  "eval_type": "real-system",
+  "hardware": "1x NVIDIA A100 80GB (Lenovo SD650-N V2); cost analysis with 6-10 GPUs for GPT-3",
+  "models": "GPT-J 6B, LLaMA 13B, GPT-NeoX 20B, LLaMA-33B, GPT-3 175B",
+  "workloads": "Alpaca dataset (predictor fine-tuned on Alpaca; also Natural-Questions and a QA set for predictor accuracy)",
+  "confidence": "high",
+  "extractor_notes": "Baseline is Orca assuming max-sequence-length reservation, not vLLM. Latency SLO is per-token (reading speed) mean, not a percentile. Throughput unit is sequences/s. Memory is the lever (batch size), but MEMORY is not itself the metric reported.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Offline scenario: Maximum throughput ... We measure the throughput using the maximum batch size of each configuration (§4.1); online scenario = max batch size that meets the per-sequence SLO, no arrival trace",
+  "repass_log": [
+    "THR_REQ: abstract result quote replaced by §1 design goal (throughput under latency SLOs)",
+    "UTIL: problem-statement quote replaced by §3 design statement",
+    "TOKEN_LAT -> NORM_LAT: the SLO is a per-sequence latency threshold = 0.1875 s x sequence length (length-normalised E2E), not batch-1 decode speed; stat attainment explicit",
+    "COST: moved to reported (result only)",
+    "load_class offline-batch"
+  ]
+}

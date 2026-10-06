@@ -1,0 +1,110 @@
+{
+  "key": "arxiv_2308.16369",
+  "title": "SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills",
+  "first_author": "Agrawal",
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2308.16369",
+  "cluster": "D1",
+  "technique": "chunked prefills + decode-maximal batching (one prefill chunk plus decodes per batch); uniform micro-batches for pipeline parallelism",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2308.16369.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a chunk size can be chosen such that the end-to-end throughput of the model is maximized",
+      "locator": "§4.3 (txt line ~343)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "creating such uniform and compute-intensive batches ensures high GPU utilization throughout, as well as, minimizes pipeline bubbles in multi-GPU deployments",
+      "locator": "§3.2 / §4.1 (txt line ~291-293)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:pipeline_bubble_time",
+      "stat": "P50",
+      "role": "objective",
+      "evidence": "creating such uniform and compute-intensive batches ensures high GPU utilization throughout, as well as, minimizes pipeline bubbles in multi-GPU deployments",
+      "locator": "§3.2 / §4.1 (txt line ~291-293)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "For the LLaMA-13B model on A6000 GPU, SARATHI improves decode throughput by up to 10x, and accelerates end-to-end throughput by up to 1.33x. ... When used with pipeline parallelism on GPT-3, SARATHI reduces bubbles by 6.29x, resulting in an end-to-end throughput improvement of 1.91x.",
+    "metrics": [
+      "THR_TOK",
+      "OTHER:decode_throughput"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "OTHER:decode_throughput",
+      "stat": "mean",
+      "where": "Fig 8, Table 4 (decode speedup)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Table 4, Fig 10, 11 (normalized end-to-end throughput)"
+    },
+    {
+      "metric": "OTHER:pipeline_bubble_time",
+      "stat": "P50",
+      "where": "Fig 12a (CDF)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 12b (time to complete 10K requests)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "decode throughput",
+      "canonical": "OTHER:decode_throughput",
+      "definition_quote": "decode phase throughput that we calculate based on the average time spent on decoding one token. For the baseline system, we compute the average decode time per token by dividing the time to process one decode iteration by the batch size.",
+      "locator": "§5.1.1",
+      "notes": "decode-only throughput; in SARATHI the time of piggybacked decodes is isolated from the prefill chunk cost"
+    },
+    {
+      "term_as_written": "pipeline bubble time per request",
+      "canonical": "OTHER:pipeline_bubble_time",
+      "definition_quote": "We define this as the sum of bubble time for all the micro-batches across all iterations for a given request.",
+      "locator": "§5.3",
+      "notes": "median reduced 6.29x"
+    },
+    {
+      "term_as_written": "end-to-end throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "(not defined explicitly) end-to-end throughput of the model",
+      "locator": "§5.1",
+      "notes": "never formally defined; measured on offline batches at fixed P:D ratio and sequence length; token units (input+output) implied, per single GPU/deployment"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline fixed batch (batch size, P:D ratio, sequence length swept); pipeline experiment is simulated 10K requests, Zipf lengths",
+  "tradeoff_acknowledged": "smaller chunks lower prefill arithmetic intensity and add KV re-read overhead, reducing efficiency; no latency (TTFT/TBT) trade-off analysed",
+  "eval_type": "both",
+  "hardware": "A6000 (LLaMA-13B), A100 (LLaMA-33B), simulated 64 A100 (GPT-3)",
+  "models": "LLaMA-13B, LLaMA-33B, GPT-3",
+  "workloads": "synthetic: fixed seq length 1K-4K, P:D ratios 1-100, Zipf in simulation",
+  "confidence": "high",
+  "extractor_notes": "Early version of Sarathi: no TTFT/TBT/latency percentiles and no SLOs; objective is throughput only. 'End-to-end throughput' and 'decode throughput' used without token-unit definition. Pipeline-bubble time is an unusual metric.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Fig 11 caption: 'We choose the maximum batch size which fits for the sequence length (18, 10 and 6 for 1K, 2K and 3K sequence lengths, respectively)'; 'Varying P:D ratio (sequence length=1K, batch size=18)'; pipeline study is simulated ('a total of 10K requests') (§5)",
+  "repass_log": [
+    "THR_TOK: evidence_kind design (chunk size chosen to maximize end-to-end throughput)",
+    "UTIL: abstract problem-statement quote replaced by design statement (§4.1 uniform compute-intensive batches ensure high GPU utilization)",
+    "pipeline_bubble_time: abstract quote replaced by design statement (minimizes pipeline bubbles)",
+    "no latency entries; no stat changes",
+    "load_class offline-batch"
+  ]
+}

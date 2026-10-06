@@ -1,0 +1,100 @@
+{
+  "key": "arxiv_2305.13144",
+  "title": "Response Length Perception and Sequence Scheduling: An LLM-Empowered LLM Inference Pipeline",
+  "first_author": "Zheng",
+  "year": 2023,
+  "venue": "NeurIPS'23 (arXiv v2 May 2023)",
+  "url": "https://arxiv.org/abs/2305.13144",
+  "cluster": "D1",
+  "technique": "LLM-based response-length prediction (instruction-tuned) + length-grouped micro-batching with failure re-collection and variable batch size",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2305.13144.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "This approach intelligently groups queries with similar response lengths, reducing computational waste and improving inference throughput without compromising performance.",
+      "locator": "§1 contributions (txt lines ~141-144)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "This approach intelligently groups queries with similar response lengths, reducing computational waste and improving inference throughput without compromising performance.",
+      "locator": "§1 contributions (txt lines ~141-144)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "an impressive 86% improvement in inference throughput compared to the vanilla batch inference without compromising effectiveness",
+    "metrics": [
+      "THR_REQ"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "mean",
+      "where": "Tables 4-6, Fig 3 (samples/s)"
+    },
+    {
+      "metric": "OTHER:avg_batch_length",
+      "stat": "mean",
+      "where": "Tables 4-6 (mean generated length per batch, redundant computation)"
+    },
+    {
+      "metric": "OTHER:length_prediction_error",
+      "stat": "n/a",
+      "where": "Error(w), Acc-50, Acc-100 (§3)"
+    },
+    {
+      "metric": "OTHER:failure_recollection_ratio",
+      "stat": "n/a",
+      "where": "§4.2 (15.3% max-length prediction; 29.8% mean-length)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "throughput (samples/s)",
+      "canonical": "THR_REQ",
+      "definition_quote": "We evaluate the throughput at the sample level and report the number of samples processed per second and the corresponding improvement compared to the vanilla baseline, where inference is conducted with batch size 16.",
+      "locator": "§4.2",
+      "notes": "offline sample-level throughput (requests/s), not token throughput; baseline is vanilla batch size 16"
+    },
+    {
+      "term_as_written": "average length",
+      "canonical": "OTHER:avg_batch_length",
+      "definition_quote": "The average length refers to the mean length of each batch, where a smaller average length indicates reduced redundant computation.",
+      "locator": "§4.2",
+      "notes": "proxy for padding/redundant decode waste"
+    },
+    {
+      "term_as_written": "Error(w), Acc-50, Acc-100",
+      "canonical": "OTHER:length_prediction_error",
+      "definition_quote": "the metric Error(w), which measures the difference between the estimated number of words and the actual word number. We also consider two thresholds for accuracy: Acc-50 and Acc-100, where a prediction is considered correct if the difference falls below 50 and 100 words, respectively.",
+      "locator": "§3",
+      "notes": "length prediction measured in words, not tokens"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline batch inference (10,000 alpaca prompts; Instruction-in-Wild dataset), group size 256, no arrival process",
+  "tradeoff_acknowledged": "mispredicted (too short) lengths cause failure re-collection and recomputation; mean-length prediction raises failure ratio to 29.8% and gain drops to 45%; larger batches for short responses constrained by memory",
+  "eval_type": "real-system",
+  "hardware": "1x NVIDIA A100 80GB",
+  "models": "Vicuna-7B (LLaMA-based); length predictors: GPT-4, Claude, ChatGPT, Vicuna variants",
+  "workloads": "10,000 prompts from alpaca subset; Instruction-in-Wild",
+  "confidence": "high",
+  "extractor_notes": "Offline throughput only: no latency, TTFT, TPOT or SLOs at all. Response quality claim ('without compromising effectiveness') is stated but I did not locate a dedicated quality metric table in the txt; treat the QUALITY constraint as asserted by the abstract (medium evidence). Throughput measured per sample/s with baseline batch size 16.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Our experiments are conducted on two datasets: a set of 10,000 prompts ... (§5.1); group size 256, micro-batch inference, no arrival process",
+  "repass_log": [
+    "THR_REQ: abstract result quote replaced by §1 contribution/design statement (reduce computational waste, improve throughput)",
+    "QUALITY: constraint quote replaced by same design statement (without compromising performance); no dedicated quality table located",
+    "no latency entries",
+    "load_class offline-batch"
+  ]
+}

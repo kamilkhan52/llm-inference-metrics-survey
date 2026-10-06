@@ -1,0 +1,127 @@
+{
+ "key": "arxiv_2510.18586",
+ "title": "TokenCake: A KV-Cache-centric Serving Framework for LLM-based Multi-Agent Applications",
+ "first_author": "Zhuohang Bian",
+ "year": 2025,
+ "venue": "EuroSys'27 (arXiv v5)",
+ "url": "https://arxiv.org/abs/2510.18586",
+ "cluster": "D6",
+ "technique": "agent-aware KV cache management: temporal scheduler (proactive offload of idle KV during function calls, predictive upload) and spatial scheduler (priority-based memory partitioning reserving memory for critical-path agents)",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2510.18586.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Some agents ... lie on the critical path, meaning any delay they experience ... directly increases the total time-to-result for the entire",
+   "locator": "§2 (txt lines 163-166; motivates critical-path priority in §5)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "average latency by up to 47.06% compared to vLLM"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "To mitigate temporal ... underutilization, the Temporal Scheduler uses an ... opportunistic policy to proactively offload the KV ... Cache of stalled agents during function calls",
+   "locator": "§1 (txt lines 120-124)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "to reserve memory for critical-path agents (§5).",
+   "locator": "§1 (txt line 134)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "TokenCake reduces end-to-end latency by up to 47.06% in memory-constrained settings and improves effective GPU utilization by 16.9 percentage points compared to vLLM.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Fig 9 (average app latency vs QPS), Fig 13-15"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P90",
+   "where": "§7.3 ablation (328.3 s P90)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "§7.5 (164.7 s P95)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "Fig 10 GPU KV cache utilization"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "§7.3/7.4 throughput req/s (e.g. +26.6% at 0.5 QPS)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P90",
+   "where": "headline/evaluation (demoted by tail audit)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "We report end-to-end latency (average and tail percentiles) from application submission to final response, and GPU KV Cache utilization as the fraction of KV Cache blocks occupied over time.",
+   "locator": "§7.1 Metrics",
+   "notes": "Application-level (multi-agent DAG, including function-call stall times), not a single LLM call. Tool durations replayed from recorded distributions for fairness."
+  },
+  {
+   "term_as_written": "critical path / time-to-result",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "Some agents lie on the critical path, meaning any delay they experience directly increases the total time-to-result for the entire application.",
+   "locator": "§2",
+   "notes": "Motivates reserving memory for critical-path agents; app latency is determined by the DAG critical path."
+  },
+  {
+   "term_as_written": "GPU KV Cache utilization",
+   "canonical": "UTIL",
+   "definition_quote": "GPU KV Cache utilization as the fraction of KV Cache blocks occupied over time",
+   "locator": "§7.1",
+   "notes": "Per the text, the useful quantity is blocks allocated to active, computation-ready requests (not idle stalled agents)."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "request (application) arrival-rate sweep, Poisson arrivals in QPS (0.2-1.0 QPS etc.), memory-constrained settings via gpu_mem_utilization",
+ "tradeoff_acknowledged": "Plain agent-agnostic offload reduces total latency but less than TokenCake; offload noise/mispredicted tool time reduces gains (14.8% with zero noise); priority_first policy gives lowest mean latency but inflates tail (first_fit chosen for best tradeoff); offload adds overhead.",
+ "eval_type": "real-system",
+ "hardware": "A100 80GB, H20 96GB (x1 and x2 TP), 100GB CPU offload memory",
+ "models": "Qwen2.5-14B, 32B, 72B",
+ "workloads": "Code-Writer (11 agent types) and Deep Research multi-agent applications; ShareGPT and AgentCode inputs; Poisson app arrivals",
+ "confidence": "high",
+ "extractor_notes": "End-to-end latency is application-level (submission to final response), so PROGRAM_JCT, not request-level. No TTFT/TPOT. 'throughput' in req/s mentioned in results without a formal definition. Parrot excluded from Fig 9 because latency was 6.5-9x higher. | TAIL AUDIT 2026-10-06: demoted PROGRAM_JCT@P90 (non-tail entry kept)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "PROGRAM_JCT mean + P90/P95 reported; aging term claimed to reduce tail",
+  "correction": "Demote PROGRAM_JCT P90 'objective' to reported. Borderline: the aging term is described as reducing tail latency, but it is a secondary term of a priority score; headline goals are mean E2E and utilization.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "rivals follow a Poisson distribution at varying rates [§7.1: application arrivals, QPS sweep 0.1-1.0]",
+ "repass_log": [
+  "PROGRAM_JCT: headline result replaced by §2 critical-path design motivation; stat explicit (average); tail_audit correction already applied (P90 only in reported)",
+  "UTIL: headline result replaced by §1 Temporal Scheduler design statement",
+  "MEMORY: abstract problem sentence replaced by §1 Spatial Scheduler design statement"
+ ]
+}

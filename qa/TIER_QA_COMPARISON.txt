@@ -1,0 +1,7 @@
+tier agreement 25/30, Cohen kappa 0.76; ours {'2b': 1, '5': 12, '3': 10, '1': 1, '2a': 6} blind {'2b': 2, '3': 12, '5': 10, '1': 1, '2a': 5}
+collapsed tier1+2a vs rest: 29 / 30
+  DIS arxiv_2502.07903 ours 5 blind 3 | Method maximizes throughput via max-flow/partitioning; latency framed as average; SLO attainment appears as eval metric only. Borderline T5/
+  DIS arxiv_2510.09665 ours 5 blind 3 | KV cache layer reducing TTFT; tail only mentioned in motivation/eval; statistic unspecified.
+  DIS arxiv_2401.00588 ours 5 blind 2b | Fairness is the goal; deterministic response-time bound for compliant clients is a secondary guarantee. Borderline T5.
+  DIS arxiv_2309.06180 ours 3 blind 5 | Memory/throughput design.
+  DIS arxiv_2404.09526 ours 2a blind 3 | Elastic sequence parallelism; latency statistic unspecified.

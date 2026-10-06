@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2512.09277",
+ "title": "Efficient MoE Serving in the Memory-Bound Regime: Balance Activated Experts, Not Tokens",
+ "first_author": "Yanpeng Yu",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2512.09277",
+ "cluster": "D4",
+ "technique": "METRO: balance activated experts per GPU rather than tokens, for memory-bound decode",
+ "layer": "MoE-serving",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "METRO reduces decode latency by 11 - 22%",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves decode throughput by up to 4.11x over EPLB at a fixed decode SLO",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "METRO reduces decode latency by 11 - 22%, and total token throughput by 3 - 21% for Qwen3 and DeepSeek-V3 serving",
+  "metrics": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Abstract says \"decode latency\" (per decode step/token presumably -> TPOT) and a \"fixed decode SLO\" without naming the metric. The sentence says \"reduces ... total token throughput by 3-21%\" (likely a typo for increases)."
+}

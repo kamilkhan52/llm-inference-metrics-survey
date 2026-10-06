@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2404.02015",
+ "title": "MuxServe: Flexible Spatial-Temporal Multiplexing for Multiple LLM Serving",
+ "first_author": "Duan",
+ "year": 2024,
+ "venue": "ICML 2024",
+ "url": "https://arxiv.org/abs/2404.02015",
+ "cluster": "D2",
+ "technique": "spatial-temporal multiplexing: popularity-aware colocation placement + adaptive batch scheduling",
+ "layer": "LoRA/multi-model",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "MuxServe can achieves up to $1.8\\times$ higher throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "processes $2.9\\times$ more requests within $99\\%$ SLO attainment",
+   "locator": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "maximize utilization",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "MuxServe can achieves up to $1.8\\times$ higher throughput or processes $2.9\\times$ more requests within $99\\%$ SLO attainment",
+  "metrics": [
+   "GOODPUT",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

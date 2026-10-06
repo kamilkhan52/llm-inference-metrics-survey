@@ -1,0 +1,90 @@
+{
+  "key": "arxiv_2310.17157",
+  "title": "Deja Vu: Contextual Sparsity for Efficient LLMs at Inference Time",
+  "first_author": "Zichang Liu",
+  "year": 2023,
+  "venue": "ICML'23",
+  "url": "https://arxiv.org/abs/2310.17157",
+  "cluster": "D4",
+  "technique": "input-dependent contextual sparsity (attention heads and MLP neurons) predicted per layer by lightweight predictors, with asynchronous lookahead prediction and fused hardware-aware sparse kernels",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2310.17157.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "The goal is to reduce the generation latency of LLMs by exploiting contextual sparsity.",
+      "locator": "§2.3 Problem Formulation",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "Average per-token latency (ms) with batch size 1 on 8 A100-80GB (Fig. 7 caption)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "speed up LLM inference in wall-clock time without compromising LLM's quality or in-context learning ability",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "DEJA VU can reduce the inference latency of OPT-175B by over 2x compared to the state-of-the-art FasterTransformer, and over 6x compared to the widely used Hugging Face implementation, without compromising model quality.",
+    "metrics": [
+      "TOKEN_LAT",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 7 average per-token latency (ms), batch size 1, 8xA100-80G; Table 3 latency breakdown"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Fig 6, Tables 4-7 zero-shot accuracy and perplexity vs sparsity"
+    },
+    {
+      "metric": "OTHER:union_sparsity",
+      "stat": "mean",
+      "where": "Fig 8, 11: union contextual sparsity vs batch size"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Average per-token latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Average per-token latency (ms) with batch size 1 on 8 A100-80GB with NVLink when generating sequences with prompt lengths 128, 256, 512, and 1024, using FP16.",
+      "locator": "Fig. 7 caption",
+      "notes": "per-token decode latency for a single sequence; prompt-phase excluded from focus (\"Latency breakdown of generating 1 token\" Table 3, setting batch size 1, prompt length 128)"
+    },
+    {
+      "term_as_written": "union contextual sparsity",
+      "canonical": "OTHER:union_sparsity",
+      "definition_quote": "Union contextual sparsity (fraction of neurons/heads that are not used by any of the inputs in the batch)",
+      "locator": "§5.2",
+      "notes": "shows benefit shrinks as batch grows"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 for headline (\"this paper focuses on latency-sensitive settings\"); larger batches only analysed via union sparsity",
+  "tradeoff_acknowledged": "Accuracy vs sparsity: no accuracy drop until ~75% sparsity; sparsity benefit shrinks at larger batch (union of active neurons grows); prefill-phase not accelerated in the same way.",
+  "eval_type": "real-system",
+  "hardware": "8x A100-80GB (tensor parallel), NVLink",
+  "models": "OPT-175B, OPT-66B etc., BLOOM",
+  "workloads": "C4, WikiText, zero/five-shot lm-eval-harness tasks",
+  "confidence": "high",
+  "extractor_notes": "Latency here is single-stream per-token decode latency. Note: the Deja Vu text itself says it targets latency-sensitive small-batch settings.",
+  "load_class": "single-sequence",
+  "load_class_quote": "Figure 7. Average per-token latency (ms) with batch size 1 on 8 A100-80GB; \"this paper focuses on latency-sensitive settings\" (§5.2)",
+  "repass_log": [
+    "TOKEN_LAT: abstract result replaced with §2.3 goal statement; stat mean, explicit (Fig 7 'Average per-token latency')",
+    "QUALITY: design",
+    "load_class single-sequence"
+  ]
+}

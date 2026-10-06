@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2310.18547",
+ "title": "Punica: Multi-Tenant LoRA Serving",
+ "first_author": "Chen",
+ "year": 2023,
+ "venue": "MLSys 2024",
+ "url": "https://arxiv.org/abs/2310.18547",
+ "cluster": "D2",
+ "technique": "batched multi-LoRA CUDA kernel (SGMV) + multi-tenant scheduler",
+ "layer": "LoRA/multi-model",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Punica achieves 12x higher throughput in serving multiple LoRA models",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "only adding 2ms latency per token",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Punica achieves 12x higher throughput in serving multiple LoRA models compared to state-of-the-art LLM serving systems while only adding 2ms latency per token",
+  "metrics": [
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"throughput\" unit not stated."
+}

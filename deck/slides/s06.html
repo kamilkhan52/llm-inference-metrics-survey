@@ -1,0 +1,85 @@
+<section class="slide" id="s06" data-title="The constraint sets the number">
+<header class="slide-head">
+<div class="kicker">06 · The constraint sets the number</div>
+<h2>Tightening the TPOT bound from 50 to 15 ms cuts CloudMatrix384’s decode throughput 3.6-fold.</h2>
+<div class="sub">DeepSeek-R1 decode on CloudMatrix-Infer, 4,096-token prompts, 256 output tokens: measured tokens/s per NPU at three TPOT bounds.</div>
+</header>
+<div class="slide-body">
+<style>
+#s06 .sub { max-width: 1160px; text-wrap: balance; }
+#s06 .cols { align-items: center; }
+#s06 .s06-fig { margin: 0; }
+#s06 .s06-cap { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; line-height: 1.4; }
+#s06 .s06-ratio { font-family: var(--font-display); font-size: 22px; margin-bottom: 16px; }
+#s06 .s06-ratio .num { font-size: 30px; font-weight: 600; color: var(--near); }
+#s06 .s06-ratio .tag { display: block; margin-top: 2px; }
+</style>
+<script type="application/json" id="s06-data">
+{"id":"cloudmatrix_tpot","rows":[
+{"row_id":"CloudMatrix-Infer@50","tpot_slo_ms":50,"batch_size":96,"decode_throughput_tok_s":1943,"achieved_tpot_ms":49.4,"src":"arxiv_2506.12708","loc":"Table 4, p.41; also Table 3","unc":"printed"},
+{"row_id":"CloudMatrix-Infer@30","tpot_slo_ms":30,"batch_size":24,"decode_throughput_tok_s":974,"achieved_tpot_ms":24.6,"src":"arxiv_2506.12708","loc":"Table 4, p.41","unc":"printed"},
+{"row_id":"CloudMatrix-Infer@15","tpot_slo_ms":15,"batch_size":8,"decode_throughput_tok_s":538,"achieved_tpot_ms":14.9,"src":"arxiv_2506.12708","loc":"Table 4, p.41","unc":"printed"}
+]}
+</script>
+<div class="cols c-6-4">
+<figure class="s06-fig">
+<svg id="s06-svg" viewBox="0 0 680 366" width="680" role="img" aria-label="Chart of CloudMatrix-Infer decode throughput per NPU against TPOT bound: 538 tokens/s at 15 ms, 974 at 30 ms, 1,943 at 50 ms; a bracket marks the 3.6-fold ratio."></svg>
+<figcaption class="s06-cap">Printed values, arXiv 2506.12708 Table 4 (p.41); points sit at the TPOT bound, labels give batch per NPU and achieved TPOT; the paper does not say whether “NPU” is a package or a die.</figcaption>
+</figure>
+<div>
+<div class="box near s06-ratio"><span class="num">3.6×</span> = 1,943 / 538, derived</div>
+<p>A throughput number means little without its latency bound. At 15 ms the paper runs batch 8 per NPU instead of 96, so each NPU emits fewer tokens per second. Throughput-only comparisons hide this trade-off.</p>
+</div>
+</div>
+</div>
+<footer class="slide-foot"><div class="sources">[P] Zuo et al., Serving LLMs on Huawei CloudMatrix384, arXiv 2506.12708, Table 4 p.41 · [D] 1,943 / 538 = 3.61 · data/cloudmatrix_tpot.json (two blind extractions, 0 % disagreement)</div><div class="pageno">06 / 14</div></footer>
+<script>
+(function(){
+var root=document.getElementById('s06');
+var data=JSON.parse(root.querySelector('#s06-data').textContent).rows;
+var svg=root.querySelector('#s06-svg'), NS='http://www.w3.org/2000/svg';
+var L=70,R=660,T=46,B=316;
+function X(v){return L+(R-L)*v/60;} function Y(v){return B-(B-T)*v/2500;}
+function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;svg.appendChild(e);return e;}
+var fmt=function(v){return v.toLocaleString('en-US');};
+// grid + y ticks
+for(var v=0;v<=2500;v+=500){
+ el('line',{x1:L,x2:R,y1:Y(v),y2:Y(v),stroke:'var(--rule)','stroke-width':1});
+ el('text',{x:L-8,y:Y(v)+4,'text-anchor':'end','class':'axis'},fmt(v));
+}
+for(var x=0;x<=60;x+=10){
+ el('line',{x1:X(x),x2:X(x),y1:B,y2:B+5,stroke:'var(--ink-3)'});
+ el('text',{x:X(x),y:B+20,'text-anchor':'middle','class':'axis'},x);
+}
+el('line',{x1:L,x2:R,y1:B,y2:B,stroke:'var(--ink-3)'});
+el('text',{x:(L+R)/2,y:B+42,'text-anchor':'middle','class':'lbl'},'TPOT bound (ms)');
+el('text',{x:0,y:0,transform:'translate('+14+','+((T+B)/2)+') rotate(-90)','text-anchor':'middle','class':'lbl'},'Decode throughput (tokens/s per NPU)');
+var by={};data.forEach(function(r){by[r.tpot_slo_ms]=r;});
+// constraints
+[[15,'TPOT ≤ 15 ms'],[30,'≤ 30 ms'],[50,'≤ 50 ms']].forEach(function(c){
+ el('line',{x1:X(c[0]),x2:X(c[0]),y1:T-10,y2:B,stroke:'var(--far)','stroke-width':1.5,'stroke-dasharray':'5 4'});
+ el('text',{x:X(c[0]),y:T-16,'text-anchor':'middle','class':'lbl halo',style:'fill:var(--far);font-weight:600'},c[1]);
+});
+// line + points
+var pts=[15,30,50].map(function(k){return X(k)+','+Y(by[k].decode_throughput_tok_s);}).join(' ');
+el('polyline',{points:pts,fill:'none',stroke:'var(--near)','stroke-width':1.5});
+// bracket
+var bx=X(56), y1=Y(by[50].decode_throughput_tok_s), y2=Y(by[15].decode_throughput_tok_s);
+el('line',{x1:X(50),x2:bx+6,y1:y1,y2:y1,stroke:'var(--ink-3)','stroke-width':1,'stroke-dasharray':'2 3'});
+el('line',{x1:X(15),x2:bx+6,y1:y2,y2:y2,stroke:'var(--ink-3)','stroke-width':1,'stroke-dasharray':'2 3'});
+el('path',{d:'M'+(bx-4)+','+y1+' L'+(bx+6)+','+y1+' L'+(bx+6)+','+y2+' L'+(bx-4)+','+y2,fill:'none',stroke:'var(--ink)','stroke-width':1.5});
+el('text',{x:bx+12,y:(y1+y2)/2+6,'class':'halo',style:'font-size:18px;font-weight:600;font-family:var(--font-display)'},'3.6×');
+// points + labels
+var labs={15:['538 tok/s · batch 8 · achieved 14.9 ms','start',10,24],
+          30:['974 · batch 24 · 24.6 ms','start',10,24],
+          50:['1,943 · batch 96 · 49.4 ms','end',-12,-12]};
+[15,30,50].forEach(function(k){
+ var r=by[k],cx=X(k),cy=Y(r.decode_throughput_tok_s);
+ var c=el('circle',{cx:cx,cy:cy,r:6,fill:'var(--near)'});
+ var l=labs[k];
+ el('text',{x:cx+l[2],y:cy+l[3],'text-anchor':l[1],'class':'lbl halo',style:'fill:var(--ink)'},l[0]);
+ if(window.DeckTip)window.DeckTip.attach(c,r.row_id+' · '+r.src+' '+r.loc+' · '+r.unc);
+});
+})();
+</script>
+</section>

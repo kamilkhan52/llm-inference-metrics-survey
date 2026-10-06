@@ -1,0 +1,92 @@
+{
+  "key": "arxiv_2404.14469",
+  "title": "SnapKV: LLM Knows What You are Looking for Before Generation",
+  "first_author": "Li",
+  "year": 2024,
+  "venue": "arXiv preprint (NeurIPS 2024)",
+  "url": "https://arxiv.org/abs/2404.14469",
+  "cluster": "D3",
+  "technique": "Fine-tuning-free KV eviction: per-head selection of clustered important prompt KV positions using attention of an observation window at the end of the prompt, with pooling",
+  "layer": "KV-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.14469.txt",
+  "optimized_metrics": [
+    {
+      "metric": "MEMORY",
+      "stat": "max",
+      "role": "objective",
+      "evidence": "while overlooking the realistic problem of compressing KV cache for prompts, which is typically the bottleneck in memory efficiency.",
+      "locator": "§1 (txt line 90-91)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "During inference time, as prompt length increases, the decoding latency per step grows linearly due to the attention calculation across past KVs.",
+      "locator": "§1 (txt line 53)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "Additional challenge lies in compressing KV cache for such vast prompts without losing crucial information for accurate generation",
+      "locator": "§1 (txt line 95-96)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "SnapKV achieves a consistent decoding speed with a 3.6x increase in generation speed and an 8.2x enhancement in memory efficiency compared to the baseline when processing inputs of 16K tokens.",
+    "metrics": [
+      "TOKEN_LAT",
+      "MEMORY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "LongBench (16 datasets), Needle-in-a-Haystack, Fig 2-6, Tables"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 7 decode latency (ms/token) vs input length at batch 1-8; Fig 9 vs Medusa"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "max",
+      "where": "§5.1.2 max input length before OOM (16k -> 131k at batch 2)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "decoding latency (ms/token)",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Figure 7: Decoding latency comparison of baseline implementation and SnapKV optimized solutions on various batch sizes. The x-axis denotes the input sequence length; the y-axis indicates decoding latency (ms/token).",
+      "locator": "Fig 7 caption (txt line 531)",
+      "notes": "Per-step decode time at fixed generation length 512 and max KV size 2048; prefill excluded; no tail stat. 'Memory efficiency' is operationalised as max input length before OOM, not bytes."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed batch size (1,2,4,8), input-length sweep, generation length fixed at 512",
+  "tradeoff_acknowledged": "Accuracy drop at small KV budgets (negligible in Needle test); compression applies to prompt only, not generated tokens.",
+  "eval_type": "real-system",
+  "hardware": "A100 80GB",
+  "models": "LWM-Text-Chat-1M, LongChat-7B-v1.5-32k, Mistral-7B-Instruct-v0.2, Mixtral-8x7B-Instruct",
+  "workloads": "LongBench, Needle-in-a-Haystack, Medusa comparison",
+  "confidence": "high",
+  "extractor_notes": "No TTFT/prefill timing, no throughput, no serving load; 'generation speed' in abstract means per-token decode latency. 'Memory efficiency' in abstract = maximum supported input length (8.2x = 16k -> 131k).",
+  "load_class": "single-sequence",
+  "load_class_quote": "We further benchmark the speed of LWM-Text-Chat-1M under different batch-size settings using SnapKV. We set the maximum KV cache size as 2048 for SnapKV, and fix the generation length at 512 (batch sizes 1-8; §5.1.2, Fig 7)",
+  "repass_log": [
+    "MEMORY: evidence/locator replaced with design statement (was: 'SnapKV achieves a consistent decoding speed with a 3.6x incr...')",
+    "TOKEN_LAT: per-step decoding latency; no statistic stated",
+    "TOKEN_LAT: stat 'mean' -> n/a (unspecified)",
+    "QUALITY: evidence/locator replaced with design statement (was: 'it maintains comparable performance to the baseline models a...')",
+    "load_class = single-sequence"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "key": "osdi2024_dlora",
+  "title": "dLoRA: Dynamically Orchestrating Requests and Adapters for LoRA LLM Serving",
+  "first_author": "Bingyang Wu",
+  "year": 2024,
+  "venue": "OSDI'24",
+  "url": "https://www.usenix.org/conference/osdi24/presentation/wu-bingyang",
+  "cluster": "D2",
+  "technique": "Dynamic merge/unmerge of LoRA adapters with base model via credit-based batching, plus request-adapter co-migration (ILP-derived heuristic) across replicas",
+  "layer": "LoRA/multi-model",
+  "read_level": "full",
+  "fulltext_path": "fulltext/osdi2024_dlora.txt",
+  "optimized_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Based on the request arrival pattern and current state, dLoRA dynamically switches between merged and unmerged inference with different batching strategies to reduce the end-to-end latency.",
+      "locator": "§1 Introduction",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We use the average latency as the primary metric to evaluate the performance of dLoRA"
+    },
+    {
+      "metric": "OTHER:batch_time",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "The goal of the migration algorithm is to minimize the overall running time among all replicas.",
+      "locator": "§5.2 Objective: overall running time",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "FAIRNESS",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "Starvation prevention. Although dynamic batching accelerates LoRA LLM serving, it may cause starvation.",
+      "locator": "§4.1 starvation prevention (txt l.~444)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "dLoRA improves the throughput by up to 57.9× and 26.0×, compared to vLLM and HugginFace PEFT, respectively. Compared to the concurrent work S-LoRA, dLoRA achieves up to 1.8× lower average latency.",
+    "metrics": [
+      "THR_REQ",
+      "NORM_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "where": "Figs 9-12 average latency (s/token) vs request rate"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "attainment",
+      "where": "Figs 9-11 max throughput under the latency SLO (0.5 s)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P90",
+      "where": "Fig 10(b) P90 latency vs Merged-only/Unmerged-only"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "mean",
+      "where": "§7.3 queueing delay of requests as load-imbalance indicator"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "average latency",
+      "canonical": "NORM_LAT",
+      "definition_quote": "We use the average latency as the primary metric to evaluate the performance of dLoRA. Following prior work on LLM serving [11, 12], the average latency is calculated by dividing the sum of each request's end-to-end latency by the total number of output tokens.",
+      "locator": "§7.1 Metrics",
+      "notes": "ratio of sum E2E to sum of output tokens (token-weighted), not mean of per-request normalized latency; Fig axes in s/token"
+    },
+    {
+      "term_as_written": "latency SLO / max throughput under SLO",
+      "canonical": "GOODPUT",
+      "definition_quote": "we set a latency service level objective (SLO) and compare the maximum throughput achieved by each system under the SLO. Similar to prior work, we set the latency SLO to 10× of the latency of a single iteration in the decoding phase. Specifically, SLO is 0.5 seconds based on our profiling.",
+      "locator": "§7.2",
+      "notes": "SLO applied to average latency (s/token) curve, not to per-request attainment; throughput = max request rate at which average latency <= SLO; units of throughput (req/s) not strictly defined"
+    },
+    {
+      "term_as_written": "peak capacity of a LoRA adapter",
+      "canonical": "OTHER:adapter_peak_capacity",
+      "definition_quote": "we define the peak capacity of a LoRA adapter as the number of requests that can be served by the unallocated GPU memory where the corresponding LoRA adapter resides.",
+      "locator": "§5.1",
+      "notes": "internal dispatch metric"
+    },
+    {
+      "term_as_written": "overall running time",
+      "canonical": "OTHER:batch_time",
+      "definition_quote": "The goal of the migration algorithm is to minimize the overall running time among all replicas.",
+      "locator": "§5.2 Objective: overall running time",
+      "notes": "re-pass: ILP objective over the current requests/adapters placement; batch wall-clock, not per-request latency"
+    }
+  ],
+  "slo_spec": "Latency SLO = 10x the latency of one decode iteration = 0.5 s (average latency in s/token) from profiling; max throughput at that SLO compared",
+  "load_regime": "request-rate sweep on Azure production traces (rescaled), varied skewness and scale ratio, numbers of adapters (up to 128)",
+  "tradeoff_acknowledged": "Dynamic merge/unmerge may preempt some requests (switching overhead); credit-based mechanism prevents starvation; paper reports P90 still improved",
+  "eval_type": "real-system",
+  "hardware": "4 nodes x 8 NVIDIA A800 80GB (32 GPUs), 200 Gbps InfiniBand",
+  "models": "Llama-2-7B, 13B, 70B with LoRA adapters",
+  "workloads": "Microsoft Azure Functions traces 2019 (MAF1) and 2021 (MAF2) used as request arrival patterns",
+  "confidence": "high",
+  "extractor_notes": "Primary metric is mean latency normalized by total output tokens (s/token), SLO of 0.5 s defined on that average, so 'throughput under SLO' is capacity at a mean-latency threshold, not goodput in the DistServe sense. Only P90 reported as a tail stat (Fig 10b). Source: USENIX open-access PDF (no arXiv).",
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep on rescaled Azure production traces; arrival rate set so dLoRA's average latency is about the SLO (§7)",
+  "repass_log": [
+    "NORM_LAT design quote kept (reduce end-to-end latency); stat explicit mean ('average latency' = sum of per-request E2E / total output tokens)",
+    "THR_REQ demoted: only result headline (throughput at 0.5 s SLO); no design statement",
+    "E2E 'overall running time among all replicas' (migration ILP objective) recoded to OTHER:batch_time: it is a running time of the placed request set, not per-request latency; stat n/a",
+    "FAIRNESS quote replaced by design statement on starvation prevention",
+    "load_class online-arrivals"
+  ]
+}

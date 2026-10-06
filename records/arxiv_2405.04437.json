@@ -1,0 +1,117 @@
+{
+ "key": "arxiv_2405.04437",
+ "title": "vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention",
+ "first_author": "Prabhu",
+ "year": 2025,
+ "venue": "ASPLOS'25",
+ "url": "https://arxiv.org/abs/2405.04437",
+ "cluster": "D3",
+ "technique": "keep KV cache virtually contiguous but allocate physical memory on demand via CUDA virtual-memory APIs (64KB pages, deferred reclamation, overlapped allocation), so unmodified non-paged attention kernels can be used",
+ "layer": "KV-memory",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2405.04437.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Serving LLMs with high throughput requires careful allocation of GPU memory.",
+   "locator": "§2 Background (problem statement; abstract: fragmentation 'crippled the batch size (and consequently throughput)')",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "PagedAttention ... enables on-demand allocation of GPU memory to mitigate KV cache fragmentation - a phenomenon that crippled the batch size (and consequently throughput) in prior systems. ... physical memory fragmentation can be avoided without making KV cache non-contiguous",
+   "locator": "abstract; §5",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:portability_programming_effort",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "such a design leads to non-trivial programming and performance overheads ... vAttention is a simpler, portable ... alternative",
+   "locator": "abstract (qualitative: no kernel rewrite, FA3 supported on day one)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "improves LLM serving throughput by up to 1.23x compared to the use of PagedAttention-based kernels of FlashAttention-2 and FlashInfer",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Fig 7 prefill throughput (prompt tokens/s), Fig 8 decode throughput (tokens/s)"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Fig 9 offline requests per minute (427 arXiv-Summarization requests, 64K-192K context)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P50",
+   "where": "Fig 10 CDF of end-to-end request execution latency; median reduced up to 42% (online, near capacity)"
+  },
+  {
+   "metric": "OTHER:kernel_latency",
+   "stat": "mean",
+   "where": "Table 7 attention kernel latency, Fig 3 kernel sensitivity"
+  },
+  {
+   "metric": "OTHER:alloc_api_latency",
+   "stat": "n/a",
+   "where": "Table 3 CUDA VMM API latency vs page size"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Fig 4 / §6 fragmentation vs page size"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "prefill / decode throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "We define prefill throughput as the number of prompt tokens processed per second, and decode throughput as the number of tokens generated per second.",
+   "locator": "§7.1",
+   "notes": "Phase-separated token rates; decode throughput computed 'based on the mean latency of 400 decode iterations' at fixed batch size and 16K initial context (§7.2)."
+  },
+  {
+   "term_as_written": "end-to-end system throughput (offline)",
+   "canonical": "THR_REQ",
+   "definition_quote": "We measure the end-to-end system throughput in an offline scenario as the number of requests completed per minute.",
+   "locator": "§7.3",
+   "notes": "Requests/min for long-context (64K-192K) requests, not tokens/s."
+  },
+  {
+   "term_as_written": "serving capacity",
+   "canonical": "THR_REQ",
+   "definition_quote": "We evaluate performance near the serving capacity of the system which denotes the maximum load a system can handle without incurring high queuing delays [35, 51].",
+   "locator": "§7.4",
+   "notes": "Capacity defined qualitatively (no queueing blow-up); online latency reported as CDF of 'end-to-end request execution latency' with median highlighted."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch sizes (decode micro-benchmarks); offline batch (427 requests); online Poisson QPS near capacity, FCFS (512 requests)",
+ "tradeoff_acknowledged": "CUDA VMM allocation latency (several ms per call) and 2MB default page granularity risk fragmentation/waste, mitigated by 64KB pages and overlapping allocation with compute; decode throughput only on par with PagedAttention (no gain).",
+ "eval_type": "real-system",
+ "hardware": "1-2 NVIDIA A100 (TP-1/TP-2)",
+ "models": "Yi-6B, Llama-3-8B, Yi-34B",
+ "workloads": "arXiv-Summarization long-context traces (22K-192K tokens), microbenchmarks at 16K context",
+ "confidence": "high",
+ "extractor_notes": "Throughput is phase-specific (prefill tokens/s and decode tokens/s) plus requests/min offline. Online result is reported as median E2E (P50) latency in a CDF; no tail percentile, no TTFT/TPOT. Programmability/portability is a stated co-objective but not numerically measured.",
+ "load_class": "mixed",
+ "load_class_quote": "We measure the end-to-end system throughput in an offline scenario as the number of requests completed per minute (§7.3); online: request arrivals based on Poisson distribution, FCFS (§7.2); decode microbenchmarks at fixed batch sizes (§7.1)",
+ "repass_log": [
+  "THR_TOK: abstract result replaced by §2 design/problem statement",
+  "MEMORY, portability: design (abstract design statements)",
+  "added load_class mixed (fixed-batch microbenchmarks + offline batch + online Poisson)"
+ ]
+}

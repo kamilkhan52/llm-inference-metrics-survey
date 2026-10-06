@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2402.15220",
+ "title": "ChunkAttention: Efficient Self-Attention with Prefix-Aware KV Cache and Two-Phase Partition",
+ "first_author": "Ye",
+ "year": 2024,
+ "venue": "ACL'24",
+ "url": "https://arxiv.org/abs/2402.15220",
+ "cluster": "D3",
+ "technique": "prefix-tree KV cache + two-phase-partition attention kernel",
+ "layer": "kernels/attention",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:attn_kernel_speed",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "ChunkAttention can speed up the self-attention kernel by 3.2-4.8$\\times$",
+   "locator": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "to improve the memory utilization of KV cache",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "ChunkAttention can speed up the self-attention kernel by 3.2-4.8$\\times$ compared to the state-of-the-art implementation",
+  "metrics": [
+   "MEMORY",
+   "OTHER:attn_kernel_speed"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:attn_kernel_speed",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Kernel-level speedup (self-attention kernel time), not request-level latency; motivation mentions \"inference latency for long sequences\"."
+}

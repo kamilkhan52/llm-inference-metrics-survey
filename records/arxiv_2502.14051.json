@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2502.14051",
+ "title": "RocketKV: Accelerating Long-Context LLM Inference via Two-Stage KV Cache Compression",
+ "first_author": "Behnam",
+ "year": 2025,
+ "venue": "ICML'25",
+ "url": "https://arxiv.org/abs/2502.14051",
+ "cluster": "D3",
+ "technique": "two-stage KV compression: coarse eviction + hybrid top-k sparse attention",
+ "layer": "KV-compression",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "peak memory reduction of up to 32.6% in the decode phase",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "end-to-end speedup of up to 3.7$\\times$",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "while achieving negligible accuracy loss",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "RocketKV provides a compression ratio of up to 400$\\times$, end-to-end speedup of up to 3.7$\\times$ as well as peak memory reduction of up to 32.6% in the decode phase",
+  "metrics": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"end-to-end speedup\" in decode phase mapped to TOKEN_LAT (batch=1-style speedup); not stated explicitly."
+}

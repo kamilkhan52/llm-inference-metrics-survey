@@ -1,0 +1,155 @@
+{
+  "key": "arxiv_2504.19867",
+  "title": "semi-PD: Towards Efficient LLM Serving via Phase-Wise Disaggregated Computation and Unified Storage",
+  "first_author": "Ke Hong",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2504.19867",
+  "cluster": "D2",
+  "technique": "SM-level phase-wise disaggregated computation (prefill/decode workers on same GPU, partitioned SM ratio) with unified weight/KV storage and SLO-aware dynamic SM partitioning",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.19867.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "we further design a service-level objective (SLO) aware dynamic partitioning algorithm to optimize the SLO attainment",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "adhering to the TTFT and TPOT constraints, how to schedule the prefill and decode phase of each request to maximize the system throughput is very important",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Constraining TTFT and TPOT, as the two components of the service-level objective (SLO), are both essential for user experience",
+      "locator": "§1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the agreement between service providers and users determines SLOs (e.g., TTFT ≤ 500ms, TPOT ≤ 100ms) as the latency constraints"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Constraining TTFT and TPOT, as the two components of the service-level objective (SLO), are both essential for user experience",
+      "locator": "§1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the agreement between service providers and users determines SLOs (e.g., TTFT ≤ 500ms, TPOT ≤ 100ms) as the latency constraints"
+    }
+  ],
+  "headline_claim": {
+    "text": "semi-PD maintains lower latency at higher request rates, reducing the average end-to-end latency per request by 1.27-2.58× on DeepSeek series models, and serves 1.55-1.72× more requests adhering to latency constraints on Llama series models",
+    "metrics": [
+      "E2E",
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "P90",
+      "where": "Fig 12"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P90",
+      "where": "Fig 12"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Fig 12 (P99 curves)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P99",
+      "where": "Fig 12"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 15"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "DeepSeek results"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "max request rate at >90% attainment"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "Time-to-First-Token (TTFT) is the duration between the arrival time and the time when the prefill phase finishes of a request.",
+      "locator": "§2.2",
+      "notes": "includes queueing/waiting; latency model: 'The TTFT of a single request consists of two parts of latency, i.e., waiting latency, and prefill latency.' (§5)"
+    },
+    {
+      "term_as_written": "TPOT",
+      "canonical": "TPOT",
+      "definition_quote": "Time-per-Output-Token (TPOT) is the average duration to generate the subsequent tokens (except for the first one) of a request. Some works [19] use Time-between-Tokens (TBT) to measure the latency between successive tokens. In this work, we use the TPOT metric.",
+      "locator": "§2.2",
+      "notes": "TPOT model excludes decode waiting latency: 'we assume the requests are immediately batched for running upon arrival at the decode worker, hence excluding the waiting latency from TPOT'; KV transfer time counted in TPOT in disaggregated systems (§1)"
+    },
+    {
+      "term_as_written": "SLO",
+      "canonical": "SLO_ATT",
+      "definition_quote": "the agreement between service providers and users determines SLOs (e.g., TTFT ≤ 500ms, TPOT ≤ 100ms) as the latency constraints. To address the importance of SLOs, many works consider serving more requests while adhering to the SLOs, which is also the objective of this work.",
+      "locator": "§2.2",
+      "notes": ""
+    },
+    {
+      "term_as_written": "more requests adhering to SLOs",
+      "canonical": "GOODPUT",
+      "definition_quote": "serves 1.55-1.72× more requests ... while staying within latency constraints for > 90% of requests",
+      "locator": "§1 contributions; §7.4",
+      "notes": "max request rate sustaining >90% SLO attainment; the word goodput is not used in this form"
+    }
+  ],
+  "slo_spec": "TTFT and TPOT thresholds per model/dataset (Table 2), e.g. Llama3-8B ShareGPT tight/loose 0.3s/0.15s and 0.4s/0.2s; Llama3-70B 0.85s/0.3s and 1.1s/0.4s; LongBench 2.25s/0.13s,3.0s/0.18s (8B) and 6.0s/0.3s,8.0s/0.4s (70B). Set as 'approximates of 7.5× and 10× of the single request latency as the tight and loose SLOs'. Attainment target >90% (pSLO in Alg. 1).",
+  "load_regime": "request-rate sweep, Poisson arrivals",
+  "tradeoff_acknowledged": "Analyses TTFT-vs-TPOT interference in unified systems and storage inefficiency (3x higher TPOT from storage shortage) in disaggregated; no explicit cost of semi-PD",
+  "eval_type": "real-system",
+  "hardware": "A100 80GB (8x), A100 40GB (4 nodes x8), H200 (8x)",
+  "models": "Llama3-8B, Llama3-70B, Llama3.1-405B, DeepSeek-V2-Lite, DeepSeek-V3 series",
+  "workloads": "ShareGPT, LongBench, MATH-500, synthetic 95% ShareGPT + 5% long",
+  "confidence": "high",
+  "extractor_notes": "Headline mixes mean E2E (DeepSeek) with SLO-constrained request rate (Llama). Instance-scale latency curves use P90 (P99 as secondary), SLO attainment target is >90%. Never uses the word goodput for its metric. SLO thresholds derived as multiples of single-request latency.",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT/TPOT P90 (major reported metric) and P99; design optimizes SLO attainment vs fixed thresholds",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "repass_log": [
+    "SLO_ATT, THR_REQ: design (abstract design sentence / §1 'maximize the system throughput' / §2 objective of this work)",
+    "TTFT/TPOT constraints: design; stat_basis explicit (SLO threshold attainment)",
+    "E2E (mean, abstract result only; no design statement found) -> demoted to reported_metrics",
+    "added load_class online-arrivals"
+  ],
+  "load_class": "online-arrivals",
+  "load_class_quote": "generate request arrival times using the Poisson distribution to emulate the real-world workloads (§7.1)"
+}

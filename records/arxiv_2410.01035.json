@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2410.01035",
+ "title": "Don't Stop Me Now: Embedding Based Scheduling for LLMs",
+ "first_author": "Shahout",
+ "year": 2024,
+ "venue": "ICLR 2025",
+ "url": "https://arxiv.org/abs/2410.01035",
+ "cluster": "D1",
+ "technique": "embedding-based remaining-length prediction + limited-preemption SRPT",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "aim to reduce average request completion time",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "we derive a closed-form formula for this SRPT variant in an M/G/1 queue model",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Abstract as stored is truncated before experimental results; objective inferred from the SRPT motivation sentence. Memory overhead of preemption is a design concern (limited preemption)."
+}

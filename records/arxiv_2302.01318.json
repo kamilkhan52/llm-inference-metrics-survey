@@ -1,0 +1,54 @@
+{
+ "key": "arxiv_2302.01318",
+ "title": "Accelerating Large Language Model Decoding with Speculative Sampling",
+ "first_author": "Charlie Chen",
+ "year": 2023,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2302.01318",
+ "cluster": "D4",
+ "technique": "speculative sampling with draft model + modified rejection sampling",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "achieving a 2-2.5x decoding speedup in a distributed setup",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "without compromising the sample quality",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "achieving a 2-2.5x decoding speedup in a distributed setup, without compromising the sample quality",
+  "metrics": [
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

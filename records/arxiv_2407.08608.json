@@ -1,0 +1,89 @@
+{
+ "key": "arxiv_2407.08608",
+ "title": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision",
+ "first_author": "Shah",
+ "year": 2024,
+ "venue": "NeurIPS'24 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2407.08608",
+ "cluster": "D5",
+ "technique": "Hopper-specific warp-specialized producer/consumer pipelining, ping-pong softmax/GEMM overlap, FP8 attention with block quantization and incoherent processing",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2407.08608.txt",
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "FlashAttention-2 nonetheless achieves poor utilization on newer GPUs relative to optimized matrix-multiplication (GEMM) kernels, such as 35% vs. 80-90% on the Hopper H100 GPU.",
+   "locator": "§1 (txt line 43-45)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "We develop three main techniques to speed up attention on Hopper GPUs",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "We use the techniques of block quantization and incoherent processing to mitigate the loss of accuracy that results from moving to FP8 precision.",
+   "locator": "§1 contribution 3 (txt line 82-83)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "FlashAttention-3, achieves speedup on H100 GPUs by 1.5-2.0× with FP16 reaching up to 740 TFLOPs/s (75% utilization), and with FP8 reaching close to 1.2 PFLOPs/s.",
+  "metrics": [
+   "UTIL",
+   "OTHER:kernel_speedup"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "Fig 5-8 (attention fwd/bwd TFLOPs/s)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Table 3 (RMSE of attention output FP16/FP8)"
+  },
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "where": "§4.1 text, Fig 5-8"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "utilization",
+   "canonical": "UTIL",
+   "definition_quote": "We benchmark the speed on an H100 80GB SXM5 (700W). ... We repeat the benchmarks 100 times and take the average timing.",
+   "locator": "App. C (txt line 1183-1194)",
+   "notes": "Utilization = achieved attention TFLOPs/s over H100 FP16 theoretical max (≈989 TFLOPs/s dense); the paper gives no separate formal definition beyond the FLOPs formula, same as FA2 (4*seqlen^2*d*heads, halved for causal)"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "sequence-length sweep with fixed total tokens (16k) kernel microbenchmark",
+ "tradeoff_acknowledged": "FP8 raises numerical error (baseline FP8 RMSE 2.4e-2) vs FP16 (1.9e-4); mitigated by block quantization + incoherent processing to 9.1e-3.",
+ "eval_type": "real-system",
+ "hardware": "H100 80GB SXM5",
+ "models": "none (attention microbenchmark)",
+ "workloads": "synthetic Q/K/V; head dim 64/128/256; causal and non-causal",
+ "confidence": "high",
+ "extractor_notes": "Kernel-level only; design targets achieved TFLOPs/s (UTIL) and kernel runtime, with numerical error as accuracy constraint. No end-to-end training or serving results; paper lists 'optimizing for LLM inference' as future work. No serving metric (TTFT/TPOT/throughput) appears.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"We vary the sequence length as 512, 1k, ..., 16k, and set batch size so that the total number of tokens is 16k.\" (§4.1, txt line 470)",
+ "repass_log": [
+  "evidence_kind=design for all 3 entries",
+  "UTIL and QUALITY quotes replaced with design statements (headline result sentences removed)",
+  "load_class offline-batch"
+ ]
+}

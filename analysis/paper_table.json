@@ -1,0 +1,8750 @@
+[
+ {
+  "key": "arxiv_2205.14135",
+  "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awar",
+  "year": 2022,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:HBM_accesses",
+   "OTHER:kernel_speedup"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "memory"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "FA-training",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:HBM_accesses@n/a",
+   "OTHER:kernel_speedup@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:HBM_accesses",
+   "OTHER:kernel_speedup",
+   "OTHER:training_wallclock",
+   "QUALITY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size / sequence-length sweep (kernel microbenchmarks; training runs)",
+  "tradeoff": "Backward pass has more FLOPs than standard attention due to recomputation, but fewer HBM accesses, so is faster; on T4 less speedup due to smaller SRAM; for seq>1K some approximate methods are faster."
+ },
+ {
+  "key": "arxiv_2207.00032",
+  "title": "DeepSpeed Inference: Enabling Efficient Inference of Transformer Model",
+  "year": 2022,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "memory",
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_TOK@mean",
+   "TOKEN_LAT@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "THR_TOK",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size (sweep) at fixed prompt/generation lengths; offline batch for throughput scenarios",
+  "tradeoff": "Pipeline micro-batch count: 'A small micro-batch count reduces the latency of token-generation but prolongs the latency of prompt processing' (paper discusses a hybrid schedule); latency vs throughput governed by batch size."
+ },
+ {
+  "key": "arxiv_2208.07339",
+  "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+  "year": 2022,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:matmul_speedup",
+   "QUALITY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "not applicable (accuracy/memory study; matmul microbenchmarks in Appendix D)",
+  "tradeoff": "Quantization and decomposition overhead is significant; Int8 matmul only faster for large models, mixed-precision decomposition slows inference further so only 13B and 175B models see speedups (Appendix D)"
+ },
+ {
+  "key": "arxiv_2210.17223",
+  "title": "Accelerating Distributed MoE Training and Inference with Lina",
+  "year": 2022,
+  "layer": "MoE-serving",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [
+   "E2E@P95"
+  ],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "P95"
+  ],
+  "obj_stats": [
+   "E2E@P95"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:training_step_time"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2210.17323",
+  "title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained T",
+  "year": 2022,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:quantization_time",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:quantization_time@n/a",
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "COST",
+   "MEMORY",
+   "OTHER:quantization_time",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1, generating 128 tokens",
+  "tradeoff": "Method gives no speedup for the actual multiplications (no hardware support for mixed-precision operands); speedups come from reduced memory movement; 3-bit has noticeably higher perplexity for smaller models"
+ },
+ {
+  "key": "arxiv_2211.05102",
+  "title": "Efficiently Scaling Transformer Inference",
+  "year": 2022,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "MEMORY",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "hw-efficiency",
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "COST@n/a",
+   "MEMORY@n/a",
+   "TOKEN_LAT@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed batch size and chip-count sweep tracing the Pareto frontier; context length 2048; no arrival process",
+  "tradeoff": "Explicit latency vs cost/MFU trade-off: 'Lower latency can often be achieved by using more chips, but this can also result in worse MFU, resulting in a higher total cost (in terms of chip-seconds or dollars) per token.'"
+ },
+ {
+  "key": "arxiv_2211.10438",
+  "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for Lar",
+  "year": 2022,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:batch_time"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "memory"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:batch_time@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:batch_time",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size (4) forward pass; sequence lengths 128-1024; decoding-stage table",
+  "tradeoff": "Coarser (faster) quantization schemes O1->O3 lose some accuracy; LLM.int8() baseline slows inference in most cases"
+ },
+ {
+  "key": "arxiv_2211.17192",
+  "title": "Fast Inference from Transformers via Speculative Decoding",
+  "year": 2022,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "OTHER:arithmetic_ops_increase",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "batch=1 (single TPU-v4), per task test set",
+  "tradeoff": "latency is improved through increased concurrency at the cost of an increased number of arithmetic operations (e.g. Table 1); not helpful when additional compute is unavailable"
+ },
+ {
+  "key": "arxiv_2302.01318",
+  "title": "Accelerating Large Language Model Decoding with Speculative Sampling",
+  "year": 2023,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2302.11665",
+  "title": "AlpaServe: Statistical Multiplexing with Model Parallelism for Deep Le",
+  "year": 2023,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "SLO_ATT"
+  ],
+  "con": [],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "non-generative",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "E2E",
+   "MEMORY",
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "trace replay (Azure MAF1, MAF2) with swept rate scale, burstiness (CV), SLO scale and #devices; Gamma processes for synthetic",
+  "tradeoff": "model parallelism adds overhead (communication, stage imbalance) vs statistical multiplexing benefit; with loose SLO or high rate, replication outperforms model parallelism ('model parallelism is beneficial for smaller SLOs')"
+ },
+ {
+  "key": "arxiv_2303.06865",
+  "title": "High-throughput Generative Inference of Large Language Models with a S",
+  "year": 2023,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "MEMORY",
+   "OTHER:batch_time",
+   "QUALITY"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "mechanism/other",
+   "memory",
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "MEMORY@n/a",
+   "OTHER:batch_time@n/a",
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "OTHER:batch_time",
+   "QUALITY",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch (large effective batch, fixed input 512/1024, output 32/256)",
+  "tradeoff": "Explicit latency-for-throughput trade: 'In throughput-oriented scenarios, we can sacrifice latency by using a large batch size'; FlexGen reaches 100x higher max throughput at latency of ~12000 s per block; Fig 1 shows Pareto frontier."
+ },
+ {
+  "key": "arxiv_2305.05920",
+  "title": "Fast Distributed Inference Serving for Large Language Models",
+  "year": 2023,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "NORM_LAT",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "NORM_LAT@mean",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "GOODPUT",
+   "NORM_LAT",
+   "THR_REQ"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "Poisson request-rate sweep; ShareGPT and Alpaca; also a fixed-length synthetic workload",
+  "tradeoff": "preemption may hurt tail latency of long jobs (mitigated by starvation prevention); paper says tail latency improved too"
+ },
+ {
+  "key": "arxiv_2305.09781",
+  "title": "SpecInfer: Accelerating Generative Large Language Model Serving with T",
+  "year": 2023,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size (1-16 concurrent requests), 128 new tokens per prompt, offline",
+  "tradeoff": "Improvement over incremental decoding shrinks as batch size grows (less spare GPU compute); larger tree width increases verification latency at large batch (BS>=4)"
+ },
+ {
+  "key": "arxiv_2305.13144",
+  "title": "Response Length Perception and Sequence Scheduling: An LLM-Empowered L",
+  "year": 2023,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "OTHER:avg_batch_length",
+   "OTHER:failure_recollection_ratio",
+   "OTHER:length_prediction_error",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch inference (10,000 alpaca prompts; Instruction-in-Wild dataset), group size 256, no arrival process",
+  "tradeoff": "mispredicted (too short) lengths cause failure re-collection and recomputation; mean-length prediction raises failure ratio to 29.8% and gain drops to 45%; larger batches for short responses constrained by memory"
+ },
+ {
+  "key": "arxiv_2306.00978",
+  "title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acce",
+  "year": 2023,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "median"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "TOKEN_LAT@median"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1, 4-token prompt, 200 generated tokens, median over runs",
+  "tradeoff": "W8A8 methods unsuitable for on-device generation stage (arithmetic intensity ~1; memory-bound), so weight-only 4-bit chosen; context stage is compute-bound and 10 ms for 200 tokens vs 310 ms to generate 20 tokens"
+ },
+ {
+  "key": "arxiv_2306.06000",
+  "title": "S3: Increasing GPU Utilization during Generative Inference for Higher ",
+  "year": 2023,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ",
+   "UTIL"
+  ],
+  "con": [
+   "NORM_LAT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "NORM_LAT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "QUALITY",
+   "THR_REQ",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch with max batch size; online = max batch size meeting SLO; no arrival-rate trace",
+  "tradeoff": "explicit latency-throughput trade-off (Fig 1): larger batch raises throughput at the cost of higher latency; S3 aims to exploit slack below the SLO"
+ },
+ {
+  "key": "arxiv_2306.14048",
+  "title": "H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large L",
+  "year": 2023,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:batch_time",
+   "THR_TOK"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "memory",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:batch_time@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:batch_time",
+   "QUALITY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch, synthetic prompts padded to equal length, fixed batch sizes; XSUM real dataset",
+  "tradeoff": "Accuracy vs KV budget: comparable accuracy at <=20% budget; 'strided'/'fixed' sparse baselines fail at 20% budget; extreme budgets degrade."
+ },
+ {
+  "key": "arxiv_2307.08691",
+  "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Pa",
+  "year": 2023,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:kernel_speedup",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency"
+  ],
+  "conf_": [],
+  "flag": "FA-training",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:kernel_speedup@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:kernel_speedup",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "sequence-length sweep with fixed total tokens (16k); training runs",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2308.12908",
+  "title": "POLCA: Power Oversubscription in LLM Cloud Providers",
+  "year": 2023,
+  "layer": "energy/cost",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "OTHER:servers_per_power_budget"
+  ],
+  "con": [
+   "E2E"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:servers_per_power_budget@n/a"
+  ],
+  "con_stats": [
+   "E2E@n/a"
+  ],
+  "reported": [
+   "ENERGY",
+   "OTHER:servers_per_power_budget"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2308.16369",
+  "title": "SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked ",
+  "year": 2023,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:pipeline_bubble_time",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:pipeline_bubble_time@median",
+   "THR_TOK@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:decode_throughput",
+   "OTHER:pipeline_bubble_time",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "offline fixed batch (batch size, P:D ratio, sequence length swept); pipeline experiment is simulated 10K requests, Zipf lengths",
+  "tradeoff": "smaller chunks lower prefill arithmetic intensity and add KV re-read overhead, reducing efficiency; no latency (TTFT/TBT) trade-off analysed"
+ },
+ {
+  "key": "arxiv_2309.06180",
+  "title": "Efficient Memory Management for Large Language Model Serving with Page",
+  "year": 2023,
+  "layer": "KV-memory",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "THR_REQ"
+  ],
+  "con": [
+   "NORM_LAT"
+  ],
+  "objf": [
+   "memory",
+   "throughput"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "NORM_LAT@mean"
+  ],
+  "reported": [
+   "MEMORY",
+   "NORM_LAT",
+   "OTHER:kernel_latency",
+   "THR_REQ",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep with Poisson arrivals over synthesized ShareGPT/Alpaca length traces; 1-hour traces (15 min for OPT-175B)",
+  "tradeoff": "Kernel-level: PagedAttention adds 20-26% higher attention kernel latency vs FasterTransformer kernel (but better end-to-end); block size trade-off between fragmentation and kernel efficiency; swap vs recompute overheads."
+ },
+ {
+  "key": "arxiv_2309.17453",
+  "title": "Efficient Streaming Language Models with Attention Sinks",
+  "year": 2023,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "quality",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "QUALITY@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 streaming single sequence; no serving load",
+  "tradeoff": "Does not extend the context window or long-term memory; tasks needing information outside the window fail (Limitations). Increasing cache size does not consistently lower perplexity."
+ },
+ {
+  "key": "arxiv_2310.07240",
+  "title": "CacheGen: KV Cache Compression and Streaming for Fast Large Language M",
+  "year": 2023,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:kv_size",
+   "TTFT"
+  ],
+  "con": [
+   "QUALITY",
+   "TTFT"
+  ],
+  "objf": [
+   "first-token",
+   "memory"
+  ],
+  "conf_": [
+   "first-token",
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:kv_size@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "OTHER:encode_decode_overhead",
+   "OTHER:kv_size",
+   "QUALITY",
+   "SLO_ATT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "single-request contexts with emulated bandwidth traces (0.1-10 Gbps, 20 traces); concurrent requests batched up to B for streaming",
+  "tradeoff": "Compression/delay vs generation quality (lossy KV encoding); at low bandwidth CacheGen drops quality or falls back to text recompute to meet the SLO."
+ },
+ {
+  "key": "arxiv_2310.17157",
+  "title": "Deja Vu: Contextual Sparsity for Efficient LLMs at Inference Time",
+  "year": 2023,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "OTHER:union_sparsity",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 for headline (\"this paper focuses on latency-sensitive settings\"); larger batches only analysed via union sparsity",
+  "tradeoff": "Accuracy vs sparsity: no accuracy drop until ~75% sparsity; sparsity benefit shrinks at larger batch (union of active neurons grows); prefill-phase not accelerated in the same way."
+ },
+ {
+  "key": "arxiv_2310.18547",
+  "title": "Punica: Multi-Tenant LoRA Serving",
+  "year": 2023,
+  "layer": "LoRA/multi-model",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "TOKEN_LAT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "single-seq-speed"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2310.19102",
+  "title": "Atom: Low-bit Quantization for Efficient and Accurate LLM Serving",
+  "year": 2023,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "quality",
+   "single-seq-speed"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a",
+   "TOKEN_LAT@mean"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed batch size sweep (8-256), ShareGPT prefill/decode length distribution, multi-round chats as separate requests, FCFS",
+  "tradeoff": "Fine-grained group quantization contributes the major kernel overhead (~8% for mixed precision fusion); accuracy cost small (e.g. 0.3 WikiText2 perplexity increase for Llama-65B)"
+ },
+ {
+  "key": "arxiv_2311.01282",
+  "title": "FlashDecoding++: Faster Large Language Model Inference on GPUs",
+  "year": 2023,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:kernel_speedup",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:kernel_speedup@n/a",
+   "TOKEN_LAT@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:kernel_speedup",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size (1,2,4,8), fixed input length (1K; 32K case in Fig 1)",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2311.03285",
+  "title": "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
+  "year": 2023,
+  "layer": "LoRA/multi-model",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:num_served_adapters",
+   "QOE",
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "memory",
+   "slo-goodput",
+   "throughput",
+   "user-perceived"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:num_served_adapters@n/a",
+   "QOE@mean",
+   "SLO_ATT@attainment",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "QOE",
+   "SLO_ATT",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "synthetic Gamma-process arrivals per adapter (rate power-law alpha, CV cv, total rate R, 5 min) with request-rate sweeps; real LMSYS Chatbot Arena trace downsampled; adapter-count sweeps",
+  "tradeoff": "adapter heterogeneity/rank adds batching and communication overhead (reported small); early-abort drops requests likely to miss SLO to raise user satisfaction; S-LoRA-merge advantage only for tiny adapter counts"
+ },
+ {
+  "key": "arxiv_2311.04934",
+  "title": "Prompt Cache: Modular Attention Reuse for Low-Latency Inference",
+  "year": 2023,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 single prompt, per dataset (LongBench 4K-10K context), CPU and GPU",
+  "tradeoff": "Memory overhead of storing precomputed attention states (e.g. 2.5 GB per 1K-token module on Llama 70B -> CPU memory only); host-to-device copy latency when modules live in CPU memory (GPU speedup 5-10x vs up to 10x); possible accuracy change since attention is limited per module."
+ },
+ {
+  "key": "arxiv_2311.11514",
+  "title": "HexGen: Generative Inference of Large Language Model over Heterogeneou",
+  "year": 2023,
+  "layer": "energy/cost",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "con": [
+   "COST"
+  ],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "cost-energy"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "COST@n/a"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2311.15566",
+  "title": "SpotServe: Serving Generative Large Language Models on Preemptible Ins",
+  "year": 2023,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "E2E"
+  ],
+  "con": [
+   "THR_REQ"
+  ],
+  "objf": [
+   "cost-energy",
+   "request-latency"
+  ],
+  "conf_": [
+   "throughput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "COST@n/a",
+   "E2E@n/a"
+  ],
+  "con_stats": [
+   "THR_REQ@n/a"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_REQ"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "trace replay of 12-hour AWS g4dn spot availability trace (two 20-min segments); stable Gamma arrivals (CV 6; 1.5/0.35/0.2 req/s for OPT-6.7B/GPT-20B/LLaMA-30B) and fluctuating MAF trace",
+  "tradeoff": "balances throughput, latency and monetary cost; spot-only saves 54% cost at <18% higher average latency and 90% higher P99 than on-demand (abstract/\u00a76.2); overload when preemption leaves capacity below arrival rate"
+ },
+ {
+  "key": "arxiv_2311.18677",
+  "title": "Splitwise: Efficient generative LLM inference using phase splitting",
+  "year": 2023,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "ENERGY",
+   "THR_REQ"
+  ],
+  "con": [
+   "E2E",
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "request-latency",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "E2E@P99",
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "ENERGY@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "E2E@P99",
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "ENERGY",
+   "MEMORY",
+   "TBT",
+   "THR_REQ",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "both",
+  "load": "trace replay shapes with Poisson arrival-rate sweep (requests/s) for cluster sizing; iso-power, iso-cost, iso-throughput comparisons",
+  "tradeoff": "KV-cache transfer overhead (<7% of prompt time; up to 3% of E2E in serialized case); mixed continuous batching hurts TBT; prompt phase sensitive to power cap while token phase is not; lower cost designs (A100 token machines) trade some latency"
+ },
+ {
+  "key": "arxiv_2312.04511",
+  "title": "An LLM Compiler for Parallel Function Calling",
+  "year": 2023,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "COST",
+   "PROGRAM_JCT",
+   "QUALITY"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "program-latency",
+   "quality"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "COST@mean",
+   "PROGRAM_JCT@n/a",
+   "QUALITY@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "PROGRAM_JCT",
+   "QUALITY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "single-query / benchmark latency (no concurrent load)",
+  "tradeoff": "Planner overhead slightly increases end-to-end latency on tasks without parallelizable calls."
+ },
+ {
+  "key": "arxiv_2312.05516",
+  "title": "Stateful Large Language Model Serving with Pensieve",
+  "year": 2023,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "NORM_LAT",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "NORM_LAT@mean",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "NORM_LAT",
+   "OTHER:kernel_latency",
+   "OTHER:prefill_tokens",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep; conversations arrive Poisson, simulated user think time between turns; ShareGPT and UltraChat",
+  "tradeoff": "Swap/transfer overheads and GPU-cache contention under high rates (GPU-only cache variant loses gain); CPU cache transfer 18-20% throughput drop when swapping in both directions without optimization."
+ },
+ {
+  "key": "arxiv_2312.07104",
+  "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+  "year": 2023,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:cache_hit_rate"
+  ],
+  "con": [],
+  "objf": [
+   "cache-proxy",
+   "memory"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:cache_hit_rate@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:cache_hit_rate",
+   "PROGRAM_JCT",
+   "QUALITY",
+   "THR_REQ",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch (large batch of program instances for throughput); batch=1 sequential for latency; no request-rate sweep",
+  "tradeoff": "Greedy cache-aware (longest-shared-prefix-first) scheduling 'can lead to starvation' (fairness), left as future work; in latency-sensitive settings only limited re-ordering tolerated."
+ },
+ {
+  "key": "arxiv_2312.11514",
+  "title": "LLM in a flash: Efficient Large Language Model Inference with Limited ",
+  "year": 2023,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:flash_io_volume",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "OTHER:flash_io_volume@n/a",
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "OTHER:flash_io_volume",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1, single-token decode latency with model memory limited to half of size",
+  "tradeoff": "Sparsity/predictor inaccuracy (false negatives) can reduce accuracy; MMLU drops for lower-sparsity layers if aggressively pruned; larger windows cost more DRAM."
+ },
+ {
+  "key": "arxiv_2312.12456",
+  "title": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GP",
+  "year": 2023,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "QUALITY",
+   "TBT",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 single-request local inference (plus a batch-size sweep)",
+  "tradeoff": "Larger batch sizes reduce sparsity benefits so speedup shrinks (still avg 6.08x improvement at batch sizes tested); long input prompt with short output shows smaller gains (prefill dominated)."
+ },
+ {
+  "key": "arxiv_2312.17238",
+  "title": "Fast Inference of Mixture-of-Experts Language Models with Offloading",
+  "year": 2023,
+  "layer": "MoE-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "MEMORY",
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "memory",
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a",
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:cache_hit_rate",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 interactive generation; no concurrency",
+  "tradeoff": "Lower-bit expert quantization reduces size/enables fit at some perplexity/MMLU cost; speculative expert loading may load wrong experts (recall<1) adding no benefit."
+ },
+ {
+  "key": "arxiv_2401.00588",
+  "title": "Fairness in Serving Large Language Models",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "FAIRNESS"
+  ],
+  "con": [
+   "UTIL"
+  ],
+  "objf": [
+   "fairness"
+  ],
+  "conf_": [
+   "hw-efficiency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "FAIRNESS@max"
+  ],
+  "con_stats": [
+   "UTIL@n/a"
+  ],
+  "reported": [
+   "FAIRNESS",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "synthetic clients with constant/Poisson/on-off request rates (overloaded and underloaded); real-trace (LMSYS-Chat-1M) clients",
+  "tradeoff": "fairness vs throughput/utilization: RPM limits give isolation but low utilization; VTC variants (predict) trade off; strict bound tightening may compromise work conservation (Remark 4.7)"
+ },
+ {
+  "key": "arxiv_2401.02669",
+  "title": "Infinite-LLM: Efficient LLM Service for Long Context with DistAttentio",
+  "year": 2024,
+  "layer": "long-context",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "memory",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "MEMORY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2401.08671",
+  "title": "DeepSpeed-FastGen: High-throughput Text Generation for LLMs via MII an",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "GOODPUT",
+   "TBT",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "slo-goodput",
+   "throughput",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "GOODPUT@attainment",
+   "TBT@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "GOODPUT",
+   "TBT",
+   "THR_REQ"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "closed-loop client sweep (1-32 concurrent clients, 512 requests), throughput-latency curves; also 16-replica load balancing",
+  "tradeoff": "Argues balance between throughput and latency; vLLM preemption of generation for prompts causes P90/P95 latency spikes (the trade-off they avoid)."
+ },
+ {
+  "key": "arxiv_2401.09670",
+  "title": "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized L",
+  "year": 2024,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "OTHER:kv_transfer_time_fraction",
+   "SLO_ATT",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep with Poisson arrivals over datasets without timestamps; SLO-scale sweep",
+  "tradeoff": "chunked prefill 'trades TTFT for TPOT and cannot eliminate the interference'; disaggregation adds KV transfer overhead (found <0.1% of latency)"
+ },
+ {
+  "key": "arxiv_2401.10774",
+  "title": "Medusa: Simple LLM Inference Acceleration Framework with Multiple Deco",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "ACCEPT@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "QUALITY",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 (\"In the paper, we focus on the setting with batch size 1\"; 'representative of the use case where LLMs are locally hosted for personal use'); batch>1 only via roofline analysis in appendix (batch 1-16+), no serving load",
+  "tradeoff": "Quality vs speed: typical acceptance threshold eps up raises quality but reduces acceleration; self-distilled models (Vicuna-13/33B, Zephyr) get lower speedup to preserve quality. Larger batch erodes benefit (compute-bound)."
+ },
+ {
+  "key": "arxiv_2401.11181",
+  "title": "Inference without Interference: Disaggregate LLM Inference for Mixed D",
+  "year": 2024,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token",
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean",
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "TTFT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_TOK",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "offline batch-style: 128 requests per workload type (five mixes: LPLD, LPHD, HPLD, HPHD, Mixed) from ShareGPT; no request-rate sweep",
+  "tradeoff": "disaggregation uses 2x hardware cards; HPHD gains small ('the overhead we introduce cannot be offset'); LPHD improves perf/$ only 1.1x; large-LLM parallel mode may lower throughput by ~10%"
+ },
+ {
+  "key": "arxiv_2401.14351",
+  "title": "ServerlessLLM: Low-Latency Serverless Inference for Large Language Mod",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:model_startup_latency"
+  ],
+  "con": [],
+  "objf": [
+   "system-op-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:model_startup_latency@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:loading_throughput",
+   "OTHER:model_startup_latency",
+   "SLO_ATT",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (RPS 0.2-1.4) on traces modeled on Azure serverless trace (Gamma-distributed bursty), GSM8K and ShareGPT datasets",
+  "tradeoff": "Live migration/preemption adds pause latency to the migrated inference (counted in latency); Shepherd* preemption causes longer latency; at high RPS (1.4) ServerlessLLM latency also grows due to GPU resource contention"
+ },
+ {
+  "key": "arxiv_2401.15077",
+  "title": "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "ACCEPT@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 for main results (\"experiments with a batch size of 1\"); small fixed batch sizes 1-4 and max-memory batch in \u00a74.4; no request-rate load",
+  "tradeoff": "Speedup diminishes as batch size grows (Vicuna 7B 2.90x at bs1 -> 2.76x at bs4; 70B 3.01x -> 2.40x); EAGLE needs slightly more CUDA memory so max batch is 7 vs 8."
+ },
+ {
+  "key": "arxiv_2401.18079",
+  "title": "KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache",
+  "year": 2024,
+  "layer": "KV-compression",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2402.01869",
+  "title": "InferCept: Efficient Intercept Support for Augmented Large Language Mo",
+  "year": 2024,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "memory",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "MEMORY",
+   "NORM_LAT",
+   "PREEMPT",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (req/s) on mixed augmentation workload (math, QA, VE, chatbot, image, TTS) with synthetic/real interception durations",
+  "tradeoff": "TTFT can be worse than vanilla vLLM (vLLM TTFT better because it discards/queues interceptions); chunked resource sharing minimizes but does not remove overhead."
+ },
+ {
+  "key": "arxiv_2402.02057",
+  "title": "Break the Sequential Dependency of LLM Inference Using Lookahead Decod",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "ACCEPT@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 (single-batch inference); discussion notes compute-bound large-batch serving may cause slowdowns",
+  "tradeoff": "Needs surplus per-step FLOPs; in compute-bound settings (large batch serving) it may slow down; lower speedup on larger models and on GPUs with fewer FLOPs (RTX3090 ~30% vs A100 >50% on MT-Bench). Sampling gives smaller speedups than greedy."
+ },
+ {
+  "key": "arxiv_2402.02750",
+  "title": "KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache",
+  "year": 2024,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@max"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size, increased until OOM (offline batch)",
+  "tradeoff": "Accuracy drop from lossy quantization (small for KIVI; naive 2-bit per-token degrades sharply). Quantization/dequantization overhead acknowledged as unfused (future work)."
+ },
+ {
+  "key": "arxiv_2402.05099",
+  "title": "Hydragen: High-Throughput LLM Inference with Shared Prefixes",
+  "year": 2024,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:attention_kernel_speedup",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch; fixed prefix length with batch-size sweep, and fixed batch with prefix-length sweep",
+  "tradeoff": "Gains shrink for small batches, short prefixes, long suffixes, or GQA/MQA models where attention is not the bottleneck; proof-of-concept not a full serving system."
+ },
+ {
+  "key": "arxiv_2402.07033",
+  "title": "Fiddler: CPU-GPU Orchestration for Fast Inference of Mixture-of-Expert",
+  "year": 2024,
+  "layer": "MoE-serving",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "TOKEN_LAT"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2402.12374",
+  "title": "Sequoia: Scalable, Robust, and Hardware-aware Speculative Decoding",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "ACCEPT@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 (small-batch and offloading regimes; 'The optimal tree also depends on the batch size, which can be considered by the hardware-aware optimizer' but not evaluated); 128-token prompt and generation",
+  "tradeoff": "Optimal tree depends on acceptance-rate vector (draft/target pair, temperature, domain) and on batch size; per-setting measurement is work-intensive. Larger trees trade verification cost vs accepted tokens."
+ },
+ {
+  "key": "arxiv_2402.15220",
+  "title": "ChunkAttention: Efficient Self-Attention with Prefix-Aware KV Cache an",
+  "year": 2024,
+  "layer": "kernels/attention",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "OTHER:attn_kernel_speed"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "memory"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:attn_kernel_speed@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "MEMORY",
+   "OTHER:attn_kernel_speed"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2403.00579",
+  "title": "NeuPIMs: NPU-PIM Heterogeneous Acceleration for Batched LLM Inferencin",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean",
+   "UTIL@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": "fixed batch sizes (64-512) of sampled sequence lengths; throughput of steady-state batches",
+  "tradeoff": "none; says batching improves utilization 'while not sacrificing the latency requirement' without measuring latency"
+ },
+ {
+  "key": "arxiv_2403.01876",
+  "title": "DejaVu: KV-cache Streaming for Fast, Fault-tolerant Generative LLM Ser",
+  "year": 2024,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:recovery_time_under_failure",
+   "THR_REQ"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "throughput"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:recovery_time_under_failure@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "NORM_LAT",
+   "OTHER:makespan",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "request-rate sweep (single open-loop Poisson client, fixed 1000-token prompt, output lengths from LMSys); fixed homogeneous requests for failure experiments",
+  "tradeoff": "Streaming/swapping add KV transfer overhead (single-batch latency slowdown, Fig 11); swapping bottlenecked by PCIe time to bring KV back; paper notes potential negative impact on throughput from differing prompt/token machine counts"
+ },
+ {
+  "key": "arxiv_2403.02310",
+  "title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "OTHER:pipeline_bubbles",
+   "TBT"
+  ],
+  "con": [
+   "TBT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "slo-goodput",
+   "token-pace"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99"
+  ],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "OTHER:pipeline_bubbles@n/a",
+   "TBT@n/a"
+  ],
+  "con_stats": [
+   "TBT@P99"
+  ],
+  "reported": [
+   "GOODPUT",
+   "QUEUE",
+   "TBT",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "Poisson arrival request-rate sweep to find max capacity; datasets openchat_sharegpt4 and arxiv_summarization",
+  "tradeoff": "explicitly a throughput-latency tradeoff: prefill-prioritizing (vLLM/Orca) gets throughput at cost of high TBT tail; decode-prioritizing (FasterTransformer) low TBT but low throughput; smaller token budget reduces TBT but increases chunking overhead"
+ },
+ {
+  "key": "arxiv_2403.19708",
+  "title": "Cost-Efficient Large Language Model Serving for Multi-turn Conversatio",
+  "year": 2024,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "OTHER:cache_hit_rate"
+  ],
+  "con": [],
+  "objf": [
+   "cache-proxy",
+   "cost-energy"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "OTHER:cache_hit_rate@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "OTHER:cache_hit_rate",
+   "OTHER:gpu_time",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay of ShareGPT multi-turn conversations; sessions interleave; compared against recomputation (RE) baseline",
+  "tradeoff": "Storage cost of DRAM/SSD for saved KV (offset by reduced GPU time); low hit rate for LLaMA-65B (2.5 MB/token KV) limits gain; prefetch/save overheads hidden via overlap."
+ },
+ {
+  "key": "arxiv_2404.02015",
+  "title": "MuxServe: Flexible Spatial-Temporal Multiplexing for Multiple LLM Serv",
+  "year": 2024,
+  "layer": "LoRA/multi-model",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "GOODPUT",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "THR_TOK@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "GOODPUT",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2404.07947",
+  "title": "ExeGPT: Constraint-Aware Resource Scheduling for LLM Inference",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [
+   "E2E"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "E2E@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "E2E@P99"
+  ],
+  "reported": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "synthetic input/output length distributions (truncated normal) with decoding forced to given length; throughput at a latency bound; no arrival process",
+  "tradeoff": "Larger batch / fewer micro-batches raises throughput at the cost of latency; under distribution shift a non-adjusted schedule can violate the latency constraint."
+ },
+ {
+  "key": "arxiv_2404.08509",
+  "title": "Efficient Interactive LLM Serving with Proxy Model-based Sequence Leng",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:predictor_accuracy_F1",
+   "OTHER:predictor_overhead",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson-like arrival rate sweep and burstiness sweep using Microsoft Azure function traces for arrival times; LMSYS-Chat-1M prompts; batching: none / dynamic / continuous (max batch 4)",
+  "tradeoff": "no starvation handling or preemption in SSJF (aging mentioned as option); gains shrink as batch size increases; pairwise predictor rejected for O(log N) cost"
+ },
+ {
+  "key": "arxiv_2404.09526",
+  "title": "LoongServe: Efficiently Serving Long-Context Large Language Models wit",
+  "year": 2024,
+  "layer": "long-context",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "con": [
+   "SLO_ATT"
+  ],
+  "objf": [
+   "first-token",
+   "memory",
+   "throughput",
+   "token-pace"
+  ],
+  "conf_": [
+   "slo-goodput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_REQ@n/a",
+   "TPOT@mean",
+   "TTFT@mean"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "NORM_LAT",
+   "OTHER:norm_input_latency",
+   "OTHER:norm_output_latency",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep on four real-world long-context datasets (ShareGPT, LEval, LV-Eval, Mixed) plus Zipf length distributions",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2404.14469",
+  "title": "SnapKV: LLM Knows What You are Looking for Before Generation",
+  "year": 2024,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@max",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size (1,2,4,8), input-length sweep, generation length fixed at 512",
+  "tradeoff": "Accuracy drop at small KV budgets (negligible in Needle test); compression applies to prompt only, not generated tokens."
+ },
+ {
+  "key": "arxiv_2404.14527",
+  "title": "Melange: Cost Efficient Large Language Model Serving by Exploiting GPU",
+  "year": 2024,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST"
+  ],
+  "con": [
+   "NORM_LAT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a"
+  ],
+  "con_stats": [
+   "NORM_LAT@mean"
+  ],
+  "reported": [
+   "COST",
+   "OTHER:tokens_per_dollar",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (workload histogram over request sizes; rates 1-32 req/s) ; load balancer with weighted random routing in validation",
+  "tradeoff": "Allocation chosen on average TPOT leaves ~0.05-0.5% of requests violating SLO; authors note services may need higher adherence. Low-end GPUs cheaper per token but need more instances at tight SLO."
+ },
+ {
+  "key": "arxiv_2404.16283",
+  "title": "Andes: Defining and Enhancing Quality-of-Experience in LLM-Based Text ",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "QOE"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "user-perceived"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "QOE@mean"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "COST",
+   "OTHER:TDS",
+   "QOE",
+   "QUEUE",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay (one-hour slice of BurstGPT with multi-round ShareGPT lengths) plus synthetic bursty arrivals (burst intensity/duration swept)",
+  "tradeoff": "favours QoE over raw throughput ('Throughput is not all you need'); preemption overhead (swap/recompute) handled via refiner; paper argues TTFT/TPOT/P99 statistics miss user experience"
+ },
+ {
+  "key": "arxiv_2404.16710",
+  "title": "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "per-sample generation, greedy, max 512 new tokens; batch size not stated (single-sequence latency setting implied); no serving load",
+  "tradeoff": "Early exit trades accuracy for latency; training recipe can slightly drop last-layer accuracy (e.g. 3% on TOPv2 without escale tuning; larger drop for Llama3 continual pretraining)."
+ },
+ {
+  "key": "arxiv_2405.04437",
+  "title": "vAttention: Dynamic Memory Management for Serving LLMs without PagedAt",
+  "year": 2024,
+  "layer": "KV-memory",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "OTHER:portability_programming_effort",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "mechanism/other",
+   "memory",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "OTHER:portability_programming_effort@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "OTHER:alloc_api_latency",
+   "OTHER:kernel_latency",
+   "THR_REQ",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch sizes (decode micro-benchmarks); offline batch (427 requests); online Poisson QPS near capacity, FCFS (512 requests)",
+  "tradeoff": "CUDA VMM allocation latency (several ms per call) and 2MB default page granularity risk fragmentation/waste, mitigated by 64KB pages and overlapping allocation with compute; decode throughput only on par with PagedAttention (no gain)."
+ },
+ {
+  "key": "arxiv_2405.04532",
+  "title": "QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Se",
+  "year": 2024,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "MEMORY",
+   "QUALITY"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "memory",
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@max"
+  ],
+  "con_stats": [
+   "MEMORY@n/a",
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "COST",
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline max-throughput: batch size increased to the memory limit with fixed 1024 in / 512 out; additional same-batch comparison at batch 4-64 on L40S; no request arrivals or latency SLO",
+  "tradeoff": "Accuracy: 4-bit KV/weights add perplexity vs FP16/W8A8 (Table 2) though less than W4A4 baselines; KV4 attention without optimization was 1.2x slower on A100 (Table 1); existing INT4 methods incur 20-90% dequantization overhead."
+ },
+ {
+  "key": "arxiv_2405.05465",
+  "title": "Vidur: A Large-Scale Simulation Framework For LLM Inference",
+  "year": 2024,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "THR_REQ"
+  ],
+  "con": [
+   "QUEUE",
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "request-latency",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "QUEUE@P99",
+   "TBT@P99",
+   "TTFT@P90"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "THR_REQ@P99"
+  ],
+  "con_stats": [
+   "QUEUE@P99",
+   "TBT@P99",
+   "TTFT@P90"
+  ],
+  "reported": [
+   "NORM_LAT",
+   "TBT",
+   "THR_REQ",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": "Poisson arrivals at 85% (and 95%) of capacity for fidelity; QPS binary search for capacity; static offline traces",
+  "tradeoff": "Throughput vs latency vs cost: SLO tightening raises cost (TBT SLO 0.12->0.14 s gives ~1.85x cost reduction); configs Pareto-optimal on TTFT may violate TBT SLO"
+ },
+ {
+  "key": "arxiv_2405.06856",
+  "title": "Aladdin: Joint Placement and Scaling for SLO-Aware LLM Serving",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "UTIL"
+  ],
+  "con": [
+   "SLO_ATT",
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "hw-efficiency"
+  ],
+  "conf_": [
+   "first-token",
+   "slo-goodput",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment",
+   "TPOT@mean",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "SLO_ATT",
+   "TPOT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "both",
+  "load": "request-rate sweep (Poisson arrivals, varying lambda); real testbed for end-to-end, large-scale simulation for GPU counts",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2405.16444",
+  "title": "CacheBlend: Fast Large Language Model Serving for RAG with Cached Know",
+  "year": 2024,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "COST",
+   "QUALITY",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (average request rate per second) on RAG queries; storage initially empty (first 1K queries skipped)",
+  "tradeoff": "Full KV reuse is fastest (lowest TTFT) but quality drops sharply (often >2x); CacheBlend pays small extra recompute (5-18% of tokens) and <=0.02 F1/Rouge-L loss; MapRerank slightly lower TTFT but much worse quality."
+ },
+ {
+  "key": "arxiv_2405.19888",
+  "title": "Parrot: Efficient Serving of LLM-based Applications with Semantic Vari",
+  "year": 2024,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT",
+   "THR_TOK"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "program-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "NORM_LAT",
+   "PROGRAM_JCT",
+   "THR_REQ",
+   "TPOT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "application workload runs at varying chunk size/output length and number of concurrent apps; mixed chat+map-reduce; no request-rate sweep with SLOs",
+  "tradeoff": "Request-level: per-request latency of individual requests may be sacrificed for application-level completion time ('The latency of individual requests can sacrificed so as to reduce the completion time of the entire DAG'); throughput-oriented batching raises per-request latency (\u00a73: 8.2x throughput for 95% higher latency)."
+ },
+ {
+  "key": "arxiv_2406.00059",
+  "title": "Conveyor: Efficient Tool-aware LLM Serving with Tool Partial Execution",
+  "year": 2024,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "PROGRAM_JCT"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "single request run 100 times per workload (average latency and std); no load sweep",
+  "tradeoff": "Improvement depends heavily on tool characteristics; not all workloads benefit equally (Validation 376.4% from early abort)."
+ },
+ {
+  "key": "arxiv_2406.01566",
+  "title": "Helix: Serving Large Language Models over Heterogeneous GPUs and Netwo",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "online: Azure Conversation arrival times scaled to 75% of cluster peak throughput; offline: requests arrive at rate that fully utilizes the cluster",
+  "tradeoff": "Helix trades some latency for throughput in places: e.g. decode latency 10-16% higher than Swarm in some single-cluster/geo cases because of higher GPU utilization; SP baseline has lower average latency in some settings because it serves mostly on fast GPUs"
+ },
+ {
+  "key": "arxiv_2406.03243",
+  "title": "Llumnix: Dynamic Scheduling for Large Language Model Serving",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "QUEUE",
+   "TPOT",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "first-token",
+   "request-latency",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "COST@n/a",
+   "QUEUE@n/a",
+   "TPOT@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "E2E",
+   "OTHER:migration_downtime",
+   "PREEMPT",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep with Poisson and Gamma arrivals (varying CV), varying length distributions (ShareGPT, BurstGPT, generated long-tail), 16 instances",
+  "tradeoff": "Migration copy adds up to ~1% slowdown to running batches on the source instance; migration/rescheduling benefits limited under very high or very low cluster load"
+ },
+ {
+  "key": "arxiv_2406.04785",
+  "title": "Enabling Efficient Batch Serving for LMaaS via Generation Length Predi",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2406.06282",
+  "title": "PowerInfer-2: Fast Large Language Model Inference on a Smartphone",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2406.06858",
+  "title": "FLUX: Fast Software-based Communication Overlap On GPUs Through Kernel",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:training_step_time"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2406.10774",
+  "title": "Quest: Query-Aware Sparsity for Efficient Long-Context LLM Inference",
+  "year": 2024,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "OTHER:kernel_latency",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 decoding, sequence length sweep (up to 64k)",
+  "tradeoff": "Accuracy vs token budget (smaller budget = faster, risk of accuracy loss); Quest keeps full KV in memory so memory footprint is not reduced (only memory movement)."
+ },
+ {
+  "key": "arxiv_2406.14066",
+  "title": "TurboSpec: Closed-loop Speculation Control System for Optimizing LLM S",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:spec_goodput"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:spec_goodput@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ACCEPT",
+   "E2E",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "static fixed batch sizes (1-64) and dynamic request-rate (QPS) changes plus dataset-distribution shift; online serving in vLLM; separate offline throughput test",
+  "tradeoff": "Occasional degradation: Vicuna-33B at QPS=16 average request latency 43.32s original vs 46.16s TurboSpec. Speculation is harmful at high load / low acceptance, so it is throttled or disabled."
+ },
+ {
+  "key": "arxiv_2406.16858",
+  "title": "EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2406.17565",
+  "title": "MemServe: Context Caching for Disaggregated LLM Serving with Elastic M",
+  "year": 2024,
+  "layer": "prefix/context-caching",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token",
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2406.19707",
+  "title": "InfiniGen: Efficient Generative Inference of Large Language Models wit",
+  "year": 2024,
+  "layer": "KV-memory",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:batch_time"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:batch_time@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "OTHER:batch_time",
+   "OTHER:kv_load_volume",
+   "QUALITY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline fixed batch (1920 input / 128 output tokens, batch 4-20), sequence length and model size sweeps",
+  "tradeoff": "Alpha / partial-weight-ratio knobs trade accuracy vs inference latency (Fig 17, \u00a76.1)."
+ },
+ {
+  "key": "arxiv_2407.00023",
+  "title": "Preble: Efficient Distributed Prompt Scheduling for LLM Serving",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "THR_REQ",
+   "UTIL"
+  ],
+  "con": [
+   "FAIRNESS"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "fairness"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean",
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "E2E@n/a",
+   "THR_REQ@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "FAIRNESS@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "T-OBJ",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (Poisson arrivals, RPS on x-axis) plus Azure trace arrival pattern for tool-use/video-QA mix",
+  "tradeoff": "Local fairness-oriented priority wait queue improves p99 but not average latency (ablation)"
+ },
+ {
+  "key": "arxiv_2407.00047",
+  "title": "Queue Management for SLO-Oriented Large Language Model Serving",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "SLO_ATT",
+   "THR_REQ",
+   "UTIL"
+  ],
+  "con": [
+   "TTFT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TTFT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "SLO_ATT@attainment",
+   "THR_REQ@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "TTFT@P99"
+  ],
+  "reported": [
+   "COST",
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (Poisson arrivals; 3,500 ShareGPT requests per trace; varying arrival rates to build queues)",
+  "tradeoff": "Model swapping/eviction overhead vs SLO; ITL/e2e SLOs explicitly not guaranteed (discussion)."
+ },
+ {
+  "key": "arxiv_2407.00079",
+  "title": "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving",
+  "year": 2024,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "THR_REQ"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P90",
+   "TTFT@P90"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "TBT@P90",
+   "TTFT@P90"
+  ],
+  "reported": [
+   "OTHER:rejected_requests",
+   "SLO_ATT",
+   "TBT",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "both",
+  "load": "request-rate sweep (Poisson RPS) on public and simulated datasets; real-trace replay of 23,000 requests at 2x speed for overload",
+  "tradeoff": "reuse of remote/lower-tier KVCache prolongs TTFT and larger batches enlarge TBT, so throughput optimizations risk SLO violations; naive early rejection causes load fluctuation (Fig 9); Mooncake-[2P+2D] has lower TBT but worse TTFT than [3P+1D]"
+ },
+ {
+  "key": "arxiv_2407.00088",
+  "title": "T-MAC: CPU Renaissance via Table Lookup for Low-Bit LLM Deployment on ",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "ENERGY",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ENERGY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2407.00326",
+  "title": "Teola: Towards End-to-End Optimization of LLM-based Applications",
+  "year": 2024,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "PROGRAM_JCT"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "PROGRAM_JCT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson request-rate sweep (req/s) of synthetic queries from web_question, HotpotQA, TruthfulQA, etc.; single-query latency also reported",
+  "tradeoff": "Per-batch/per-invocation latency can get slightly higher while total completion time falls (batch 16 vs 4 example)."
+ },
+ {
+  "key": "arxiv_2407.05858",
+  "title": "Fast On-device LLM Inference with NPUs",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ENERGY",
+   "OTHER:prefill_latency"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "cost-energy",
+   "first-token"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "ENERGY@mean",
+   "OTHER:prefill_latency@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "ENERGY",
+   "MEMORY",
+   "OTHER:prefill_latency",
+   "QUALITY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1, single request, prompt lengths 64/256/1024 tokens",
+  "tradeoff": "none stated beyond prefill dominating end-to-end (54-92% of total latency)."
+ },
+ {
+  "key": "arxiv_2407.07000",
+  "title": "Etalon: Holistic Performance Evaluation Framework for LLM Inference Sy",
+  "year": 2024,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:fluid_token_generation_rate",
+   "OTHER:fluidity_index",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "throughput",
+   "user-perceived"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:fluid_token_generation_rate@P99",
+   "OTHER:fluidity_index@P99",
+   "THR_REQ@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:fluid_token_generation_rate",
+   "OTHER:fluidity_index",
+   "OTHER:scheduling_delay",
+   "TBT",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (capacity search); black-box hourly runs over 24h for public APIs",
+  "tradeoff": "Under a 25ms P99-TBT SLO Sarathi-Serve capacity is 2x lower than vLLM, whereas under fluidity-index both are the same at 0.6 QPS (metric choice flips the ranking); tail TBT gives vLLM 3x worse throughput than Sarathi while TPOT shows parity"
+ },
+ {
+  "key": "arxiv_2407.08608",
+  "title": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-",
+  "year": 2024,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:kernel_speedup",
+   "UTIL"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "hw-efficiency"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:kernel_speedup@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "OTHER:kernel_speedup",
+   "QUALITY",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "sequence-length sweep with fixed total tokens (16k) kernel microbenchmark",
+  "tradeoff": "FP8 raises numerical error (baseline FP8 RMSE 2.4e-2) vs FP16 (1.9e-4); mitigated by block quantization + incoherent processing to 9.1e-3."
+ },
+ {
+  "key": "arxiv_2408.00741",
+  "title": "DynamoLLM: Designing LLM Inference Clusters for Performance and Energy",
+  "year": 2024,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "ENERGY"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "ENERGY@n/a"
+  ],
+  "con_stats": [
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "reported": [
+   "COST",
+   "ENERGY",
+   "TBT",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "both",
+  "load": "trace replay (Azure Conversation and Coding week-long traces; 1-hour open-source traces) plus Poisson Low/Medium/High load sweep",
+  "tradeoff": "Energy-vs-latency: DynamoLLM raises P50 TTFT and TBT by 11.4% and 7.6% over SinglePool while reducing P99 TTFT/TBT by 5.3% and 11.1% (text as written); savings shrink at higher load (51% / 40% / 23.4% at low/medium/high); reconfiguration overheads"
+ },
+ {
+  "key": "arxiv_2408.05235",
+  "title": "SLO-aware GPU Frequency Scaling for Energy Efficient LLM Inference Ser",
+  "year": 2024,
+  "layer": "energy/cost",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "ENERGY"
+  ],
+  "con": [
+   "SLO_ATT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "slo-goodput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@n/a"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment"
+  ],
+  "reported": [
+   "ENERGY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2408.11049",
+  "title": "MagicDec: Breaking the Latency-Throughput Tradeoff for Long Context Ge",
+  "year": 2024,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "THR_TOK@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed batch size sweep (B=1..256, notably 32-256), fixed sequence lengths 256-100k, offline generation of 96 tokens per sequence, greedy; no request arrivals",
+  "tradeoff": "Conventional trade-off (SD speedup falls with batch size for short sequences, where compute-bound verification dominates) is acknowledged: below a critical sequence length SD slows down at large batch (Fig. 6). Drafting KV budget trades draft cost vs acceptance rate."
+ },
+ {
+  "key": "arxiv_2408.12757",
+  "title": "NanoFlow: Towards Optimal Large Language Model Serving Throughput",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "NORM_LAT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "NORM_LAT@mean"
+  ],
+  "reported": [
+   "E2E",
+   "NORM_LAT",
+   "THR_REQ",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline batch (throughput) plus Poisson (exponential interarrival) request-rate sweep on 5-min traces",
+  "tradeoff": "At low request rates NanoFlow has comparable but slightly higher latency than baselines because it targets throughput and uses a large dense batch (2048); nano-batching duplicates ops and increases weight-load memory I/O."
+ },
+ {
+  "key": "arxiv_2408.13510",
+  "title": "Intelligent Router for LLM Workloads: Improving Performance Through Wo",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "QUEUE"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "QUEUE@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "QUEUE",
+   "TBT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed average arrival rate (lambda = 20 req/s, requests sampled uniformly at random from dataset), 4 instances; real workload trace from Cloud Provider X",
+  "tradeoff": "Round Robin initially has better average TBT than RL early on, but TBT grows over time as more requests accumulate; workload-guided penalties keep prompt/generation throughput similar to RR (no throughput gain claimed)"
+ },
+ {
+  "key": "arxiv_2408.15792",
+  "title": "Efficient LLM Scheduling by Learning to Rank",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "NORM_LAT",
+   "OTHER:kendall_tau",
+   "THR_REQ"
+  ],
+  "con": [
+   "FAIRNESS"
+  ],
+  "objf": [
+   "mechanism/other",
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "fairness"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "NORM_LAT@mean",
+   "OTHER:kendall_tau@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "FAIRNESS@max"
+  ],
+  "reported": [
+   "FAIRNESS",
+   "NORM_LAT",
+   "OTHER:kendall_tau",
+   "THR_REQ"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep on real workloads (chatbot, ShareGPT/LMSYS-Chat-1M) plus offline burst of 2k requests for batch generation",
+  "tradeoff": "SJF/SRTF may starve long requests; mitigated with starvation counter/priority quantum; predictor adds small overhead"
+ },
+ {
+  "key": "arxiv_2409.17264",
+  "title": "No Request Left Behind: Tackling Heterogeneity in Long-Context LLM Inf",
+  "year": 2024,
+  "layer": "long-context",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "GOODPUT",
+   "THR_REQ"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "TBT",
+   "TPOT",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "QPS sweep 0.25-1.75 with 0% / 1% / 5% long (128K-2M) requests",
+  "tradeoff": "Explicit throughput-latency trade-off of chunking (large chunks -> throughput, small chunks -> decode latency) and TTFT-vs-TPOT trade-off of KVP; Medha 3D has slightly lower peak throughput than 2D."
+ },
+ {
+  "key": "arxiv_2410.01035",
+  "title": "Don't Stop Me Now: Embedding Based Scheduling for LLMs",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "MEMORY"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2410.01228",
+  "title": "ConServe: Fine-Grained GPU Harvesting for LLM Online and Offline Co-Se",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "reported": [
+   "SLO_ATT",
+   "TBT",
+   "THR_TOK",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "request-rate sweep with synthetic Gamma arrivals (CV 0.5; 4096 in / 256 out) plus BurstGPT trace replay; offline backlog always present",
+  "tradeoff": "Simple preemptive co-serving: online P99 TTFT x3.59 and TBT x3.01 worse, offline throughput 4.27x lower (motivation); non-preemptive: online latency up to 3x, offline throughput down up to 4x."
+ },
+ {
+  "key": "arxiv_2410.14257",
+  "title": "Revisiting Service Level Objectives and System Level Metrics in Large ",
+  "year": 2024,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:smooth_goodput",
+   "OTHER:user_idle_latency"
+  ],
+  "con": [
+   "OTHER:reading_speed_token_deadline_SLO"
+  ],
+  "objf": [
+   "slo-goodput",
+   "user-perceived"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:smooth_goodput@mean",
+   "OTHER:user_idle_latency@max"
+  ],
+  "con_stats": [
+   "OTHER:reading_speed_token_deadline_SLO@attainment"
+  ],
+  "reported": [
+   "OTHER:smooth_goodput",
+   "QUEUE",
+   "TBT",
+   "THR_TOK",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate (QPS) sweep, Poisson arrivals and real-world trace",
+  "tradeoff": "Throughput vs user idle time: smooth goodput peaks at an intermediate QPS and declines as idle time dominates; larger alpha lowers the optimal QPS (Fig 11). Chunked prefills shift the peak to higher QPS."
+ },
+ {
+  "key": "arxiv_2410.16179",
+  "title": "MagicPIG: LSH Sampling for Efficient LLM Generation",
+  "year": 2024,
+  "layer": "long-context",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2410.18038",
+  "title": "POD-Attention: Unlocking Full Prefill-Decode Overlap for Faster LLM In",
+  "year": 2024,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:attn_kernel_runtime",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:attn_kernel_runtime@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "ENERGY",
+   "SLO_ATT",
+   "TBT",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "offline fixed batch of long requests (throughput); online QPS sweep on 2K-request workloads",
+  "tradeoff": "Explicit TTFT-vs-TBT trade-off between vLLM (prefill-prioritizing: low TTFT, high TBT) and Sarathi (low TBT, higher TTFT); POD narrows it. Sarathi has some throughput reduction vs vLLM."
+ },
+ {
+  "key": "arxiv_2410.21465",
+  "title": "ShadowKV: KV Cache in Shadows for High-Throughput Long-Context LLM Inf",
+  "year": 2024,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_TOK@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline fixed batch size, context-length sweep (8K-1M), batch maximized per method",
+  "tradeoff": "Accuracy within ~1.56% degradation on most tasks at 1.56% sparse budget; CPU value fetch latency mitigated by overlap."
+ },
+ {
+  "key": "arxiv_2411.00136",
+  "title": "LLM-Inference-Bench: Inference Benchmarking of Large Language Models o",
+  "year": 2024,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ENERGY",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@mean",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ENERGY",
+   "OTHER:ITL",
+   "QUALITY",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline fixed batch size sweep (1/16/32/64) x input/output length grid (128-2048); no arrival process",
+  "tradeoff": "Throughput increases with batch size until resources saturate; SN40L has higher TTFT but lower ITL; output length dominates throughput (14.6x between {1024,128} and {128,1024})"
+ },
+ {
+  "key": "arxiv_2411.01142",
+  "title": "NEO: Saving GPU Memory Crisis with CPU Offloading for Online LLM Infer",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "NORM_LAT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "NORM_LAT@mean"
+  ],
+  "reported": [
+   "E2E",
+   "NORM_LAT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson request-rate sweep (load-latency curves); offline fixed workloads",
+  "tradeoff": "KV offload could raise latency at high rates: 'NEO's latency gets slightly higher' as request rate grows vs heavily optimized vLLM"
+ },
+ {
+  "key": "arxiv_2411.01783",
+  "title": "Context Parallelism for Scalable Million-Token Inference",
+  "year": 2024,
+  "layer": "long-context",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TTFT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "TBT",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch size 1 per configuration; sweep over context length (128K-1M) and KV-cache miss rate; no request arrivals",
+  "tradeoff": "Explicit: 'CP drastically improves the prefill latency, at the expense of decode latency regression'; TTIT 47 ms for TP scaling vs growth with CP."
+ },
+ {
+  "key": "arxiv_2411.06364",
+  "title": "EconoServe: Maximizing Multi-Resource Utilization with SLO Guarantees ",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "SLO_ATT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "slo-goodput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "GOODPUT",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2411.11217",
+  "title": "MoE-Lightning: High-Throughput MoE Inference on Memory-constrained GPU",
+  "year": 2024,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Offline batch processing: large fixed request batches (thousands of requests), batch/micro-batch size searched by HRM; generation length sweep 32-256 on MTBench; no latency SLO",
+  "tradeoff": "Paper states it targets offline batch workloads where higher throughput translates into lower total completion time; per-request latency is not optimized or reported."
+ },
+ {
+  "key": "arxiv_2411.15100",
+  "title": "XGrammar: Flexible and Efficient Structured Generation Engine for Larg",
+  "year": 2024,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:mask_gen_latency_per_token",
+   "TPOT"
+  ],
+  "con": [],
+  "objf": [
+   "mechanism/other",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "OTHER:mask_gen_latency_per_token@n/a",
+   "TPOT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:mask_gen_latency_per_token",
+   "OTHER:mask_preprocessing_time",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed batch sizes in online serving (no request-rate sweep); JSON-mode-eval and synthetic datasets",
+  "tradeoff": "none stated; preprocessing (mask-cache build) cost is amortised/overlapped with prefill"
+ },
+ {
+  "key": "arxiv_2411.19379",
+  "title": "Marconi: Prefix Caching for the Era of Hybrid LLMs",
+  "year": 2024,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:token_hit_rate",
+   "TTFT"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "cache-proxy",
+   "first-token"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:token_hit_rate@mean",
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "OTHER:flop_efficiency",
+   "OTHER:token_hit_rate",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "trace replay (LMSys, ShareGPT, SWE-Bench) with varying request arrival patterns, cache sizes, and hybrid model architectures",
+  "tradeoff": "Judicious admission reduces coverage; FLOP-aware eviction trades hit rate of shorter sequences for longer ones: P5 TTFT is 6.3% worse than SGLang+ (2.1 ms absolute) while P50/P95 TTFT improve by 13.4%/22.0%."
+ },
+ {
+  "key": "arxiv_2412.03594",
+  "title": "BatchLLM: Optimizing Large Batched LLM Inference with Global Prefix Sh",
+  "year": 2024,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2412.17246",
+  "title": "BlitzScale: Fast and Live Large Model Autoscaling with O(1) Host Cachi",
+  "year": 2024,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "GOODPUT",
+   "OTHER:scale_time",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "slo-goodput",
+   "system-op-latency"
+  ],
+  "conf_": [
+   "first-token"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "GOODPUT@n/a",
+   "OTHER:scale_time@n/a",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TTFT@n/a"
+  ],
+  "reported": [
+   "COST",
+   "OTHER:scale_time",
+   "SLO_ATT",
+   "TBT",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "trace replay (BurstGPT, Azure Code, Azure Conversation) scaled to cluster capacity",
+  "tradeoff": "vs fully over-provisioned DistServe (full) BlitzScale has same SLO attainment but uses far less GPU time; DistServe (half) provisioned for half peak has poorest performance; live scale yields more benefit on TTFT than TBT"
+ },
+ {
+  "key": "arxiv_2412.20993",
+  "title": "Efficiently Scaling LLM Reasoning with Certaindex",
+  "year": 2024,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "cost-energy",
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@mean",
+   "SLO_ATT@P90",
+   "THR_REQ@P90"
+  ],
+  "con_stats": [
+   "QUALITY@mean"
+  ],
+  "reported": [
+   "COST",
+   "FAIRNESS",
+   "PROGRAM_JCT",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson program arrivals (programs/s) online; offline batch for token savings",
+  "tradeoff": "Throughput in tokens/s is unchanged ('equal average throughput ... memory bound'); gains come from fewer tokens per program. Early exit risks dropping accuracy; paper keeps accuracy fixed."
+ },
+ {
+  "key": "arxiv_2501.01005",
+  "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Infere",
+  "year": 2025,
+  "layer": "kernels/attention",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:kernel_TFLOPs",
+   "TBT",
+   "THR_TOK",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep tuned to P99 TTFT<200ms (online); fixed rate 16 for vLLM test",
+  "tradeoff": "none acknowledged"
+ },
+ {
+  "key": "arxiv_2501.08090",
+  "title": "Hierarchical Autoscaling for Large Language Model Serving with Chiron",
+  "year": 2025,
+  "layer": "cluster-routing/placement",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "SLO_ATT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "SLO_ATT@attainment",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "QUEUE",
+   "SLO_ATT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2501.12162",
+  "title": "AdaServe: SLO-Customized LLM Serving with Fine-Grained Speculative Dec",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "SLO_ATT@attainment",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "TPOT@attainment"
+  ],
+  "reported": [
+   "ACCEPT",
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Request-rate (RPS) sweep using rescaled real-world trace timestamps, plus sweeps of urgent-request share and SLO scale; synthetic trace",
+  "tradeoff": "Strict per-request latency favors small batches (lower throughput); AdaServe adjusts speculation depth/width, using shallower trees under heavy load; vLLM-Priority meets tight SLOs only at throughput/other-category cost."
+ },
+ {
+  "key": "arxiv_2501.14312",
+  "title": "Locality-aware Fair Scheduling in LLM Serving",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "FAIRNESS",
+   "OTHER:prefix_cache_hit_rate",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "cache-proxy",
+   "fairness",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "FAIRNESS@n/a",
+   "OTHER:prefix_cache_hit_rate@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "FAIRNESS",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "multi-client workloads with misbehaving clients (more requests / longer prefixes); synthetic traces + real traces; 1-8 GPUs; throughput measured under saturation",
+  "tradeoff": "Explicit three-way trade-off: fairness vs prefix locality (cache hit rate / throughput) vs load balancing; DLPM hyperparameter Q relaxes the fairness bound to gain throughput (Pareto frontier in Fig 1). Appendix: slight effect on Jain's index."
+ },
+ {
+  "key": "arxiv_2501.14794",
+  "title": "Characterizing Mobile SoC for Accelerating Heterogeneous LLM Inference",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2501.14808",
+  "title": "HyGen: Efficient LLM Serving via Elastic Online-Offline Request Co-loc",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99",
+   "TTFT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "TBT@P99",
+   "TBT@mean",
+   "TTFT@P99",
+   "TTFT@mean"
+  ],
+  "reported": [
+   "TBT",
+   "THR_REQ",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "trace replay (Azure LLM inference conversation trace 2023, Mooncake trace) scaled to a target QPS, with an offline backlog (arXiv summarization)",
+  "tradeoff": "Online SLO headroom vs offline throughput: looser interference tolerance yields higher offline throughput; HyGen gets up to 84.3% of pure-offline Sarathi total throughput."
+ },
+ {
+  "key": "arxiv_2502.04563",
+  "title": "WaferLLM: Large Language Model Inference at Wafer Scale",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a",
+   "UTIL@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ENERGY",
+   "TOKEN_LAT",
+   "TPOT",
+   "TPS_USER",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 single-request; fixed input/output lengths (e.g. 2048/2048 combos)",
+  "tradeoff": "none; notes that more GPUs raise concurrent-query throughput but not per-request speed"
+ },
+ {
+  "key": "arxiv_2502.05111",
+  "title": "Flexible and Efficient Grammar-Constrained Decoding",
+  "year": 2025,
+  "layer": "other",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:GCD_preprocessing_time"
+  ],
+  "con": [
+   "OTHER:online_mask_computation_time"
+  ],
+  "objf": [
+   "mechanism/other"
+  ],
+  "conf_": [
+   "mechanism/other"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:GCD_preprocessing_time@n/a"
+  ],
+  "con_stats": [
+   "OTHER:online_mask_computation_time@n/a"
+  ],
+  "reported": [
+   "OTHER:GCD_preprocessing_time",
+   "OTHER:online_mask_computation_time"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2502.05370",
+  "title": "Taming Latency-Memory Trade-Off in MoE-Based LLM Serving via Fine-Grai",
+  "year": 2025,
+  "layer": "MoE-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:expert_hit_rate",
+   "TPOT",
+   "TTFT"
+  ],
+  "con": [
+   "MEMORY",
+   "QUALITY"
+  ],
+  "objf": [
+   "cache-proxy",
+   "first-token",
+   "token-pace"
+  ],
+  "conf_": [
+   "memory",
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:expert_hit_rate@mean",
+   "TPOT@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "MEMORY@n/a",
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "OTHER:expert_hit_rate",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Offline serving (expert map store full) at small batch (default), batch sweep 1-8 on Mixtral-8x7B; online serving with 256 requests from Azure LLM inference traces at 2.91 req/s; expert cache limit sweep 6-96 GB",
+  "tradeoff": "The title trade-off: baselines achieve low latency with large memory footprint (e.g. no offload / ProMoE) or low memory with high latency (DeepSpeed, MoE-Infinity); FineMoE targets the Pareto point. Prefetch distance trades hit rate vs. overhead."
+ },
+ {
+  "key": "arxiv_2502.07903",
+  "title": "HexGen-2: Disaggregated Generative Inference of LLMs in Heterogeneous ",
+  "year": 2025,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "COST"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "cost-energy"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "COST@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline (saturating arrival, 4 workload types HPLD/HPHD/LPHD/LPLD) and online (75% of peak throughput, Azure conversation trace)",
+  "tradeoff": "Prefill is placed with latency-optimal parallelism and decode with throughput-optimal parallelism (explicit per-phase objective split); chunked prefill gives ~20% throughput on some workloads vs 5% on others"
+ },
+ {
+  "key": "arxiv_2502.09334",
+  "title": "ThunderServe: High-performance and Cost-efficient LLM Serving in Cloud",
+  "year": 2025,
+  "layer": "energy/cost",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "con": [
+   "COST"
+  ],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "cost-energy"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [
+   "COST@n/a"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2502.13965",
+  "title": "Autellix: An Efficient Serving Engine for LLM Agents as General Progra",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "program-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [
+   "PROGRAM_JCT@P99"
+  ],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "P99",
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@P99",
+   "PROGRAM_JCT@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "PROGRAM_JCT",
+   "QUEUE",
+   "THR_REQ"
+  ],
+  "tail_role": "T-OBJ",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (programs/s) over ShareGPT, BFCL, LATS, Mixed; single-engine and multi-engine",
+  "tradeoff": "Preemptive scheduling can reduce average latency but risk starving long programs (tail); MLFQ had poor P95/99 on ShareGPT; Autellix lower tails in 7 of 8 scenarios."
+ },
+ {
+  "key": "arxiv_2502.14051",
+  "title": "RocketKV: Accelerating Long-Context LLM Inference via Two-Stage KV Cac",
+  "year": 2025,
+  "layer": "KV-compression",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2502.14617",
+  "title": "SageServe: Optimizing LLM Serving on Cloud Data Centers with Forecast ",
+  "year": 2025,
+  "layer": "cluster-routing/placement",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "COST"
+  ],
+  "con": [
+   "E2E"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "E2E@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a"
+  ],
+  "con_stats": [
+   "E2E@P99"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "SLO_ATT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2502.14866",
+  "title": "LServe: Efficient Long-sequence LLM Serving with Unified Sparse Attent",
+  "year": 2025,
+  "layer": "long-context",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "TOKEN_LAT",
+   "TTFT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "first-token",
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "TOKEN_LAT@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "QUALITY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size / batch=1 style kernel benchmarks at fixed context lengths (16K-512K); no request-rate sweep",
+  "tradeoff": "Small accuracy deltas vs dense (LongBench avg 38.9 -> 38.6 on Llama-3-8B); larger token budget (8192 vs 4096) up to 6% slower"
+ },
+ {
+  "key": "arxiv_2502.15197",
+  "title": "TETRIS: Optimal Draft Token Selection for Batch Speculative Decoding",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ACCEPT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2502.15470",
+  "title": "PAPI: Exploiting Dynamic Parallelism in Large Language Model Decoding ",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2503.01840",
+  "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models vi",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ACCEPT",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "mechanism/other",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "ACCEPT@mean",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "ACCEPT",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Speedup: batch size 1 (greedy T=0 and T=1) on 5 tasks; throughput: fixed-batch-size sweep (SGLang bs 2-64 on H100, vLLM bs 2-56 on A100) on MT-Bench; no request-rate sweep",
+  "tradeoff": "Speculative sampling gains shrink with batch size: in vLLM EAGLE shows max throughput gain at bs 24 and degrades throughput beyond; EAGLE-3 still +38% at bs 64 in SGLang (gain declines from batch 1 to 64)."
+ },
+ {
+  "key": "arxiv_2503.05096",
+  "title": "AdaSpec: Adaptive Speculative Decoding for Fast, SLO-Aware Large Langu",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "SLO_ATT",
+   "THR_TOK"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "request-latency",
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "SLO_ATT@attainment",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "TPOT@attainment"
+  ],
+  "reported": [
+   "ACCEPT",
+   "E2E",
+   "SLO_ATT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Replay of 10-minute windows from real production traces (3 patterns: fluctuating, periodic, rapidly varying) plus batch-size sweep BS=1,2,4,8,16 (Fig 12)",
+  "tradeoff": "Longer speculative length raises expected speedup but increases risk of TPOT violations (SLO attainment drops, Fig 5); stricter SLO costs ~2% speedup."
+ },
+ {
+  "key": "arxiv_2503.06433",
+  "title": "Seesaw: High-throughput LLM Inference via Model Re-sharding",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2503.14649",
+  "title": "RAGO: Systematic Performance Optimization for Retrieval-Augmented Gene",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "cost-energy",
+   "first-token",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "COST@n/a",
+   "THR_REQ@n/a",
+   "TTFT@mean"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "NONE",
+  "eval_type": "simulation",
+  "load": "analytical/simulated max-throughput with batch-size sweeps (retrieval, prefix, decode batch); not a request-rate sweep",
+  "tradeoff": "Larger batch sizes improve retrieval and prefix throughput but may stall decoding (TPOT up); throughput vs TTFT Pareto trade-off; iterative-retrieval batching causes decode idleness (up to 2.77x normalized decode latency)."
+ },
+ {
+  "key": "arxiv_2503.18292",
+  "title": "Jenga: Effective Memory Management for Serving LLM with Heterogeneity",
+  "year": 2025,
+  "layer": "KV-memory",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "memory",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "MEMORY@mean",
+   "THR_REQ@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline dataset replay for throughput; request-rate sweep for the Llama vision latency study (Fig 14)",
+  "tradeoff": "TPOT of Jenga is larger than vLLM because it batches more requests (same TPOT if scheduling the same number of requests per step); low-rate latency differs by only 2.6%."
+ },
+ {
+  "key": "arxiv_2503.24000",
+  "title": "Rethinking Key-Value Cache Compression Techniques for Large Language M",
+  "year": 2025,
+  "layer": "KV-compression",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "OTHER:response_length_difference",
+   "QUALITY",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "offline fixed batch sweeps (batch size x prompt length x KV length) for throughput; batch=1 per-sample for E2E latency",
+  "tradeoff": "Memory reduction vs throughput (diminishing with FlashAttention/PagedAttention) and vs longer outputs; throughput speedup can be outweighed by longer responses, increasing E2E latency (GEAR worse tail E2E); length-predictor-only routing 0.83-1.03x vs throughput-predictor 1.18-1.48x and both 1.45-1.80x"
+ },
+ {
+  "key": "arxiv_2504.02263",
+  "title": "MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregate",
+  "year": 2025,
+  "layer": "MoE-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "TBT"
+  ],
+  "objf": [
+   "cost-energy",
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "THR_TOK@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "TBT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "ENERGY",
+   "OTHER:M2N_comm_latency",
+   "TBT",
+   "THR_TOK"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "Fixed (searched) global decode batch size per system under 150 ms TBT cap; prefill and decode temporally separated, decode-only measurement; synthetic/production-like in-house workload (median sequence length given)",
+  "tradeoff": "Disaggregation adds per-layer communication and does not reduce individual per-token latency; mean TBT is comparable to baselines (sometimes slightly higher), the gain is throughput at the same TBT bound."
+ },
+ {
+  "key": "arxiv_2504.03648",
+  "title": "AIBrix: Towards Scalable, Cost-Effective Large Language Model Inferenc",
+  "year": 2025,
+  "layer": "cluster-routing/placement",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "COST",
+   "E2E",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy",
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "COST@n/a",
+   "E2E@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "COST",
+   "E2E",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2504.07347",
+  "title": "Throughput-Optimal Scheduling Algorithms for LLM Inference and AI Agen",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:requests_in_system_over_time",
+   "TBT",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "both",
+  "load": "request-rate sweep / fixed Poisson arrival rate (14 QPS, Fig 1) and trace replay (1.2 QPS coding trace); stability analysis",
+  "tradeoff": "Table 3: Sarathi-Serve best E2E and prefill latency but FasterTransformer has lowest TBT - 'a trade-off between prefill responsiveness and decode smoothness'; small token budget (128) adds chunked-prefill overhead"
+ },
+ {
+  "key": "arxiv_2504.07494",
+  "title": "Apt-Serve: Adaptive Request Scheduling on Hybrid Cache for Scalable LL",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "MEMORY",
+   "QUEUE",
+   "TTFT"
+  ],
+  "con": [
+   "TBT"
+  ],
+  "objf": [
+   "first-token",
+   "memory",
+   "request-latency",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99"
+  ],
+  "lat_obj_stats": [
+   "attainment",
+   "n/a"
+  ],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "MEMORY@n/a",
+   "QUEUE@n/a",
+   "TTFT@attainment"
+  ],
+  "con_stats": [
+   "TBT@P99"
+  ],
+  "reported": [
+   "E2E",
+   "GOODPUT",
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (Poisson arrivals; 1,000 sampled requests per dataset)",
+  "tradeoff": "SLO-aware demotion of violated requests starves ~10% of requests (high tail latency); trading SLO attainment against tail latency possible via a decaying factor (0.4 variant). Hidden cache adds extra linear-transform cost that slows batches (manageable extra TBT)."
+ },
+ {
+  "key": "arxiv_2504.08784",
+  "title": "SLOs-Serve: Optimized Serving of Multi-SLO LLMs",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay (Azure LLM inference traces: bursty Coding, stable Chatting) scaled to request load; capacity search; multi-replica scaling",
+  "tradeoff": "Prefill-prioritising (vLLM) causes TPOT violations; decode-prioritising (Sarathi) causes TTFT violations; requests with unattainable SLOs are delayed/demoted to best-effort under bursts to protect the rest."
+ },
+ {
+  "key": "arxiv_2504.09285",
+  "title": "DynaServe: Unified and Elastic Execution for Dynamic Disaggregated LLM",
+  "year": 2025,
+  "layer": "PD-disaggregation",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "GOODPUT"
+  ],
+  "con": [
+   "TBT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P99"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@n/a"
+  ],
+  "con_stats": [
+   "TBT@P99"
+  ],
+  "reported": [
+   "GOODPUT",
+   "TBT",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2504.10724",
+  "title": "HELIOS: Adaptive Model And Early-Exit Selection for Efficient LLM Infe",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "con": [],
+  "objf": [
+   "memory",
+   "single-seq-speed",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "THR_TOK@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2504.14966",
+  "title": "SLO-Aware Scheduling for Large Language Model Inferences",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "SLO_ATT"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "SLO_ATT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2504.19867",
+  "title": "semi-PD: Towards Efficient LLM Serving via Phase-Wise Disaggregated Co",
+  "year": 2025,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput",
+   "throughput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "SLO_ATT@attainment",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "E2E",
+   "SLO_ATT",
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep, Poisson arrivals",
+  "tradeoff": "Analyses TTFT-vs-TPOT interference in unified systems and storage inefficiency (3x higher TPOT from storage shortage) in disaggregated; no explicit cost of semi-PD"
+ },
+ {
+  "key": "arxiv_2504.20068",
+  "title": "JITServe: SLO-aware LLM Serving with Imprecise Request Information",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "UTIL"
+  ],
+  "con": [
+   "E2E",
+   "PROGRAM_JCT",
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "program-latency",
+   "request-latency",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "E2E@attainment",
+   "PROGRAM_JCT@attainment",
+   "TBT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "E2E",
+   "GOODPUT",
+   "TBT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "trace replay (Microsoft LLM serving trace scaled to cluster; Poisson ablation); >10K requests over >=1 hour",
+  "tradeoff": "Grouping cutoff p trades batch-length homogeneity (efficiency) vs diluting group goodput; goodput-only scheduling can be unfair (fairness-adjustable priority); aggressive optimization can sacrifice a small subset of requests (shown not to occur)."
+ },
+ {
+  "key": "arxiv_2505.06371",
+  "title": "The ML.ENERGY Benchmark: Toward Automated Inference Energy Measurement",
+  "year": 2025,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ENERGY"
+  ],
+  "con": [
+   "E2E",
+   "TPOT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "request-latency",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@mean"
+  ],
+  "con_stats": [
+   "E2E@mean",
+   "TPOT@mean"
+  ],
+  "reported": [
+   "E2E",
+   "ENERGY",
+   "OTHER:avg_power_W",
+   "TPOT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "submit full 3000-request dataset; max-batch-size sweep; steady-state window at saturated batch",
+  "tradeoff": "Energy vs latency (convex Pareto frontier: e.g. TPOT 77 ms point cuts energy per generation 44%; 5 s target cuts 21% vs min-latency config); longer outputs/reasoning raise energy; batch size amortizes energy but raises latency"
+ },
+ {
+  "key": "arxiv_2505.09142",
+  "title": "ELIS: Efficient LLM Iterative Scheduling System with Response Length P",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2505.09999",
+  "title": "ServeGen: Workload Characterization and Generation of Large Language M",
+  "year": 2025,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "COST"
+  ],
+  "con": [
+   "SLO_ATT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "slo-goodput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a"
+  ],
+  "con_stats": [
+   "SLO_ATT@P99"
+  ],
+  "reported": [
+   "OTHER:arrival_CV_burstiness",
+   "OTHER:instances_provisioned_over_under",
+   "SLO_ATT",
+   "TBT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay / generated per-client workloads; rate sweep to find max sustainable rate",
+  "tradeoff": "NAIVE (Poisson, whole-workload resampling) benchmarking mis-provisions instances and can pick a worse PD config than ServeGen"
+ },
+ {
+  "key": "arxiv_2505.11329",
+  "title": "TokenWeave: Efficient Compute-Communication Overlap for Distributed LL",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:iteration_latency"
+  ],
+  "con": [],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:iteration_latency@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:iteration_latency",
+   "TBT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed (input,output)-length traces and ShareGPT/arXiv traces run offline with chunked prefill (chunk 2K, 4K for Mixtral); single-iteration microbenchmarks",
+  "tradeoff": "Chunk size trades TBT against throughput (smaller chunks -> lower TBT, lower throughput); TokenWeave applied only to batches with 1K+ tokens."
+ },
+ {
+  "key": "arxiv_2505.13326",
+  "title": "Thinking Short and Right Over Thinking Long: Serving LLM Reasoning Eff",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "QUALITY",
+   "QUEUE"
+  ],
+  "con": [],
+  "objf": [
+   "quality",
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "QUALITY@n/a",
+   "QUEUE@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:inference_latency_excl_queue",
+   "QUALITY",
+   "QUEUE"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep at two arrival rates (1 and 4 req/s), sweep of branch count N",
+  "tradeoff": "Larger N lowers inference latency but raises queuing delay and E2E latency; N in {4,8} has higher average (P50) and P90 latency than N in {1,2} but much lower P97/P99. SART accuracy slightly lower than Self-Consistency in several cases."
+ },
+ {
+  "key": "arxiv_2505.19645",
+  "title": "MoESD: Unveil Speculative Decoding's Potential for Accelerating Sparse",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "TOKEN_LAT"
+  ],
+  "con": [],
+  "objf": [
+   "single-seq-speed"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ACCEPT",
+   "OTHER:target_efficiency",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2505.23022",
+  "title": "Scorpio: Serving Right Requests at the Right Time for Heterogeneous SL",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "con": [],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@n/a",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "GOODPUT",
+   "SLO_ATT",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2505.23416",
+  "title": "KVzip: Query-Agnostic KV Cache Compression with Context Reconstruction",
+  "year": 2025,
+  "layer": "KV-compression",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "MEMORY",
+   "TOKEN_LAT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "memory",
+   "single-seq-speed"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "TOKEN_LAT@n/a"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2506.02634",
+  "title": "KVCache Cache in the Wild: Characterizing and Optimizing KVCache Cache",
+  "year": 2025,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:QTTFT",
+   "OTHER:kv_cache_hit_ratio"
+  ],
+  "con": [],
+  "objf": [
+   "cache-proxy",
+   "first-token"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "OTHER:QTTFT@mean",
+   "OTHER:kv_cache_hit_ratio@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "MEMORY",
+   "OTHER:QTTFT",
+   "OTHER:kv_cache_hit_ratio",
+   "OTHER:kv_lifespan"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "trace replay of two production traces (Trace A, Trace B) with cache-capacity sweep",
+  "tradeoff": "WA gain shrinks as cache capacity grows (larger cache tolerates a less effective policy); smaller gains on Trace B (99% single-turn)"
+ },
+ {
+  "key": "arxiv_2506.03887",
+  "title": "Pre$^3$: Enabling Deterministic Pushdown Automata for Faster Structure",
+  "year": 2025,
+  "layer": "other",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "con": [],
+  "objf": [
+   "throughput",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "TPOT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2506.10470",
+  "title": "TD-Pipe: Temporally-Disaggregated Pipeline Parallelism Architecture fo",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2506.12708",
+  "title": "Serving Large Language Models on Huawei CloudMatrix384",
+  "year": 2025,
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK",
+   "UTIL"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "hw-efficiency",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "QUALITY",
+   "THR_TOK",
+   "TPOT",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch size per phase (decode batch 96/NPU at 4K KV; prefill 16K-token batches); no request-rate sweep",
+  "tradeoff": "Throughput-latency: decode throughput falls from 1,943 to 974 to 538 tokens/s per NPU as TPOT SLO tightens from 50 to 30 to 15 ms (batch 96->24->8). MTP raises per-iteration latency but improves overall throughput (\u00a76)."
+ },
+ {
+  "key": "arxiv_2506.14851",
+  "title": "Efficient Serving of LLM Applications with Probabilistic Demand Modeli",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT",
+   "SLO_ATT"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency",
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "PROGRAM_JCT",
+   "SLO_ATT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "application submission window sweep (10/15/30 min = 3x/2x/1x workload intensity); 300 apps for LLaMA2-7B, 3000 for LLaMA3-70B",
+  "tradeoff": "Prewarming trades resource wastage for latency reduction (Fig 14 avg latency change vs resource consumption); naive SRPT fails under demand uncertainty."
+ },
+ {
+  "key": "arxiv_2507.07120",
+  "title": "Helix Parallelism: Rethinking Sharding Strategies for Interactive Mult",
+  "year": 2025,
+  "layer": "long-context",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:batch_scalability",
+   "THR_TOK",
+   "TPS_USER"
+  ],
+  "con": [
+   "TOKEN_LAT"
+  ],
+  "objf": [
+   "throughput",
+   "token-pace"
+  ],
+  "conf_": [
+   "single-seq-speed"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "OTHER:batch_scalability@n/a",
+   "THR_TOK@n/a",
+   "TPS_USER@n/a"
+  ],
+  "con_stats": [
+   "TOKEN_LAT@n/a"
+  ],
+  "reported": [
+   "THR_TOK",
+   "TOKEN_LAT",
+   "TPS_USER"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": "decode-only simulation sweeping 100,000+ configurations over TP/EP/PP/KVP and batch size at 1M context",
+  "tradeoff": "Pareto trade-off throughput/GPU vs tokens/s/user: higher batch raises throughput but lowers per-user rate; Helix shifts frontier outward."
+ },
+ {
+  "key": "arxiv_2507.07400",
+  "title": "KVFlow: Efficient Prefix Caching for Accelerating LLM-Based Multi-Agen",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "PROGRAM_JCT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batch=1 single workflow; fixed concurrency of 8-64 simultaneous independent workflows chosen so prefix caches still fit; PEER-style synthetic workflows",
+  "tradeoff": "If concurrency is too high, all memory is consumed by active requests and the method is out of scope; HiCache can fall to 0.57x of SGLang under high concurrency (baseline, not KVFlow)."
+ },
+ {
+  "key": "arxiv_2507.17769",
+  "title": "PolyServe: Efficient Multi-SLO Serving at Scale",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "GOODPUT"
+  ],
+  "con": [
+   "SLO_ATT",
+   "TPOT"
+  ],
+  "objf": [
+   "cost-energy",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "slo-goodput",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "GOODPUT@attainment"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment",
+   "TPOT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "tail_role": "T-OBJ",
+  "eval_type": "simulation",
+  "load": "request-rate sweep (20%-120% of optimal throughput), Poisson; burstiness test with inverted tier mix",
+  "tradeoff": "tighter SLO restricts batching, lowering utilization and raising cost; chunked prefill adds extra iterations (tail TTFT)"
+ },
+ {
+  "key": "arxiv_2507.19427",
+  "title": "Step-3 is Large yet Affordable: Model-system Co-design for Cost-effect",
+  "year": 2025,
+  "layer": "MoE-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "THR_TOK"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "cost-energy",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@mean",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "COST",
+   "THR_TOK",
+   "TOKEN_LAT",
+   "TPOT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "fixed large batch (6144 total, three micro batches of 2048) at 4K/8K average context; offline benchmark of steady-state decoding",
+  "tradeoff": "Longer context lowers TGS (4,039 at 4K to ~2,693 at 8K with 4A2F); BF16 attention gives 3,321 TGS vs 4,039 FP8; over-sparse MoE hits network bandwidth limit (upcycled 3A4F: 3,291 TGS). Megascale-Infer cited as 150 ms per token (high throughput, high latency)."
+ },
+ {
+  "key": "arxiv_2508.01989",
+  "title": "Prefill-Decode Aggregation or Disaggregation? Unifying Both for Goodpu",
+  "year": 2025,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "SLO_ATT",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "request-rate (QPS) sweep, Poisson arrivals",
+  "tradeoff": "TTFT-vs-TPOT tradeoff between PD aggregation and disaggregation; latency shifting deliberately degrades TTFT/TPOT of requests that already meet SLOs to protect at-risk ones"
+ },
+ {
+  "key": "arxiv_2508.06948",
+  "title": "Kairos: Low-latency Multi-Agent Serving with Shared LLMs and Excessive",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT",
+   "QUEUE"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency",
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean",
+   "n/a"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean",
+   "PROGRAM_JCT@n/a",
+   "QUEUE@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "PROGRAM_JCT"
+  ],
+  "tail_role": "T-OBJ",
+  "eval_type": "real-system",
+  "load": "trace-like inter-request interval sampling; load rate adjusted so average queueing-time ratio spans 0% to 90%; co-located multi-application workloads",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2508.16449",
+  "title": "GreenLLM: SLO-Aware Dynamic Frequency Scaling for Energy-Efficient LLM",
+  "year": 2025,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "ENERGY"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [
+   "TBT@P95"
+  ],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@n/a"
+  ],
+  "con_stats": [
+   "TBT@P95",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "ENERGY",
+   "SLO_ATT",
+   "TBT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "T-SLO",
+  "eval_type": "real-system",
+  "load": "trace replay (Alibaba chat, Azure code/conversation, rate scaled to single-node capacity) and TPS/QPS sweeps",
+  "tradeoff": "energy vs SLO compliance: <3.5% SLO violation increase; at 10 QPS pass rates drop to TTFT 88.2%; looser SLO margins save energy but raise P90 TTFT/TBT"
+ },
+ {
+  "key": "arxiv_2508.18572",
+  "title": "Strata: Hierarchical Context Caching for Long Context Language Model S",
+  "year": 2025,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "TTFT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (Poisson arrivals), in-flight cap 128; 60 s think time for ShareGPT multi-turn",
+  "tradeoff": "Larger KV page sizes raise transfer efficiency but lower cache hit rate and raise average and P90 TTFT (Fig 2); Strata aims for no short-context degradation"
+ },
+ {
+  "key": "arxiv_2509.01229",
+  "title": "LiquidGEMM: Hardware-Efficient W4A8 GEMM Kernel for High-Performance L",
+  "year": 2025,
+  "layer": "quantization/sparsity/model-compression",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "OTHER:GEMM_kernel_speedup"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "OTHER:GEMM_kernel_speedup@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:GEMM_kernel_speedup"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2510.03243",
+  "title": "Ranking Before Serving: Low-Latency LLM Serving via Pairwise Learning-",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2510.09665",
+  "title": "LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inferenc",
+  "year": 2025,
+  "layer": "prefix/context-caching",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:cache_hit_ratio",
+   "OTHER:transfer_bandwidth",
+   "TBT",
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "QPS sweep of multi-round chat / document-analysis workloads (10K-20K-token contexts, 100-token outputs), real company trace over days, PD-disaggregation random 8K-in/200-out benchmark",
+  "tradeoff": "Remote/storage backends add loading latency that can exceed prefill for short contexts; lower TTFT only when cache hit and bandwidth sufficient; context truncation destroys prefix hits."
+ },
+ {
+  "key": "arxiv_2510.14392",
+  "title": "FairBatching: Fairness-Aware Batch Formation for LLM Inference",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_REQ",
+   "TTFT"
+  ],
+  "con": [
+   "TPOT"
+  ],
+  "objf": [
+   "first-token",
+   "throughput"
+  ],
+  "conf_": [
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [
+   "TTFT@P99"
+  ],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "P99"
+  ],
+  "obj_stats": [
+   "THR_REQ@n/a",
+   "TTFT@P99"
+  ],
+  "con_stats": [
+   "TPOT@n/a"
+  ],
+  "reported": [
+   "TBT",
+   "TPOT",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2510.18586",
+  "title": "TokenCake: A KV-Cache-centric Serving Framework for LLM-based Multi-Ag",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "MEMORY",
+   "PROGRAM_JCT",
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency",
+   "memory",
+   "program-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "MEMORY@n/a",
+   "PROGRAM_JCT@mean",
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "PROGRAM_JCT",
+   "THR_REQ",
+   "UTIL"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request (application) arrival-rate sweep, Poisson arrivals in QPS (0.2-1.0 QPS etc.), memory-constrained settings via gpu_mem_utilization",
+  "tradeoff": "Plain agent-agnostic offload reduces total latency but less than TokenCake; offload noise/mispredicted tool time reduces gains (14.8% with zero noise); priority_first policy gives lowest mean latency but inflates tail (first_fit chosen for best tradeoff); offload adds overhead."
+ },
+ {
+  "key": "arxiv_2510.18672",
+  "title": "Reasoning Language Model Inference Serving Unveiled: An Empirical Stud",
+  "year": 2025,
+  "layer": "other",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "E2E",
+   "OTHER:TTFVT",
+   "THR_TOK"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "first-token",
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@mean",
+   "OTHER:TTFVT@mean",
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "OTHER:TTFVT",
+   "QUALITY",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "batched arrivals (batch sizes 8/16/32) and token-budget sweeps; additional Gamma-distribution arrival workload via BurstGPT-Perf",
+  "tradeoff": "Larger batch improves TPS at cost of higher average TTFVT; speculative decoding improves running time but lowers TPS and degrades TTFVT; GPTQ roughly doubled E2E and halved throughput; PD-disaggregation (1P1D) degrades RLLM serving metrics; prefix caching / KV quantization can hurt small RLLMs"
+ },
+ {
+  "key": "arxiv_2511.02230",
+  "title": "Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with K",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "PROGRAM_JCT",
+   "QUEUE"
+  ],
+  "con": [
+   "THR_REQ"
+  ],
+  "objf": [
+   "program-latency",
+   "request-latency"
+  ],
+  "conf_": [
+   "throughput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean",
+   "n/a"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@mean",
+   "QUEUE@n/a"
+  ],
+  "con_stats": [
+   "THR_REQ@n/a"
+  ],
+  "reported": [
+   "PROGRAM_JCT",
+   "QUALITY",
+   "THR_REQ"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "trace replay of SWE-Bench, BFCL V4, OpenHands agent traces with job-per-second (Poisson) arrival-rate sweep",
+  "tradeoff": "Pinned KV can occupy GPU memory and deadlock the scheduler (handled by unpinning); retention costs memory for other requests (cost term in utility model). Autellix underperforms on SWE-Bench."
+ },
+ {
+  "key": "arxiv_2512.03024",
+  "title": "TokenPowerBench: Benchmarking the Power Consumption of LLM Inference",
+  "year": 2025,
+  "layer": "energy/cost",
+  "read": "full",
+  "mp": true,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "ENERGY"
+  ],
+  "con": [],
+  "objf": [
+   "cost-energy"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "ENERGY@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "ENERGY",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "fixed batch-size sweep 32-1024 (also 1 in design), context-length bins 0-2K/2K-5K/5K-10K, three load profiles (Standard / High Concurrency / High Throughput)",
+  "tradeoff": "Larger batch lowers J/token with diminishing returns beyond batch 256; longer prompts raise J/token (about 3x from 2K to 10K for Llama3-70B); FP8 cuts J/token ~30% for Llama3-405B; pure TP best energy efficiency vs PP"
+ },
+ {
+  "key": "arxiv_2512.03416",
+  "title": "TokenScale: Timely and Accurate Autoscaling for Disaggregated LLM Serv",
+  "year": 2025,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "COST",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "OTHER:token_velocity",
+   "SLO_ATT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay (Azure Code/Conversation, BurstGPT) scaled to ~22 RPS average",
+  "tradeoff": "Cost vs attainment: lower output-length predictor accuracy raises GPUs from 7.5 to 8.9 (and ~2% lower attainment); no named metric degraded by the method"
+ },
+ {
+  "key": "arxiv_2512.04013",
+  "title": "AugServe: Adaptive Request Scheduling for Augmented Large Language Mod",
+  "year": 2025,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "QUEUE"
+  ],
+  "con": [
+   "NORM_LAT",
+   "TTFT"
+  ],
+  "objf": [
+   "request-latency",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "QUEUE@n/a"
+  ],
+  "con_stats": [
+   "NORM_LAT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "NORM_LAT",
+   "SLO_ATT",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep; W1 Poisson arrivals over 30 min; W2 Gamma arrivals with varying CV",
+  "tradeoff": "Throughput vs delay-awareness controlled by beta in the scheduling value; too small or too large token budgets hurt goodput (Table 1); SJF better than FCFS but suboptimal at high load."
+ },
+ {
+  "key": "arxiv_2512.09277",
+  "title": "Efficient MoE Serving in the Memory-Bound Regime: Balance Activated Ex",
+  "year": 2025,
+  "layer": "MoE-serving",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "con": [],
+  "objf": [
+   "throughput",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "THR_TOK@n/a",
+   "TPOT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2512.12928",
+  "title": "ProServe: Unified Multi-Priority Request Scheduling for LLM Serving",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "OTHER:service_gain",
+   "SLO_ATT"
+  ],
+  "con": [],
+  "objf": [
+   "mechanism/other",
+   "slo-goodput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:service_gain@n/a",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:service_gain",
+   "SLO_ATT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2512.14946",
+  "title": "EVICPRESS: Joint KV-Cache Compression and Eviction for Efficient LLM S",
+  "year": 2025,
+  "layer": "KV-compression",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [
+   "QUALITY"
+  ],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [
+   "quality"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TTFT@mean"
+  ],
+  "con_stats": [
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "QUALITY",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2512.15705",
+  "title": "Dynamic Rebatching for Efficient Early-Exit Inference with DREX",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_TOK"
+  ],
+  "con": [
+   "E2E",
+   "QUALITY"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "quality",
+   "request-latency"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_TOK@mean"
+  ],
+  "con_stats": [
+   "E2E@attainment",
+   "QUALITY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "MEMORY",
+   "OTHER:involuntary_exit_stay",
+   "QUALITY",
+   "THR_TOK"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "Offline batch evaluation at fixed batch sizes (e.g., 1, 8 and others) on CNN/DM summarization; SLA-pressure sweep for RCT; no open-loop arrival-rate sweep",
+  "tradeoff": "With no SLA pressure, throughput +11.4% over Consensus but avg RCT 1.4x and tail RCT 3x worse; SLA-aware scheduling raises avg RCT by up to 58.4% relative trade for throughput. Greedy policy gets highest throughput at 96% worse P95 confidence."
+ },
+ {
+  "key": "arxiv_2512.18194",
+  "title": "TraCT: Disaggregated LLM Serving with CXL Shared Memory KV Cache at Ra",
+  "year": 2025,
+  "layer": "KV-memory",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "THR_REQ",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "THR_REQ@n/a",
+   "TTFT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "ENERGY",
+   "THR_REQ",
+   "TTFT",
+   "UTIL"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "QPS sweep (1.0-3.0 for synthetic workloads; 0.5-1.5 for static 6000-token inputs); static fixed-length and synthetic Dynamo-generated workloads",
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2512.22219",
+  "title": "MPK: A Compiler and Runtime for Mega-Kernelizing Tensor Programs",
+  "year": 2025,
+  "layer": "kernels/attention",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2512.22420",
+  "title": "Nightjar: Dynamic Adaptive Speculative Decoding for Large Language Mod",
+  "year": 2025,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2601.05109",
+  "title": "Nalar: Workflow-Aware Management of Agentic Applications",
+  "year": 2026,
+  "layer": "agent/compound-serving",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2602.06502",
+  "title": "DualMap: Enabling Both Cache Affinity and Load Balancing for Distribut",
+  "year": 2026,
+  "layer": "cluster-routing/placement",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [
+   "TTFT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "first-token"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "TTFT@n/a"
+  ],
+  "reported": [
+   "THR_REQ",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2602.11688",
+  "title": "GORGO: Online Tuning for Cross-Region Network-Aware LLM Serving",
+  "year": 2026,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [
+   "TTFT@P95"
+  ],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "P95"
+  ],
+  "obj_stats": [
+   "TTFT@P95"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "TBT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay of ART-Chat-2.5M (Mooncake format timestamps) with time_scale 1.0/2.0/3.0 to vary saturation; BFCL replay with 128 concurrent episodes",
+  "tradeoff": "Optimizing p95 TTFT can exploit continuous batching by concentrating load on the nearest replica, trading E2E and ITL tails for TTFT (Table 8 'reward hacking': wqueue=0 wins every TTFT percentile but is worst on E2E and ITL tails; p95 TTFT 17% better than next-best)."
+ },
+ {
+  "key": "arxiv_2602.16603",
+  "title": "FlowPrefill: Decoupling Preemption from Prefill Scheduling Granularity",
+  "year": 2026,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "OTHER:preemption_blocking_time",
+   "SLO_ATT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "trace replay with request-rate scale and SLO-scale sweeps (QwenTrace)",
+  "tradeoff": "chunk size: smaller improves responsiveness but degrades computational efficiency/throughput; larger maximizes throughput but exacerbates blocking (motivation). FlowPrefill matches baseline throughput in single-SLO workload (Fig 14)."
+ },
+ {
+  "key": "arxiv_2603.05451",
+  "title": "FlashAttention-4: Algorithm and Kernel Pipelining Co-Design for Asymme",
+  "year": 2026,
+  "layer": "kernels/attention",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "UTIL"
+  ],
+  "con": [],
+  "objf": [
+   "hw-efficiency"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "UTIL@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:attn_kernel_speed",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2603.13358",
+  "title": "Not All Prefills Are Equal: PPD Disaggregation for Multi-turn LLM Serv",
+  "year": 2026,
+  "layer": "PD-disaggregation",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TPOT",
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token",
+   "token-pace"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean",
+   "n/a"
+  ],
+  "obj_stats": [
+   "TPOT@mean",
+   "TTFT@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "SLO_ATT",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson conversation arrivals at target QPS (0.5-20), 10 s fixed-duration test points; ShareGPT and WildChat multi-turn; synthetic sweeps",
+  "tradeoff": "TTFT vs TPOT: full AP-to-D (x=1) gives 94-96% Turn 2+ TTFT reduction with 7-12% TPOT degradation; no static x wins all objectives (92.2% of workload-QPS combos differ between TTFT and TPOT winners)."
+ },
+ {
+  "key": "arxiv_2603.16104",
+  "title": "Efficient LLM Serving for Agentic Workflows: A Data Systems Perspectiv",
+  "year": 2026,
+  "layer": "agent/compound-serving",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "OTHER:batch_time"
+  ],
+  "con": [],
+  "objf": [
+   "mechanism/other"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "OTHER:batch_time@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "OTHER:batch_time",
+   "OTHER:cache_hit_rate",
+   "UTIL"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "offline batch of workflow queries (fixed batch sizes, e.g. 16); not an arrival-rate sweep",
+  "tradeoff": "Helium adds planning overhead (query optimization, cache-aware scheduling, TRT construction) that is included in reported latency and is shown to be small."
+ },
+ {
+  "key": "arxiv_2604.00499",
+  "title": "Scheduling LLM Inference with Uncertainty-Aware Output Length Predicti",
+  "year": 2026,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "NORM_LAT",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "NORM_LAT@mean",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "NORM_LAT",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2604.20503",
+  "title": "FASER: Fine-Grained Phase Management for Speculative Decoding in Dynam",
+  "year": 2026,
+  "layer": "speculative/decoding-algorithm",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2604.25899",
+  "title": "Pythia: Exploiting Workflow Predictability for Efficient Agent-Native ",
+  "year": 2026,
+  "layer": "agent/compound-serving",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "low",
+  "obj": [
+   "PROGRAM_JCT",
+   "THR_TOK"
+  ],
+  "con": [],
+  "objf": [
+   "program-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "PROGRAM_JCT@n/a",
+   "THR_TOK@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "PROGRAM_JCT",
+   "QUEUE",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2606.00946",
+  "title": "Lodestar: An Online-Learning LLM Inference Router",
+  "year": 2026,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "TTFT"
+  ],
+  "con": [],
+  "objf": [
+   "first-token"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "TTFT@mean"
+  ],
+  "con_stats": [],
+  "reported": [
+   "OTHER:predictor_error",
+   "OTHER:routing_overhead_ms",
+   "TTFT"
+  ],
+  "tail_role": "T-REP",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (RPS fixed per run, e.g. ToolAgent RPS 12/22, Conversation RPS 21) over Mooncake trace workloads; also prefix-sharing-ratio sweeps and workload shifts for online adaptation",
+  "tradeoff": "Prefix-cache locality vs load balance is the tension in routing (fixed heuristic thresholds are workload dependent); learned policy adds routing overhead on the critical path (measured Fig 12). No explicit metric trade-off."
+ },
+ {
+  "key": "arxiv_2606.05933",
+  "title": "Beyond Greedy Chunking: SLO-Aware Sliding-Window Scheduling for LLM In",
+  "year": 2026,
+  "layer": "request-scheduling",
+  "read": "abstract",
+  "mp": false,
+  "oos": false,
+  "conf": "medium",
+  "obj": [
+   "THR_REQ"
+  ],
+  "con": [
+   "SLO_ATT"
+  ],
+  "objf": [
+   "throughput"
+  ],
+  "conf_": [
+   "slo-goodput"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [
+   "SLO_ATT@attainment"
+  ],
+  "reported": [
+   "SLO_ATT",
+   "THR_REQ",
+   "THR_TOK"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "unknown",
+  "load": null,
+  "tradeoff": null
+ },
+ {
+  "key": "arxiv_2607.03948",
+  "title": "Online Linear Programming for Multi-Objective Routing in LLM Serving",
+  "year": 2026,
+  "layer": "cluster-routing/placement",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "THR_REQ",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "con": [
+   "MEMORY"
+  ],
+  "objf": [
+   "first-token",
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [
+   "memory"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "attainment",
+   "mean"
+  ],
+  "obj_stats": [
+   "E2E@attainment",
+   "E2E@mean",
+   "THR_REQ@n/a",
+   "THR_TOK@mean",
+   "TTFT@attainment",
+   "TTFT@mean"
+  ],
+  "con_stats": [
+   "MEMORY@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "OTHER:router_latency",
+   "OTHER:slo_column",
+   "THR_TOK",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "simulation",
+  "load": "Poisson arrivals, \u03bb=0.4 (stable) and \u03bb=0.5 (mild overload), plus non-stationary 0.4->0.6 shift; ConvSharegpt-like conversational dataset sampled randomly",
+  "tradeoff": "Weighting average latency (0,1,1,0,0,0) lowers mean EEL/TTFT but can worsen tail metrics 'because the policy is not incentivized to protect the slowest requests'; overload (\u03bb=0.5) deteriorates tails unless tail weights are large."
+ },
+ {
+  "key": "mlsys2025_sola",
+  "title": "SOLA: Optimizing SLO Attainment for Large Language Model Serving with ",
+  "year": 2025,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TPOT",
+   "TTFT"
+  ],
+  "objf": [
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "GOODPUT@attainment",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TPOT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "GOODPUT",
+   "SLO_ATT",
+   "TPOT",
+   "TTFT"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep (Poisson-style input request rate), ShareGPT and LongBench sampled",
+  "tradeoff": "Core framing: trade-off between TTFT and TPOT (prefill-first helps TTFT, hurts TPOT; decode-first reverse) and among requests; no loss of a third metric claimed."
+ },
+ {
+  "key": "osdi2022_orca",
+  "title": "Orca: A Distributed Serving System for Transformer-Based Generative Mo",
+  "year": 2022,
+  "layer": "request-scheduling",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "con": [],
+  "objf": [
+   "request-latency",
+   "throughput"
+  ],
+  "conf_": [],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "n/a"
+  ],
+  "obj_stats": [
+   "E2E@n/a",
+   "THR_REQ@n/a"
+  ],
+  "con_stats": [],
+  "reported": [
+   "E2E",
+   "NORM_LAT",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "Poisson arrivals with varied rate on synthetic trace (input U(32,512), max_gen_tokens U(1,128)); also engine microbenchmark with fixed batch",
+  "tradeoff": "larger max batch size trades increased latency for throughput ('Increasing the batch size trades off increased throughput for increased latency'); operator tunes max_bs for the latency budget"
+ },
+ {
+  "key": "osdi2024_dlora",
+  "title": "dLoRA: Dynamically Orchestrating Requests and Adapters for LoRA LLM Se",
+  "year": 2024,
+  "layer": "LoRA/multi-model",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "NORM_LAT",
+   "OTHER:batch_time"
+  ],
+  "con": [
+   "FAIRNESS"
+  ],
+  "objf": [
+   "mechanism/other",
+   "request-latency"
+  ],
+  "conf_": [
+   "fairness"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [
+   "mean"
+  ],
+  "obj_stats": [
+   "NORM_LAT@mean",
+   "OTHER:batch_time@mean"
+  ],
+  "con_stats": [
+   "FAIRNESS@n/a"
+  ],
+  "reported": [
+   "E2E",
+   "NORM_LAT",
+   "QUEUE",
+   "THR_REQ"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "real-system",
+  "load": "request-rate sweep on Azure production traces (rescaled), varied skewness and scale ratio, numbers of adapters (up to 128)",
+  "tradeoff": "Dynamic merge/unmerge may preempt some requests (switching overhead); credit-based mechanism prevents starvation; paper reports P90 still improved"
+ },
+ {
+  "key": "sosp2025_aegaeon",
+  "title": "Aegaeon: Effective GPU Pooling for Concurrent LLM Serving on the Marke",
+  "year": 2025,
+  "layer": "LoRA/multi-model",
+  "read": "full",
+  "mp": false,
+  "oos": false,
+  "conf": "high",
+  "obj": [
+   "COST",
+   "SLO_ATT"
+  ],
+  "con": [
+   "TBT",
+   "TTFT"
+  ],
+  "objf": [
+   "cost-energy",
+   "slo-goodput"
+  ],
+  "conf_": [
+   "first-token",
+   "token-pace"
+  ],
+  "flag": "",
+  "tail_obj": [],
+  "tail_con": [],
+  "lat_obj_stats": [],
+  "obj_stats": [
+   "COST@n/a",
+   "SLO_ATT@attainment"
+  ],
+  "con_stats": [
+   "TBT@attainment",
+   "TTFT@attainment"
+  ],
+  "reported": [
+   "COST",
+   "GOODPUT",
+   "OTHER:autoscaling_latency",
+   "SLO_ATT",
+   "UTIL"
+  ],
+  "tail_role": "unaudited",
+  "eval_type": "both",
+  "load": "request-rate sweep per model (RPS 0.1, 0.5, ...) with number of models varied (up to ~40+); production deployment",
+  "tradeoff": "stricter SLOs reduce slack and GPU-pooling opportunity: under the strictest setup (0.2x SLO) Aegaeon no longer outperforms MuxServe; at 0.5x/0.3x it supports at least 50% / 12.5% more models; looser TBT allows more aggressive sharing"
+ }
+]

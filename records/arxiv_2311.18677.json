@@ -1,0 +1,187 @@
+{
+  "key": "arxiv_2311.18677",
+  "title": "Splitwise: Efficient generative LLM inference using phase splitting",
+  "first_author": "Pratyush Patel",
+  "year": 2023,
+  "venue": "ISCA'24 (arXiv v2)",
+  "url": "https://arxiv.org/abs/2311.18677",
+  "cluster": "D2",
+  "technique": "split prompt and token phases onto separate machine pools (homogeneous/heterogeneous GPUs, power-capped), KV-cache transfer over InfiniBand, mixed pool; cluster provisioning search for throughput/cost/power",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2311.18677.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Using Splitwise, we design homogeneous and heterogeneous LLM inference clusters optimized for throughput, cost, and power.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "With Splitwise, we design clusters optimized for cost, throughput, and power",
+      "locator": "§I (Introduction)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "With Splitwise, we design clusters optimized for cost, throughput, and power",
+      "locator": "§I (Introduction)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "To determine the maximum throughput that can be supported by a given cluster design, we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics. ... We require all nine SLOs to be met.",
+      "locator": "§VI-A SLOs (txt/pdf)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics ... We require all nine SLOs to be met.",
+      "locator": "§VI-A SLOs",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics ... We require all nine SLOs to be met.",
+      "locator": "§VI-A SLOs",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we use P50, P90, and P99 SLOs for TTFT, TBT, and E2E latency metrics"
+    }
+  ],
+  "headline_claim": {
+    "text": "Compared to current designs, Splitwise clusters achieve up to 1.4x higher throughput at 20% lower cost. Alternatively, they can deliver 2.35x more throughput under the same power and cost budgets.",
+    "metrics": [
+      "THR_REQ",
+      "COST",
+      "ENERGY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "P50/P90/P99",
+      "where": "Figs 5, 15, 16; Table IV"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P50/P90/P99",
+      "where": "Figs 5, 16"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P50/P90/P99",
+      "where": "Figs 5c, 15, 16"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 6 (tokens/s vs batching, characterization)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Figs 17-19 cluster designs (max RPS meeting SLOs)"
+    },
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "where": "Figs 8-9 power draw / power cap"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Table IV, Fig 18-19"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 7 memory capacity utilization"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "E2E latency",
+      "canonical": "E2E",
+      "definition_quote": "End-to-end (E2E) latency: Total query time that the user sees",
+      "locator": "Table II",
+      "notes": ""
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "Time to first token (TTFT): How quickly user sees initial response",
+      "locator": "Table II",
+      "notes": "no explicit statement on queueing, but cluster simulation reports per-request TTFT under load (incl. queues)"
+    },
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "We add another latency metric: time between tokens (TBT), to track the online streaming throughput of the tokens as they are generated serially.  [Table II:] Time between tokens (TBT): Average token streaming latency",
+      "locator": "§II-C, Table II",
+      "notes": "Table II says 'Average token streaming latency' but SLOs are applied to P50/P90/P99 of TBT"
+    },
+    {
+      "term_as_written": "Throughput (tokens/s, characterization)",
+      "canonical": "THR_TOK",
+      "definition_quote": "For the prompt phase, we define the throughput as the number of prompt input tokens that are processed per second.",
+      "locator": "§III-D",
+      "notes": "phase-wise: prompt phase counts input tokens, token phase counts generated tokens"
+    },
+    {
+      "term_as_written": "Throughput (cluster)",
+      "canonical": "THR_REQ",
+      "definition_quote": "Throughput: Requests per second",
+      "locator": "Table II",
+      "notes": "cluster throughput = max RPS satisfying all nine SLOs"
+    },
+    {
+      "term_as_written": "SLO",
+      "canonical": "SLO_ATT",
+      "definition_quote": "Table VI: SLO expressed as slowdown compared to a request running on DGX-A100 under no contention. [P50/P90/P99] TTFT 2x/3x/6x; TBT 1.25x/1.5x/5x; E2E 1.25x/1.5x/5x",
+      "locator": "Table VI",
+      "notes": "9 SLOs, all must be met; relative-slowdown SLOs, not absolute"
+    }
+  ],
+  "slo_spec": "Table VI: slowdown vs a contention-free request on DGX-A100; P50/P90/P99 for TTFT = 2x/3x/6x, TBT = 1.25x/1.5x/5x, E2E = 1.25x/1.5x/5x; all nine must hold; TTFT slightly looser since smaller impact on E2E",
+  "load_regime": "trace replay shapes with Poisson arrival-rate sweep (requests/s) for cluster sizing; iso-power, iso-cost, iso-throughput comparisons",
+  "tradeoff_acknowledged": "KV-cache transfer overhead (<7% of prompt time; up to 3% of E2E in serialized case); mixed continuous batching hurts TBT; prompt phase sensitive to power cap while token phase is not; lower cost designs (A100 token machines) trade some latency",
+  "eval_type": "both",
+  "hardware": "DGX-A100 and DGX-H100 (characterization on H100; cluster simulator with A100/H100 mixes)",
+  "models": "BLOOM-176B, Llama2-70B",
+  "workloads": "Microsoft production traces: coding and conversation (Azure); Poisson arrivals",
+  "confidence": "high",
+  "extractor_notes": "Cluster results come from a simulator validated against hardware. Multiple objectives depending on design question (iso-power throughput-optimized, iso-throughput cost/power-optimized); P99 constraints are expressed as slowdown ratios. Characterization throughput (tokens/s per phase) differs from cluster throughput (RPS).",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT, TBT, E2E @ P50/P90/P99 (nine SLOs, all must hold)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "cluster sizing via Poisson arrival-rate sweep on production-trace shapes: 'To determine the maximum throughput that can be supported by a given cluster design, we use P50, P90, and P99 SLOs' (§VI-A); simulator-based",
+  "repass_log": [
+    "COST and ENERGY(power) quotes replaced: result headline -> design statement 'optimized for cost, throughput, and power'",
+    "TTFT/TBT/E2E P99 entries: stat_basis explicit (P50/P90/P99 SLOs)",
+    "load_class online-arrivals"
+  ]
+}

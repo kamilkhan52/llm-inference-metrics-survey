@@ -1,0 +1,100 @@
+{
+ "key": "arxiv_2312.11514",
+ "title": "LLM in a flash: Efficient Large Language Model Inference with Limited Memory",
+ "first_author": "Alizadeh",
+ "year": 2023,
+ "venue": "ACL'24 (arXiv v3)",
+ "url": "https://arxiv.org/abs/2312.11514",
+ "cluster": "D5",
+ "technique": "Flash-resident weights loaded on demand using FFN activation sparsity: windowing (reuse recently activated neurons), row-column bundling for larger contiguous reads, DRAM management; cost model of flash I/O",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2312.11514.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Our primary metric for evaluating various flash loading strategies is latency, dissected into three distinct components: the I/O cost of loading from flash, the overhead of managing memory with newly loaded data, and the compute cost for inference operations.",
+   "locator": "§3 (txt line 181-189)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Figure 1: Average inference latency for a single token"
+  },
+  {
+   "metric": "OTHER:flash_io_volume",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "guiding us to optimize in two critical areas: reducing the volume of data transferred from flash and reading data in larger, more contiguous chunks",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "This paper tackles the challenge of efficiently running LLMs that exceed the available DRAM capacity by storing the model parameters in flash memory, but bringing them on demand to DRAM.",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "These methods collectively enable running models up to twice the size of the available DRAM, with up to 4x and 20x increase in inference speed compared to naive loading approaches in CPU and GPU, respectively.",
+  "metrics": [
+   "TOKEN_LAT",
+   "MEMORY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "Fig 1, Tables 2-3: average per-token inference latency (ms) split into compute / flash load / memory management"
+  },
+  {
+   "metric": "OTHER:flash_io_volume",
+   "stat": "mean",
+   "where": "I/O transferred volume per token (e.g. fraction of model loaded) in Fig 5-8, Table 2"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Table 4: zero-shot accuracy of predictors; MMLU"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "latency (inference latency for a single token)",
+   "canonical": "TOKEN_LAT",
+   "definition_quote": "Average inference latency for a single token when only half of the model's memory is available: ... The latency represents the time required to repeatedly load parameters from flash memory, combined with the time needed for computations.",
+   "locator": "Fig 1 caption",
+   "notes": "Mean per-token decode latency for a single sequence on-device; I/O + memory management + compute; prefill/first-token not the headline though intro mentions first-token response latency"
+  },
+  {
+   "term_as_written": "inference speed",
+   "canonical": "OTHER:kernel_speedup",
+   "definition_quote": "speed up inference up to 4x, 7x, and 20x compared to naive implementation in CPU, Metal and GPU",
+   "locator": "§1 contributions",
+   "notes": "Speedup ratio of per-token latency vs naive on-demand loading baseline"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch=1, single-token decode latency with model memory limited to half of size",
+ "tradeoff_acknowledged": "Sparsity/predictor inaccuracy (false negatives) can reduce accuracy; MMLU drops for lower-sparsity layers if aggressively pruned; larger windows cost more DRAM.",
+ "eval_type": "real-system",
+ "hardware": "Apple M1 Max (Metal GPU, CPU), A100 server with OPT-6.7B",
+ "models": "OPT 6.7B, Falcon 7B, Llama 2 7B (ReLU-ified), Persimmon",
+ "workloads": "per-token generation; accuracy on zero-shot benchmarks",
+ "confidence": "medium",
+ "extractor_notes": "On-device single-stream: objective is per-token latency under DRAM limit; no serving metrics, no tail stats, no SLO. Intro mentions first-token response time only as motivation; evaluation reports average per-token latency (ms). Some locators approximate (txt line numbers from layout text).",
+ "load_class": "single-sequence",
+ "load_class_quote": "\"Currently, our study is limited to single-batch inference.\" (Limitations, txt line 676); per-token decode latency with DRAM limited to half the model",
+ "repass_log": [
+  "TOKEN_LAT: design (primary metric is latency, §3), stat_basis explicit (average per-token latency, Fig 1 caption)",
+  "flash_io_volume: design",
+  "MEMORY: result quote replaced with abstract problem statement",
+  "QUALITY: only evaluation text (Table 1 caption 'marginal impact on zero-shot metrics') found, no design statement -> moved to reported_metrics (already present)",
+  "load_class single-sequence"
+ ]
+}

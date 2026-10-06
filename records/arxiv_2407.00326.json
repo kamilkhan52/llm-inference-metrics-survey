@@ -1,0 +1,85 @@
+{
+ "key": "arxiv_2407.00326",
+ "title": "Teola: Towards End-to-End Optimization of LLM-based Applications",
+ "first_author": "Xin Tan",
+ "year": 2024,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2407.00326",
+ "cluster": "D6",
+ "technique": "Primitive-level dataflow graph (p-graph) orchestration for LLM apps: parallelization, pipelining, topology-aware batching and app-aware scheduling across LLM and non-LLM engines",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2407.00326.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Large language model (LLM)-based applications consist of both LLM and non-LLM components, each contributing to the end-to-end latency. Despite great efforts to optimize LLM inference, end-to-end workflow optimization has been overlooked.",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "average latency under varying request loads"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "identifying an execution plan with the best end-to-end latency",
+   "locator": "§2.2",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "average latency under varying request loads"
+  }
+ ],
+ "headline_claim": {
+  "text": "Comprehensive experiments show that Teola can achieve up to 2.09x speedup over existing systems across various popular LLM applications.",
+  "metrics": [
+   "PROGRAM_JCT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Fig 8 (average latency vs request rate), Figs 9-10, co-location"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "single-query latency averaged over 10 runs (§7.2)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency / avg latency (s)",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "optimize for the total completion time instead of per-batch latency",
+   "locator": "§2.3",
+   "notes": "Teola never formally defines 'latency'; evaluation plots 'avg latency (s)' of a whole query workflow (all modules: embedding, search, LLM prefill/decode, API calls) vs request rate. Includes queueing at engines under load ('queuing latency dominates end-to-end time')."
+  },
+  {
+   "term_as_written": "per-request latency (contrast)",
+   "canonical": "E2E",
+   "definition_quote": "we can only optimize for the per-request latency with reasonable but sub-optimal GPU utilization.",
+   "locator": "§2.3",
+   "notes": "Request-level engines optimise per-batch/per-request latency; Teola argues for total completion time of correlated requests (48 embeddings: 1.8 s -> 1.35 s with larger batch)."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "Poisson request-rate sweep (req/s) of synthetic queries from web_question, HotpotQA, TruthfulQA, etc.; single-query latency also reported",
+ "tradeoff_acknowledged": "Per-batch/per-invocation latency can get slightly higher while total completion time falls (batch 16 vs 4 example).",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA 3090 24GB GPUs (embeddings, 2B-13B LLMs); 2x A800 80GB for llama-30B; 100 Gbps network",
+ "models": "gemma-2-2B, Llama-2-7B/13B, Llama-30B",
+ "workloads": "Search-engine-empowered generation, naive/advanced RAG doc QA, contextual retrieval, LLM agent (apps built from LlamaIndex/Anthropic pipelines)",
+ "confidence": "medium",
+ "extractor_notes": "Metric used without formal definition ('avg latency (s)' of a query's whole workflow). Baselines PO (per-invocation oriented) vs TO (throughput oriented) engine scheduling make the request-level vs app-level contrast. No TTFT/TPOT/percentiles; non-LLM modules can be >50% of E2E.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "Poisson distribution-based synthesis of [§6: avg latency vs request rate (req/s); single-query latency also reported]",
+ "repass_log": [
+  "PROGRAM_JCT#1: problem-statement quote kept as design; stat explicit (average latency in Figs 7-9)",
+  "PROGRAM_JCT#2: design quote (best end-to-end latency plan) kept; stat explicit"
+ ]
+}

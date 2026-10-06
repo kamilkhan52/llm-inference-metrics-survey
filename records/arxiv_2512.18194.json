@@ -1,0 +1,125 @@
+{
+  "key": "arxiv_2512.18194",
+  "title": "TraCT: Disaggregated LLM Serving with CXL Shared Memory KV Cache at Rack-Scale",
+  "first_author": "Dongha Yoon",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2512.18194",
+  "cluster": "D3",
+  "technique": "CXL shared memory as RDMA-free KV transfer substrate between prefill and decode workers and as rack-wide prefix-aware KV cache; software locks/flush for non-coherent CXL (on Dynamo+vLLM)",
+  "layer": "KV-memory",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2512.18194.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "This network hop significantly inflates prefill latency, increases tail variability, and constrains overall throughput.",
+      "locator": "§1 (txt line 19-20)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "This network hop significantly inflates prefill latency, increases tail variability, and constrains overall throughput.",
+      "locator": "§1 (txt line 19-20)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "TraCT reduces average TTFT by up to 9.8x, lowers P99 latency by up to 6.2x, and improves peak throughput by up to 1.6x compared to RDMA and DRAM-based caching baselines.",
+    "metrics": [
+      "TTFT",
+      "THR_REQ"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "§5.3"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Fig 9 CDF, §5.3"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 6, 7 (req/s; prefill throughput vs request throughput)"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "§5.5 GPU utilization, PCIe RX bandwidth"
+    },
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "where": "§5.5 GPU power"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 10 per-request time breakdown (schedule, kv_read, compute, kv_write)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT (prefill latency)",
+      "canonical": "TTFT",
+      "definition_quote": "TraCT reduces and stabilizes TTFT (prefill latency).",
+      "locator": "§5.3",
+      "notes": "TTFT used interchangeably with prefill latency; includes scheduler queue wait ('Scheduling time reflects how long a request waits in the scheduler's queue') per Fig 10 breakdown. Static workloads fix output length at 3 tokens so TTFT ~ end-to-end."
+    },
+    {
+      "term_as_written": "P99 latency / P99 TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "at the tail (P99), it is reduced by up to 6.2x",
+      "locator": "§5.3",
+      "notes": "Abstract says 'P99 latency'; intro and §5.3 clarify P99 TTFT. Not formally defined."
+    },
+    {
+      "term_as_written": "request throughput / prefill throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "Figure 6 evaluates both prefill and end-to-end request throughput under increasing QPS for 6000-token inputs.",
+      "locator": "§5.3",
+      "notes": "Unit req/s (Fig 6 y-axis)."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "QPS sweep (1.0-3.0 for synthetic workloads; 0.5-1.5 for static 6000-token inputs); static fixed-length and synthetic Dynamo-generated workloads",
+  "tradeoff_acknowledged": null,
+  "eval_type": "real-system",
+  "hardware": "2 servers, NVIDIA A6000 48GB each; Niagara 2.0 CXL Type-3 device (640 ns, 10.1 GB/s); 100 Gbps NIC baseline",
+  "models": "DeepSeek-R1-Distill-Llama-8B",
+  "workloads": "static (1500-6000 input tokens, 3 output tokens) and 3 synthetic workloads A/B/C from Dynamo data generator",
+  "confidence": "high",
+  "extractor_notes": "Prefill-side TTFT dominated evaluation; output length is 3 tokens in static runs so decode metrics (TPOT/TBT) are not studied. Abstract 'P99 latency' is P99 TTFT in the body. | TAIL AUDIT 2026-10-06: demoted TTFT@P99 (non-tail entry kept)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT mean (9.8x) and P99 (6.2x), reported",
+    "correction": "Demote TTFT P99 'objective' to headline/reported. Tail variability appears only as motivation for removing the RDMA hop.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "Figure 6 evaluates both prefill and end-to-end request throughput under increasing QPS for 6000-token inputs. (§5.2; QPS sweeps)",
+  "repass_log": [
+    "TTFT: evidence/locator replaced with design statement (was: 'TraCT reduces average TTFT by up to 9.8x, lowers P99 latency...')",
+    "TTFT: tail-audit: P99 only a result; §1 states prefill latency (TTFT) and tail variability as the problem, no percentile objective; mean and P99 are in reported_metrics",
+    "TTFT: stat 'mean' -> n/a (unspecified)",
+    "THR_REQ: evidence/locator replaced with design statement (was: 'improves peak throughput by up to 1.6x...')",
+    "load_class = online-arrivals"
+  ]
+}

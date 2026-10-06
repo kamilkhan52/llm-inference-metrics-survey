@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2512.12928",
+ "title": "ProServe: Unified Multi-Priority Request Scheduling for LLM Serving",
+ "first_author": "Huang",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2512.12928",
+ "cluster": "D1",
+ "technique": "two-tier multi-priority scheduling (SlideBatching + GoRouting)",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:service_gain",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "maximize overall service gain",
+   "locator": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "improving system gain by up to 35% and SLO attainment by up to 52%",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "ProServe outperforms state-of-the-art baselines, improving system gain by up to 35% and SLO attainment by up to 52%",
+  "metrics": [
+   "OTHER:service_gain",
+   "SLO_ATT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:service_gain",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. service gain = sum of per-request gain from meeting latency requirements by priority; defined in abstract only qualitatively."
+}

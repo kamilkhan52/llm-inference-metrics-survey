@@ -1,0 +1,109 @@
+{
+  "key": "arxiv_2310.19102",
+  "title": "Atom: Low-bit Quantization for Efficient and Accurate LLM Serving",
+  "first_author": "Yilong Zhao",
+  "year": 2023,
+  "venue": "MLSys'24",
+  "url": "https://arxiv.org/abs/2310.19102",
+  "cluster": "D4",
+  "technique": "4-bit weight-activation quantization with mixed-precision outlier channels, fine-grained group quantization, dynamic activation quant, 4-bit KV cache, fused kernels (FlashInfer, PagedAttention)",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2310.19102.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "To maximize LLMs' serving throughput, we introduce Atom, a low-bit quantization method that achieves high throughput improvements with negligible accuracy loss.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "constraint",
+      "evidence": "while maintaining the same latency target",
+      "locator": "abstract; §5.3",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "Average decode latency per token. (Fig 11b caption)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "low-bit quantization method that achieves high throughput improvements with negligible accuracy loss",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Atom improves end-to-end throughput (token/s) by up to 7.73x compared to the FP16 and by 2.53x compared to INT8 quantization, while maintaining the same latency target.",
+    "metrics": [
+      "THR_TOK",
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 10(a), 10(c)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 10(b) average decode latency per token"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Tables 2-4 (WikiText2/PTB/C4 perplexity, zero-shot accuracy)"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "Fig 11 kernel TOPS"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 10(c) throughput at fixed GPU memory"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "End-to-end throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "We show the end-to-end throughput, i.e., generated tokens per second, in Figure 10(a).",
+      "locator": "§5.3",
+      "notes": "Output (generated) tokens/s, single GPU; batch size varied 8-256; dashed lines are simulated where memory exceeds GPU."
+    },
+    {
+      "term_as_written": "End-to-end latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "We measure the latency as the average decoding time of each token, without considering the queuing time.",
+      "locator": "§5.3",
+      "notes": "Called 'end-to-end latency' but is average per-token decode time, queueing excluded. Latency target = 'Tolerable Latency' line of 100 ms in Fig 10."
+    }
+  ],
+  "slo_spec": "Fixed latency target of 100 ms per decoded token (human reading speed); throughput compared at that latency with larger batch enabled by memory savings",
+  "load_regime": "fixed batch size sweep (8-256), ShareGPT prefill/decode length distribution, multi-round chats as separate requests, FCFS",
+  "tradeoff_acknowledged": "Fine-grained group quantization contributes the major kernel overhead (~8% for mixed precision fusion); accuracy cost small (e.g. 0.3 WikiText2 perplexity increase for Llama-65B)",
+  "eval_type": "both",
+  "hardware": "RTX 4090 (24GB) with simulation beyond memory; A100 kernels",
+  "models": "Llama-7B/13B/30B/65B, Llama-2, Mixtral, Falcon",
+  "workloads": "ShareGPT; WikiText2, PTB, C4; zero-shot tasks",
+  "confidence": "high",
+  "extractor_notes": "Throughput is the objective under a fixed per-token latency target (100 ms); 'end-to-end latency' excludes queueing. Rare case of a quantization paper stating a throughput-at-latency objective.",
+  "load_class": "offline-batch",
+  "load_class_quote": "We vary the batch size from 8 to 256 ... All requests are served in a First-Come-First-Served manner. When a request is finished, we re-fill the on-the-fly batch with a new request following continous batching (§5.3; no arrival process)",
+  "repass_log": [
+    "THR_TOK: evidence/locator replaced with design statement (was: 'To maximize LLMs' serving throughput, we introduce Atom ... ...')",
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'while maintaining the same latency target / even at batch si...')",
+    "TOKEN_LAT: stat_basis explicit (mean)",
+    "load_class = offline-batch"
+  ]
+}

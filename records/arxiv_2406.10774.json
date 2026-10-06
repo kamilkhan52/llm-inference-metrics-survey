@@ -1,0 +1,95 @@
+{
+  "key": "arxiv_2406.10774",
+  "title": "Quest: Query-Aware Sparsity for Efficient Long-Context LLM Inference",
+  "first_author": "Tang",
+  "year": 2024,
+  "venue": "ICML 2024",
+  "url": "https://arxiv.org/abs/2406.10774",
+  "cluster": "D3",
+  "technique": "Query-aware KV page selection: per-page min/max key metadata estimates criticality against the current query; attention loads only Top-K pages (no eviction, full cache retained)",
+  "layer": "KV-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2406.10774.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Therefore, we can dramatically reduce the inference latency by only loading the critical tokens, while still maintaining accuracy.",
+      "locator": "§1 (txt line 42-44)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We measure the average latency of generating one token in the decode stage under different sequence lengths and token budgets. (§4.3.2)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "we compare the inference efficiency of different attention mechanisms under the same accuracy constraint, i.e. lossless accuracy of six tasks from LongBench.",
+      "locator": "§4.3.3",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Quest can achieve up to 7.03x self-attention speedup, which reduces inference latency by 2.23x while performing well on tasks with long dependencies with negligible accuracy loss.",
+    "metrics": [
+      "TOKEN_LAT",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "Fig 6 (PG19 perplexity), Table 1 (passkey), Fig 7 (LongBench), Fig 11"
+    },
+    {
+      "metric": "OTHER:kernel_latency",
+      "stat": "mean",
+      "where": "Fig 8, Fig 9 (self-attention kernel/time breakdown, us)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 10 (end-to-end per-token decode latency, ms)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "§3.5 memory movement reduction (analytical, token budget)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "end-to-end latency (latency of generating one token in decode)",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "We measure the average latency of generating one token in the decode stage under different sequence lengths and token budgets. Note that we do not measure the sampling process since its execution time is smaller and depends on the setting.",
+      "locator": "§4.3.2",
+      "notes": "Single-batch (batch=1) decode only; excludes sampling and prefill; mean."
+    },
+    {
+      "term_as_written": "Token Budget",
+      "canonical": "OTHER:token_budget",
+      "definition_quote": "We define the number of tokens in selected pages as the \"Token Budget\".",
+      "locator": "§3.5",
+      "notes": "Sparsity knob; accuracy-vs-budget is the key trade-off axis (lossless-accuracy budget in Fig 11)."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 decoding, sequence length sweep (up to 64k)",
+  "tradeoff_acknowledged": "Accuracy vs token budget (smaller budget = faster, risk of accuracy loss); Quest keeps full KV in memory so memory footprint is not reduced (only memory movement).",
+  "eval_type": "real-system",
+  "hardware": "RTX 4090 24GB (kernel/E2E), A100 for some accuracy runs",
+  "models": "LongChat-7B-v1.5-32k, Yarn-Llama-2-7B-128k, Llama2-7B",
+  "workloads": "PG19, passkey retrieval, six LongBench datasets",
+  "confidence": "medium",
+  "extractor_notes": "Hardware not verified against full text (locator-light). 'Inference latency' in abstract is per-token decode latency at batch 1, not request latency. Memory is not an optimized target: the full KV cache is retained; only memory movement per step is reduced.",
+  "load_class": "single-sequence",
+  "load_class_quote": "we deploy the framework into real-world single-batch scenarios (§4.3.2)",
+  "repass_log": [
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'Quest can achieve up to 7.03x self-attention speedup, which ...')",
+    "TOKEN_LAT: stat_basis explicit (mean)",
+    "load_class = single-sequence"
+  ]
+}

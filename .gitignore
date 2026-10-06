@@ -1,0 +1,5 @@
+fulltext/
+__pycache__/
+*.pyc
+.qcache
+.DS_Store

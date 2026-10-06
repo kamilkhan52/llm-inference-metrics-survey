@@ -1,0 +1,86 @@
+{
+  "key": "arxiv_2305.09781",
+  "title": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification",
+  "first_author": "Xupeng Miao",
+  "year": 2023,
+  "venue": "ASPLOS'24",
+  "url": "https://arxiv.org/abs/2305.09781",
+  "cluster": "D4",
+  "technique": "tree-based speculative inference: multiple small SSMs build a token tree, LLM verifies the whole tree in one pass with tree attention; multi-step speculative sampling",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2305.09781.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "This paper introduces SpecInfer, a system that improves the end-to-end latency and computational efficiency of LLM serving with tree-based speculative inference and verification.",
+      "locator": "§1 (txt line 108-110)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we let all systems generate up to 128 new tokens and report the average per-token latency in Figure 7. (§6.2)"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "To preserve an LLM's generative performance, SpecInfer must guarantee that its tree-based speculative inference and verification mechanism generates the next token by following the exact same probability distribution as incremental decoding.",
+      "locator": "§1 (txt line ~110-113)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "SpecInfer outperforms existing LLM serving systems by 1.5-2.8x for distributed LLM inference and by 2.6-3.5x for offloading-based LLM inference, while preserving the same generative performance.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 7, 8, 10, 11 (average per-token latency, ms)"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Table 1-3, Fig 9 (verified tokens per decoding step; success rate)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "average per-token latency / end-to-end inference latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "For each prompt, we let all systems generate up to 128 new tokens and report the average per-token latency in Figure 7.",
+      "locator": "§6.2",
+      "notes": "Latency per generated token averaged over a 128-token generation; SpecInfer may produce more than 128 tokens. Request batch size (concurrent requests) 1-16 on x-axis; not serving under arrival process."
+    },
+    {
+      "term_as_written": "verified tokens per decoding step",
+      "canonical": "ACCEPT",
+      "definition_quote": "we focus on the average number of tokens that can be verified in each stochastic decoding step",
+      "locator": "§6.5",
+      "notes": "Table 2 greedy, Table 3 stochastic; success rate of verifying a token in Table 1."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed batch size (1-16 concurrent requests), 128 new tokens per prompt, offline",
+  "tradeoff_acknowledged": "Improvement over incremental decoding shrinks as batch size grows (less spare GPU compute); larger tree width increases verification latency at large batch (BS>=4)",
+  "eval_type": "real-system",
+  "hardware": "1 or 4 A10 GPUs (tensor parallel), 2 nodes x 4 A100 (65B); single 24GB GPU for offloading",
+  "models": "LLaMA-7B, OPT-13B, OPT-30B, LLaMA-65B; LLaMA-68M/OPT-125M SSMs",
+  "workloads": "Alpaca, CP, WebQA, CIP, PIQA",
+  "confidence": "high",
+  "extractor_notes": "'End-to-end latency' in text is operationalized as average per-token latency; comparison vs vLLM/TGI/FasterTransformer/FlexGen. No tail percentiles, no SLOs. Abstract says 'end-to-end latency' but figures plot per-token latency.",
+  "load_class": "single-sequence",
+  "load_class_quote": "report the average per-token latency ... batch size (i.e., number of concurrent requests) 1-16, 128 new tokens per prompt (§6.2, Fig 7)",
+  "repass_log": [
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'SpecInfer significantly reduces the end-to-end latency and c...')",
+    "TOKEN_LAT: design says end-to-end latency; measured quantity is average per-token latency at fixed small batch",
+    "TOKEN_LAT: stat_basis explicit (mean)",
+    "QUALITY: evidence/locator replaced with design statement (was: 'while provably preserving model quality...')",
+    "load_class = single-sequence"
+  ]
+}

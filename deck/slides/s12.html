@@ -1,0 +1,132 @@
+<section class="slide" id="s12" data-title="Stalls">
+<style>
+#s12 .slide-body{display:block}
+#s12 .cols{align-items:center}
+#s12 .txt{display:flex;flex-direction:column;justify-content:center;height:100%}
+#s12 .txt p{font-size:18px;line-height:1.5}
+#s12 .cap{margin-top:6px}
+#s12 svg{width:96%}
+#s12 svg .axis{font-size:12.5px}
+</style>
+<header class="slide-head">
+<div class="kicker">12 · Stalls</div>
+<h2>Etalon's capacity ranking flips with the metric: Sarathi-Serve leads on TPOT, trails on P99 TBT.</h2>
+<div class="sub">Highest load (QPS) meeting each criterion at a 25 ms target; Llama-3-8B on H100, Arxiv-Summarization requests (Etalon Fig. 6a).</div>
+</header>
+<div class="slide-body">
+<div class="cols c-6-4">
+<div>
+<svg id="s12-chart" viewBox="0 0 680 392" role="img" aria-label="Grouped bars of capacity in QPS at a 25 ms target. TPOT: vLLM 0.66, Sarathi-Serve 1.16. P99 TBT: vLLM 0.65, Sarathi-Serve 0.34. Fluidity index: vLLM 0.60, Sarathi-Serve 0.62."></svg>
+<div class="tiny cap">Bar heights read from the rendered figure against gridlines, ±0.02 QPS (two blind reads agree within 0.01 QPS); paper text gives "2x lower" P99-TBT capacity for Sarathi-Serve and "same at 0.6 QPS" by fluidity. One model (Llama3-8B), one H100, one dataset.</div>
+</div>
+<div class="txt">
+<p>A per-request mean TPOT averages stalls away; P99 TBT counts them; Etalon's fluidity index tracks per-token deadlines and rates both systems at about 0.6 QPS. The metric, not only the system, decides which design looks better.</p>
+</div>
+</div>
+</div>
+<footer class="slide-foot"><div class="sources">[P] Agrawal et al., Etalon, arXiv 2407.07000, §5.2 and Fig. 6a pp.8–9; §4.1 (deadline Dᵢ = D_p + i·D_d) · data/etalon_tpot_vs_tbt.json rows b_fig6a_* (two blind extractions; chart read)</div><div class="pageno">12 / 14</div></footer>
+<script type="application/json" id="s12-data">
+[
+ {
+  "row_id": "b_fig6a_vllm_fluidity",
+  "system": "vLLM",
+  "criterion": "fluidity-index",
+  "capacity_qps": 0.6,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y (QPS/s), \u00b10.02"
+ },
+ {
+  "row_id": "b_fig6a_sarathi_fluidity",
+  "system": "Sarathi-Serve",
+  "criterion": "fluidity-index",
+  "capacity_qps": 0.62,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y, \u00b10.02"
+ },
+ {
+  "row_id": "b_fig6a_vllm_tbt",
+  "system": "vLLM",
+  "criterion": "P99 TBT",
+  "capacity_qps": 0.65,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y, \u00b10.02"
+ },
+ {
+  "row_id": "b_fig6a_sarathi_tbt",
+  "system": "Sarathi-Serve",
+  "criterion": "P99 TBT",
+  "capacity_qps": 0.34,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y, \u00b10.02"
+ },
+ {
+  "row_id": "b_fig6a_vllm_tpot",
+  "system": "vLLM",
+  "criterion": "TPOT",
+  "capacity_qps": 0.66,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y, \u00b10.02"
+ },
+ {
+  "row_id": "b_fig6a_sarathi_tpot",
+  "system": "Sarathi-Serve",
+  "criterion": "TPOT",
+  "capacity_qps": 1.16,
+  "src": "arxiv_2407.07000",
+  "loc": "Fig 6a, p.9",
+  "tag": "P",
+  "unc": "chart read, linear y, \u00b10.02"
+ }
+]
+</script>
+</section>
+<script>
+(function(){
+var root=document.getElementById('s12');if(!root)return;
+var rows=JSON.parse(root.querySelector('#s12-data').textContent);
+var by={};rows.forEach(function(r){by[r.row_id]=r;});
+var svg=root.querySelector('#s12-chart');var NS='http://www.w3.org/2000/svg';
+function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;svg.appendChild(e);return e;}
+var X0=56,X1=672,Y0=330,Y1=58,MAX=1.4,sc=(Y0-Y1)/MAX;
+function y(v){return Y0-v*sc;}
+for(var t=0;t<=7;t++){var v=t*0.2;el('line',{x1:X0,x2:X1,y1:y(v),y2:y(v),stroke:'var(--rule)','stroke-width':1});
+ el('text',{x:X0-8,y:y(v)+4,'text-anchor':'end','class':'axis'},v.toFixed(1));}
+el('text',{x:0,y:14,'class':'axis faint'},'capacity (QPS)');
+var groups=[['tpot','TPOT ≤ 25 ms'],['tbt','P99 TBT ≤ 25 ms'],['fluidity','fluidity-index','(99 % of requests ≥ 0.9)']];
+var gw=(X1-X0)/3,bw=58,gap=8,cen=[];
+groups.forEach(function(g,i){
+ var c=X0+gw*(i+.5);cen.push(c);
+ [['vllm',c-bw-gap/2,'vLLM'],['sarathi',c+gap/2,'Sarathi-Serve']].forEach(function(b){
+  var r=by['b_fig6a_'+b[0]+'_'+g[0]];var v=r.capacity_qps;
+  var rect=el('rect',{x:b[1],y:y(v),width:bw,height:Y0-y(v),fill:b[0]==='sarathi'?'var(--ink)':'var(--bg)',stroke:'var(--ink)','stroke-width':1.5});
+  var cx=b[1]+bw/2;
+  el('line',{x1:cx,x2:cx,y1:y(v+.02),y2:y(v-.02),stroke:'var(--ink-2)','stroke-width':1});
+  el('line',{x1:cx-4,x2:cx+4,y1:y(v+.02),y2:y(v+.02),stroke:'var(--ink-2)','stroke-width':1});
+  el('line',{x1:cx-4,x2:cx+4,y1:y(v-.02),y2:y(v-.02),stroke:'var(--ink-2)','stroke-width':1});
+  el('text',{x:cx,y:y(v+.02)-6,'text-anchor':'middle','class':'halo num',style:'font-size:14px;font-weight:600'},v.toFixed(2));
+  if(window.DeckTip)window.DeckTip.attach(rect.node||rect,r.row_id+'<br>'+r.src+' '+r.loc+'<br>'+r.unc);
+  if(i===0)el('text',{x:cx,y:Y0+16,'text-anchor':'middle','class':'lbl'},b[2]);
+ });
+ var gy=Y0+(i===0?38:38);
+ el('text',{x:c,y:gy,'text-anchor':'middle',style:'font-size:14px;font-weight:600'},g[1]);
+ if(g[2])el('text',{x:c,y:gy+17,'text-anchor':'middle','class':'lbl'},g[2]);
+});
+el('line',{x1:X0,x2:X1,y1:Y0,y2:Y0,stroke:'var(--ink)','stroke-width':1});
+el('text',{x:cen[2],y:y(.62)-34,'text-anchor':'middle','class':'faint',style:'font-size:13px'},'text: "same at 0.6 QPS"');
+/* reversal arrow */
+var ay=34;
+el('defs',{}).innerHTML='<marker id="s12-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-2)"/></marker>';
+el('path',{d:'M'+(cen[0]+30)+','+(y(1.16)-26)+' L'+(cen[0]+30)+','+ay+' L'+(cen[1]+30)+','+ay+' L'+(cen[1]+30)+','+(y(.34)-26),fill:'none',stroke:'var(--ink-2)','stroke-width':1.2,'marker-end':'url(#s12-ah)'});
+el('text',{x:(cen[0]+cen[1])/2+30,y:ay-6,'text-anchor':'middle','class':'lbl halo'},'ranking reverses');
+})();
+</script>

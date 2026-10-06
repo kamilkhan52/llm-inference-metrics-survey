@@ -1,0 +1,54 @@
+{
+ "key": "arxiv_2408.05235",
+ "title": "SLO-aware GPU Frequency Scaling for Energy Efficient LLM Inference Serving",
+ "first_author": "Kakolyris",
+ "year": 2024,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2408.05235",
+ "cluster": "D2",
+ "technique": "GPU frequency + instance scaling driven by ML performance predictor, under SLOs",
+ "layer": "energy/cost",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "ENERGY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "minimizing energy costs under Service-Level Objectives (SLOs)",
+   "locator": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "reduces energy consumption while meeting SLOs",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "achieves up to 43.8\\% lower energy consumption and an energy efficiency improvement of at least $1.71\\times$ under SLOs",
+  "metrics": [
+   "ENERGY",
+   "SLO_ATT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "ENERGY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. SLO metric not named in abstract."
+}

@@ -1,0 +1,63 @@
+{
+ "key": "arxiv_2503.24000",
+ "title": "Rethinking Key-Value Cache Compression Techniques for Large Language Model Serving",
+ "first_author": "Gao",
+ "year": 2025,
+ "venue": "MLSys 2025 (arXiv v1)",
+ "url": "https://arxiv.org/abs/2503.24000",
+ "cluster": "D3",
+ "technique": "METRIC-PAPER: re-evaluation of KV-cache compression (KIVI, GEAR, StreamingLLM, H2O-style) arguing evaluation misses (1) serving-realistic throughput (FlashAttention/PagedAttention, multi-GPU), (2) response-length shift and hence end-to-end latency, (3) per-sample negative-sample accuracy; supplies throughput/length predictors and a negative-sample benchmark",
+ "layer": "KV-compression",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2503.24000.txt",
+ "optimized_metrics": [
+  {"metric": "E2E", "stat": "mean", "role": "objective",
+   "evidence": "Measuring the end-to-end latency uncovers that compression methods still have a long way to go in practice. In addition to the innate algorithm defect of compression that might lower the throughput performance benefits, the lengthy response length is another factor that hinders their adoption.",
+   "locator": "§4.3 Observation 4"},
+  {"metric": "THR_TOK", "stat": "mean", "role": "objective",
+   "evidence": "KV cache compression algorithms can bring throughput improvement in the decoding stage. However, our evaluation presents poor performance under certain batch sizes and prompt lengths.",
+   "locator": "§1 contributions (1)"},
+  {"metric": "QUALITY", "stat": "per-sample", "role": "constraint",
+   "evidence": "we define the negative sample as a benign sample where KV cache compression leads to the relative accuracy loss exceeding a given threshold",
+   "locator": "§4.4 Negative Sample Analysis"}
+ ],
+ "headline_claim": {"text": "(1) while compressing KV cache can reduce memory consumption, current implementations (e.g., FlashAttention, PagedAttention) do not optimize for production-level LLM serving, resulting in suboptimal throughput performance; (2) compressing KV cache may lead to longer outputs, resulting in increased end-to-end latency.",
+  "metrics": ["THR_TOK", "E2E"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "THR_TOK", "stat": "prefill and decode throughput (synthetic inputs)", "where": "Fig 1-2, Table 4"},
+  {"metric": "E2E", "stat": "CDF per sample (batch size 1), mean", "where": "Fig 5, Table 8"},
+  {"metric": "OTHER:response_length_difference", "stat": "distribution", "where": "Table 5"},
+  {"metric": "QUALITY", "stat": "LongBench task metrics, negative-sample counts", "where": "§4.4, Fig 7"},
+  {"metric": "MEMORY", "stat": "max memory reduction", "where": "Table 3"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "TTFT / TBOT", "canonical": "TTFT", "definition_quote": "For computational efficiency, LLM practitioners focus on the key metrics of Time-To-First-Token (TTFT) and Time-Between-Output-Token (TBOT).", "locator": "§2", "notes": "named but not defined; 'TBOT' is this paper's spelling of TBT/TPOT; neither used in the evaluation"},
+  {"term_as_written": "response length difference", "canonical": "OTHER:response_length_difference", "definition_quote": "We define the response length difference as D = (L_un − L_cs)/L_un, where L_un and L_cs represent the response length without and with compression methods, respectively. A negative D implies that compression methods lead to longer outputs", "locator": "§4.3", "notes": "new diagnostic metric; sizes of 1000 ShareGPT samples; substantial = +/-50%"},
+  {"term_as_written": "end-to-end latency", "canonical": "E2E", "definition_quote": "we measure the end-to-end latency performance for each sample in the ShareGPT dataset with a fixed batch size of one", "locator": "§4.3 Fig 5", "notes": "per-sample, batch=1 CDF; 'average end-to-end latency' in Table 8"},
+  {"term_as_written": "routing end-to-end latency estimate", "canonical": "E2E", "definition_quote": "The end-to-end latency is calculated by the prefilling time and a product between the estimated decoding throughput and estimated response length.", "locator": "§5 (tools) routing experiment", "notes": "as written, 'product' of decode throughput and length (dimensionally this should be length divided by throughput); used for routing across compression-configured GPUs"},
+  {"term_as_written": "prefill / decoding throughput", "canonical": "THR_TOK", "definition_quote": "we report pre-fill and decoding throughput using synthesized examples and measure the end-to-end latency using samples from ShareGPT.", "locator": "§3.3 Metrics", "notes": "tokens/s not formally defined; synthetic fixed-length inputs"},
+  {"term_as_written": "negative sample", "canonical": "QUALITY", "definition_quote": "define the negative sample as a benign sample where KV cache compression leads to the relative accuracy loss exceeding a given threshold", "locator": "§4.4", "notes": "per-sample accuracy criterion from QLLM-Eval"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "THR_TOK", "critique_quote": "Missing Piece 1: With less focus on computational efficiency, only a few compression studies measure the throughput performance using the TRL framework, often neglecting serving techniques, including FlashAttention and PagedAttention. Additionally, there is a lack of assessment regarding the throughput on multiple GPUs", "locator": "§3.1"},
+  {"target_metric": "THR_TOK", "critique_quote": "the throughput performance of different compression algorithms is typically evaluated with a fixed response length. ... Thus, measuring the computational efficiency with a fixed response length is not an appropriate approach.", "locator": "§3.1"},
+  {"target_metric": "E2E", "critique_quote": "Missing Piece 2: The end-to-end latency variations from compression algorithms hinge not only on the throughput but also on the response length. However, the effect of compression algorithms on the response length has been largely neglected", "locator": "§3.1"},
+  {"target_metric": "THR_TOK", "critique_quote": "only measuring the throughput performance with a fixed response length cannot convince LLM practitioners to deploy compression algorithms in production environments.", "locator": "§4.3"},
+  {"target_metric": "QUALITY", "critique_quote": "For accuracy, many compression studies emphasize minor overall accuracy loss while concealing the specific accuracy performance defects of KV cache compression methods.", "locator": "§2"},
+  {"target_metric": "TTFT", "critique_quote": "they are typically measured using the naive transformers library (TRL), which falls short of the performance expected in production environments.", "locator": "§2"}
+ ],
+ "recommended_practice": [
+  {"quote": "In a realistic macro-benchmark, it is essential to account for the variations in the length distribution difference and assess the end-to-end latency performance of KV cache compression techniques for a fair comparison.", "locator": "§3.1"},
+  {"quote": "We even observe that GEAR leads to longer end-to-end tail latency.", "locator": "§4.3"},
+  {"quote": "a throughput analysis tool to decide under which ranges of batch sizes and prompt lengths KV cache compression can present advantageous performance; (2) a length predictor ... (3) a benchmark dataset consisting of our discovered failure cases", "locator": "§1 contributions"}
+ ],
+ "slo_spec": null,
+ "load_regime": "offline fixed batch sweeps (batch size x prompt length x KV length) for throughput; batch=1 per-sample for E2E latency",
+ "tradeoff_acknowledged": "Memory reduction vs throughput (diminishing with FlashAttention/PagedAttention) and vs longer outputs; throughput speedup can be outweighed by longer responses, increasing E2E latency (GEAR worse tail E2E); length-predictor-only routing 0.83-1.03x vs throughput-predictor 1.18-1.48x and both 1.45-1.80x",
+ "eval_type": "real-system",
+ "hardware": "A100/H800-class GPUs (LLaMA-70B on H800)",
+ "models": "LLaMA-7B, LLaMA-3.1-8B-Instruct, LLaMA-70B, Mistral",
+ "workloads": "ShareGPT, LongBench, synthesized fixed-length samples",
+ "confidence": "high",
+ "extractor_notes": "Primary critique: fixed-length throughput benchmarks hide response-length inflation from compression; E2E latency is the recommended arbiter. TTFT/TBOT named but not measured. Not a tail-metric paper; E2E is reported as CDF at batch size 1 and as average in routing table."
+}

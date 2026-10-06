@@ -1,0 +1,116 @@
+{
+  "key": "arxiv_2503.05096",
+  "title": "AdaSpec: Adaptive Speculative Decoding for Fast, SLO-Aware Large Language Model Serving",
+  "first_author": "Kaiyu Huang",
+  "year": 2025,
+  "venue": "SoCC'25",
+  "url": "https://arxiv.org/abs/2503.05096",
+  "cluster": "D4",
+  "technique": "Adaptive speculative length per request via throughput efficiency model, adaptive drafter, confidence-prior verifier, and SLO-aware estimator (on vLLM)",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2503.05096.txt",
+  "optimized_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Cloud-based Large Language Model (LLM) services often face challenges in achieving low inference latency and meeting Service Level Objectives (SLOs) under dynamic request patterns.",
+      "locator": "abstract",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Similar to vLLM [19] and Orca [43], we use throughput to measure decoding efficiency and propose an efficiency estimator.",
+      "locator": "§3/§4 (overview)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "implements intelligent drafting and verification algorithms to maximize performance while ensuring high SLO attainment",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "to ensure that the time for each step of speculative decoding does not exceed the TPOT constraint specified by the SLO, strict control is necessary. If the time for speculative decoding exceeds the SLO limit, the throughput will be set to -1",
+      "locator": "§5.3; §2.3 Limitation #3",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "using the P90 TPOT of autoregressive decoding as the threshold"
+    }
+  ],
+  "headline_claim": {
+    "text": "AdaSpec consistently meets SLOs and achieves substantial performance improvements, delivering up to 66% speedup compared to state-of-the-art speculative inference systems.",
+    "metrics": [
+      "E2E",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Figs 10, 11, 12 (speedup of end-to-end latency vs autoregressive)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 11"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "acceptance-rate analysis"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Throughput (efficiency)",
+      "canonical": "THR_TOK",
+      "definition_quote": "we adopted the same throughput metric as used in LLM inference systems [19, 43], which is defined as Throughput = NAT/Tsd.",
+      "locator": "§4",
+      "notes": "NAT = number of accepted tokens, Tsd = time of speculative decoding step; internal efficiency objective."
+    },
+    {
+      "term_as_written": "speedup of end-to-end latency",
+      "canonical": "E2E",
+      "definition_quote": "we use the speedup of end-to-end latency relative to autoregressive decoding as our primary metric.",
+      "locator": "§7.1",
+      "notes": "Ratio of latency vs AR decoding; not absolute seconds."
+    },
+    {
+      "term_as_written": "TPOT SLO / SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "we set the SLO for TPOT as the P90 TPOT value of autoregressive decoding, employing the SLO attainment rate to assess service reliability",
+      "locator": "§7.1",
+      "notes": "SLO threshold = P90 TPOT of AR decoding, scaled 0.8-1.2; attainment = fraction of requests meeting it."
+    }
+  ],
+  "slo_spec": "TPOT SLO = P90 TPOT of autoregressive decoding under the same setting; scale factor 0.8-1.2 (SLO scale=1 baseline); attainment rate reported",
+  "load_regime": "Replay of 10-minute windows from real production traces (3 patterns: fluctuating, periodic, rapidly varying) plus batch-size sweep BS=1,2,4,8,16 (Fig 12)",
+  "tradeoff_acknowledged": "Longer speculative length raises expected speedup but increases risk of TPOT violations (SLO attainment drops, Fig 5); stricter SLO costs ~2% speedup.",
+  "eval_type": "real-system",
+  "hardware": "1xL40 48GB, 1xA100 40GB, 4xA100, 8xA100",
+  "models": "Vicuna-7B-v1.5/68M, Vicuna-33B/160M, Llama-3.3-70B/Llama-3.2-1B",
+  "workloads": "SpecBench (translation, summarization, QA, math, RAG, MT-bench), 480 requests",
+  "confidence": "high",
+  "extractor_notes": "Algorithm 3 outputs 'estimated goodput' internally, but the paper evaluates speedup and SLO attainment, not goodput. SLO defined relative to AR decoding P90 TPOT so SLO attainment of AR is ~90% by construction. Speculative decoding is lossless.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "We have implemented AdaSpec atop vLLM [19] and evaluated using real-world LLM inference traces. (§1; 10-minute production trace windows; fixed-batch sweep BS=1-16 secondary, Fig 12)",
+  "repass_log": [
+    "E2E: result-only primary-metric quote replaced with abstract problem statement (achieving low inference latency); stat n/a (speedup of end-to-end latency, statistic unspecified)",
+    "THR_TOK: quote replaced with §3 design statement (throughput as efficiency measure that drives speculative length)",
+    "SLO_ATT: design (abstract 'maximize performance while ensuring high SLO attainment')",
+    "TPOT constraint: design; stat -> attainment with explicit P90-threshold quote",
+    "load_class online-arrivals"
+  ]
+}

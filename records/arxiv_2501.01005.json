@@ -1,0 +1,102 @@
+{
+ "key": "arxiv_2501.01005",
+ "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+ "first_author": "Ye",
+ "year": 2025,
+ "venue": "MLSys'25",
+ "url": "https://arxiv.org/abs/2501.01005",
+ "cluster": "D5",
+ "technique": "block-sparse/composable KV formats, JIT-customizable attention templates, load-balanced CUDAGraph-compatible scheduler",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2501.01005.txt",
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "In FlashInfer, the load-balanced scheduling algorithm aims to minimize SM idle time by distributing the workload evenly across all SMs.",
+   "locator": "§3.3 (txt line 519-520)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "FlashInfer achieve 29-69% inter-token-latency reduction compared to compiler backends for LLM serving benchmark, 28-30% latency reduction for long-context inference, and 13-17% speedup for LLM serving with parallel generation.",
+  "metrics": [
+   "TBT",
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TBT",
+   "stat": "P50",
+   "where": "Fig 7, Fig 10, Tables 6-8"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P50",
+   "where": "Fig 7, Fig 10, Tables 7-8"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "Fig 8-9 (bandwidth utilization)"
+  },
+  {
+   "metric": "OTHER:kernel_TFLOPs",
+   "stat": "n/a",
+   "where": "Tables 1-4, Fig 12"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Table 8 (vLLM integration)"
+  },
+  {
+   "metric": "TBT",
+   "stat": "n/a",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "We measure the TTFT(time-to-first-token) and ITL(inter-token-latency) under latency-sensitive online serving settings, the request rate is adjusted to maintain P99 TTFT below 200ms.",
+   "locator": "§4.1",
+   "notes": "Neither TTFT nor ITL is formally defined; queueing inclusion unstated."
+  },
+  {
+   "term_as_written": "ITL",
+   "canonical": "TBT",
+   "definition_quote": "Figure 7. Medium Inter-Token-Latency (ITL) and medium Time-To-First-Token (TTFT) of SGLang integrated with FlashInfer",
+   "locator": "Fig 7 caption",
+   "notes": "'Medium' is presumably median (P50). Appendix G expands ITL as 'Inference Time Latency' (inconsistent)."
+  }
+ ],
+ "slo_spec": "No SLO attainment; single constraint P99 TTFT < 200 ms used to pick the request rate",
+ "load_regime": "request-rate sweep tuned to P99 TTFT<200ms (online); fixed rate 16 for vLLM test",
+ "tradeoff_acknowledged": "none acknowledged",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA H100 SXM5 (also A100, Ada 6000 microbenchmarks)",
+ "models": "Llama 3.1-8B/70B, Vicuna",
+ "workloads": "ShareGPT; synthetic Variable U(512,2048); U(4096,16384) in/256 out",
+ "confidence": "medium",
+ "extractor_notes": "Kernel paper: primary quantities are kernel latency/bandwidth utilization; end-to-end TBT/TTFT are P50 only. Rate tuned so P99 TTFT<200ms, so TTFT P99 acts as an operating-point constraint rather than a reported result. | TAIL AUDIT 2026-10-06: removed TTFT P99 constraint (benchmark protocol)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "TTFT @ P99 (< 200 ms) used only as end-to-end benchmark protocol",
+  "correction": "Remove TTFT P99 'constraint' from optimized_metrics (experimental protocol for choosing request rate, not a design constraint of a kernel library); move to reported/eval setup.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "mixed",
+ "load_class_quote": "Online: \"We measure the TTFT(time-to-first-token) and ITL(inter-token-latency) under latency-sensitive online serving settings, the request rate is adjusted to maintain P99 TTFT below 200ms.\" (§4.1); kernel bandwidth-utilization microbenchmarks at fixed batch/sequence shapes (Fig 8-9)",
+ "repass_log": [
+  "UTIL: result quote replaced with design statement (scheduler aims to minimize SM idle time)",
+  "TBT P50: abstract only states generic need for low-latency kernels; headline result only -> removed from optimized (already in reported_metrics Fig 7/10); tail_audit TTFT P99 removal already applied",
+  "load_class mixed"
+ ]
+}

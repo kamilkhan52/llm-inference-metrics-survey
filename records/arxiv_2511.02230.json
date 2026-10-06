@@ -1,0 +1,128 @@
+{
+ "key": "arxiv_2511.02230",
+ "title": "Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live",
+ "first_author": "Hanchen Li",
+ "year": 2025,
+ "venue": "arXiv preprint (PVLDB 2027 format); v7",
+ "url": "https://arxiv.org/abs/2511.02230",
+ "cluster": "D6",
+ "technique": "KV cache time-to-live pinning across tool calls (TTL from reload cost and expected queueing delay) plus program-level FCFS scheduling",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2511.02230.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "We present Continnum, a serving system to optimize job completion time for multi-turn agent workloads by introducing time-tolive mechanism for KV cache retention.",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "improves the average job completion times by over"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "we can balance the benefit of cache reuse against the ... need to maintain system throughput for other requests to achieve",
+   "locator": "§4 (txt lines 344-346)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "per-turn queueing delay. ... This per-turn queueing delay can accumulate and result in increasing delay for each agentic program",
+   "locator": "§1 (txt line 106-111)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "Continnum improves the average job completion times by over 8x while improving throughput.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Fig 8-10, 12-15 (Average Job Delay / Average Job Duration)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P90",
+   "where": "Fig 11"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "Fig 9b, Fig 11"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Jobs Per Second (JPS) axes, Fig 8-10; steps per minute in Table"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Fig 12 SWE-bench pass rate"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "headline/evaluation (demoted by tail audit)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "job completion time / Average Job Delay / per-job finish time",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "Both the benefit and the cost are measured in units of time, since they ultimately translate into changes in the total job completion latency across all programs.",
+   "locator": "§4.1 (txt line 864-865 of raw text)",
+   "notes": "Job = an agent program (multi-turn ReAct loop of LLM calls plus tool calls). 'Job Delay'/'Job Duration' used on plot axes without a separate formal definition; Fig 12 text: 'We measure the per-job finish time'. Job completion includes tool execution time (traces replayed) and queueing across turns."
+  },
+  {
+   "term_as_written": "per-turn queueing delay",
+   "canonical": "QUEUE",
+   "definition_quote": "When the next inference step has its KV cache evicted from GPU memory, even if the KV cache can be reloaded from CPU, it will also have to wait in the waiting queue for other requests to free up GPU memory before starting inference.",
+   "locator": "§1",
+   "notes": "Queueing delay that accumulates per turn; the key quantity the TTL cost model estimates."
+  },
+  {
+   "term_as_written": "Jobs Per Second (JPS)",
+   "canonical": "THR_REQ",
+   "definition_quote": "Jobs Per Second (JPS)",
+   "locator": "Fig 8-10 x-axes",
+   "notes": "Used as the offered job arrival rate (x-axis, Poisson arrivals); the 'throughput' improvement is read from the rate at which delay blows up. Not formally defined in text."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "trace replay of SWE-Bench, BFCL V4, OpenHands agent traces with job-per-second (Poisson) arrival-rate sweep",
+ "tradeoff_acknowledged": "Pinned KV can occupy GPU memory and deadlock the scheduler (handled by unpinning); retention costs memory for other requests (cost term in utility model). Autellix underperforms on SWE-Bench.",
+ "eval_type": "real-system",
+ "hardware": "A100-SXM, H100, B200; Company A internal H100 testbed",
+ "models": "Llama-3.1-8B/70B, Gemma-3-12B, GLM-4.5 355B",
+ "workloads": "SWE-Bench (mini-swe-agent traces), BFCL V4 web search, OpenHands, multi-SWE-bench; real SWE-agent run on SWE-bench-Verified",
+ "confidence": "high",
+ "extractor_notes": "Program-level (job) completion time is the stated objective; request-level TTFT/TPOT not used. Mean primary, P90/P95 secondary. QUALITY is reported (pass rate) but only to show no drop / slightly higher; it is not optimized. 'Job Delay' not formally defined. arXiv v7 timestamp reads Sep 2026. | TAIL AUDIT 2026-10-06: demoted PROGRAM_JCT@P95 (non-tail entry kept)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "job duration P90/P95 (reported)",
+  "correction": "Demote PROGRAM_JCT P95 'objective' to reported (record evidence already notes 'reported tail, not the design target').",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "using poisson distribution for the arrival pattern of agent [§5 Fig 12: jobs-per-second (JPS) arrival-rate sweeps over agent traces]",
+ "repass_log": [
+  "PROGRAM_JCT: abstract design aim kept; stat explicit (average job completion time); tail_audit correction already applied (P95 only in reported_metrics)",
+  "THR_REQ: headline result replaced by §4 design statement (maintain throughput for other requests); role changed to constraint (balancing term)",
+  "QUEUE: §1 problem/design quote kept; stat n/a (no statistic stated)"
+ ]
+}

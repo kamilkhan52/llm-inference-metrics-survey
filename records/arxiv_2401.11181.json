@@ -1,0 +1,122 @@
+{
+  "key": "arxiv_2401.11181",
+  "title": "Inference without Interference: Disaggregate LLM Inference for Mixed Downstream Workloads",
+  "first_author": "Cunchen Hu",
+  "year": 2024,
+  "venue": "arXiv preprint (TetriInfer)",
+  "url": "https://arxiv.org/abs/2401.11181",
+  "cluster": "D2",
+  "technique": "TetriInfer: fixed-size chunked prefill, disaggregated prefill/decode instances, two-level scheduling with length-prediction (SJF prefill; decentralized load-balanced decode placement), instance flipping",
+  "layer": "PD-disaggregation",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.11181.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The prefill instance's scheduler is crucial for improving the prefill phase's latency and throughput",
+      "locator": "§3.3.1 (txt l.~422)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "FCFS can lead to head-of-line blocking and high average job completion time (JCT) when requests have long prompts ... By design, they can achieve lower JCT compared to FCFS.",
+      "locator": "§3.3.1 (txt l.~417-426)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "high average job completion time (JCT)"
+    }
+  ],
+  "headline_claim": {
+    "text": "it uses 38% less resources all the while lowering average TTFT and average JCT by 97% and 47%, respectively.",
+    "metrics": [
+      "TTFT",
+      "E2E",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean/CDF",
+      "where": "Figs 11-15 end-to-end, microbenchmarks"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean/CDF",
+      "where": "Figs 11-15 (JCT)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "resource usage time and perf/$ (Figs 11-15)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 5, Fig 17 decode throughput, interference characterization"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "n/a",
+      "where": "per-iteration decode latency, Figs 4-5, 17"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "resource usage time (cost)",
+      "canonical": "COST",
+      "definition_quote": "resource usage time represents the aggregated wall time that the prefill and decode instances use to run a particular workload. For example, the resource usage time is 3 seconds if we run prefill in in 1 second and decode in 2 seconds. For vLLM, it is the total runtime since it couples prefill and decode.",
+      "locator": "§5.1",
+      "notes": "cost proxy = instance-time, summed over prefill and decode instances"
+    },
+    {
+      "term_as_written": "perf/$",
+      "canonical": "COST",
+      "definition_quote": "efficiency as in performance per dollar (perf/$)",
+      "locator": "§5",
+      "notes": "never formally defined; appears to combine JCT (performance) with resource usage time (cost): e.g. LPLD 'resource usage time is comparable' and JCT -40% gives perf/$ 1.4x"
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "time-to-first-token (TTFT)",
+      "locator": "§5",
+      "notes": "used without formal definition; 'Comparing TTFT indicates whether TetriInfer's prefill scheduler and chunked prefill are effective.' Evaluation is of a 128-request batch so queueing in the prefill scheduler is included"
+    },
+    {
+      "term_as_written": "JCT",
+      "canonical": "E2E",
+      "definition_quote": "average job completion time (JCT)",
+      "locator": "§3, §5",
+      "notes": "used without formal definition; 'Comparing JCT indicates whether TetriInfer's disaggregated prefill and decode design and two-level decode scheduling are effective.'"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline batch-style: 128 requests per workload type (five mixes: LPLD, LPHD, HPLD, HPHD, Mixed) from ShareGPT; no request-rate sweep",
+  "tradeoff_acknowledged": "disaggregation uses 2x hardware cards; HPHD gains small ('the overhead we introduce cannot be offset'); LPHD improves perf/$ only 1.1x; large-LLM parallel mode may lower throughput by ~10%",
+  "eval_type": "both",
+  "hardware": "4x NVIDIA V100-32GB; emulated 200Gbps RoCE / 300GBps NVLink KV transfer ('mock mechanism')",
+  "models": "OPT-13B (main), OPT-125M (length predictor)",
+  "workloads": "ShareGPT samples, 128 requests per workload; heavy prefill >512 tokens, heavy decode >128 tokens",
+  "confidence": "high",
+  "extractor_notes": "Averages only: no P99/percentile objective and no SLOs. TTFT, JCT used without definition; perf/$ not formally defined. Evaluation is closed-loop 128-request batches, so 'JCT' is per-request completion time within that batch.",
+  "load_class": "offline-batch",
+  "load_class_quote": "'In Figure 15, we run 128 requests' per workload mix (five mixes, ShareGPT samples); no request-rate sweep (§5, txt l.~734)",
+  "repass_log": [
+    "TTFT quote replaced with design statement (prefill scheduler improves prefill latency); stat unspecified -> n/a (was mean)",
+    "E2E (JCT) quote replaced with SJF/FCFS design discussion; stat explicit mean ('average job completion time'); JCT is per-request completion within a fixed 128-request batch, kept as E2E",
+    "COST (perf/$) demoted: headline only, no design statement",
+    "load_class offline-batch"
+  ]
+}

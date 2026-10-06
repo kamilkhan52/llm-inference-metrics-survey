@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2504.14966",
+ "title": "SLO-Aware Scheduling for Large Language Model Inferences",
+ "first_author": "Huang",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2504.14966",
+ "cluster": "D1",
+ "technique": "simulated-annealing priority scheduler using SLO, input and predicted output length",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "improves SLO attainment by up to 5x",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "reduces average latency by 31.6%",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "this work improves SLO attainment by up to 5x and reduces average latency by 31.6%",
+  "metrics": [
+   "E2E",
+   "SLO_ATT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"average latency\" not specified; E2E chosen."
+}

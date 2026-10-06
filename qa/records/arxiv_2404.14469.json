@@ -1,0 +1,16 @@
+{
+"key":"arxiv_2404.14469","title":"SnapKV: LLM Knows What You are Looking for Before Generation","first_author":"Yuhong Li","year":2024,"venue":"arXiv preprint (NeurIPS'24)","url":"https://arxiv.org/abs/2404.14469","cluster":"D3",
+"technique":"fine-tuning-free prompt KV compression: select clustered important KV positions per head using an observation window at the end of the prompt","layer":"KV-compression","read_level":"full","fulltext_path":"fulltext/arxiv_2404.14469.txt",
+"optimized_metrics":[
+{"metric":"MEMORY","stat":"max","role":"objective","evidence":"SnapKV, an innovative and fine-tuning-free approach that efficiently minimizes KV cache size while still delivering comparable performance in real-world applications","locator":"abstract"},
+{"metric":"TOKEN_LAT","stat":"mean","role":"objective","evidence":"SnapKV achieves a consistent decoding speed with a 3.6x increase in generation speed and an 8.2x enhancement in memory efficiency compared to the baseline when processing inputs of 16K tokens","locator":"abstract; §5.1.2"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"it maintains comparable performance to the baseline models across 16 long sequence datasets","locator":"abstract"}
+],
+"headline_claim":{"text":"SnapKV achieves a consistent decoding speed with a 3.6x increase in generation speed and an 8.2x enhancement in memory efficiency compared to the baseline when processing inputs of 16K tokens.","metrics":["TOKEN_LAT","MEMORY","QUALITY"],"locator":"abstract"},
+"reported_metrics":[{"metric":"QUALITY","stat":"n/a","where":"LongBench 16 datasets; Needle-in-a-Haystack"},{"metric":"TOKEN_LAT","stat":"mean","where":"Fig 7 decode latency ms/token vs input length"},{"metric":"MEMORY","stat":"max","where":"Fig 7 max input before OOM; 380K on one A100"}],
+"metric_definitions":[
+{"term_as_written":"decoding latency (ms/token)","canonical":"TOKEN_LAT","definition_quote":"The x-axis denotes the input sequence length; the y-axis indicates decoding latency (ms/token).","locator":"Fig 7 caption","notes":"per-step decode latency at batch sizes 1-4 (HF implementation); no TTFT/prefill timing"},
+{"term_as_written":"memory efficiency","canonical":"MEMORY","definition_quote":"at a batch size of 2, the baseline model encounters an OOM error beyond 16k input tokens, whereas the SnapKV-enhanced model extends this limit to 131k input tokens, indicating an approximately 8.2x improvement.","locator":"§5.1.2","notes":"memory efficiency = max feasible input length before OOM, not bytes"}],
+"slo_spec":null,"load_regime":"batch-size and input-length sweep (fixed generation length 512, max KV cache 2048); no request arrivals","tradeoff_acknowledged":"negligible accuracy drop in Needle-in-a-Haystack; prompt-only compression","eval_type":"real-system","hardware":"single A100-80GB, HuggingFace implementation","models":"LWM-Text-Chat-1M, LongChat-7b-v1.5-32k, Mistral-7B-Instruct-v0.2, Mixtral-8x7B, Command-R","workloads":"LongBench (16 datasets), Needle-in-a-Haystack",
+"confidence":"medium","extractor_notes":"Latency here is per-token decode speed (batch-level decode time), not serving TPOT under load. Core objective is KV size reduction with accuracy preserved; speed and memory gains are consequences."
+}

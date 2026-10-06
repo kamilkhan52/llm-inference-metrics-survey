@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2401.02669",
+ "title": "Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache",
+ "first_author": "Lin",
+ "year": 2024,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2401.02669",
+ "cluster": "D3",
+ "technique": "attention-layer disaggregation (DistAttention) + pooled distributed KV cache",
+ "layer": "long-context",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "demonstrates throughput improvement of 1.35-3.4x",
+   "locator": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "enhances memory utilization jointly",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Infinite-LLM demonstrates throughput improvement of 1.35-3.4x compared to state-of-the-art methods",
+  "metrics": [
+   "MEMORY",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Throughput unit not stated."
+}

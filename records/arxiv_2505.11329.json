@@ -1,0 +1,87 @@
+{
+ "key": "arxiv_2505.11329",
+ "title": "TokenWeave: Efficient Compute-Communication Overlap for Distributed LLM Inference",
+ "first_author": "Gond",
+ "year": 2025,
+ "venue": "arXiv preprint (v-latest, with B200 results)",
+ "url": "https://arxiv.org/abs/2505.11329",
+ "cluster": "D5",
+ "technique": "token-splitting compute-communication overlap with fused AllReduce-RMSNorm kernel using NVLS/Multimem on few SMs",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2505.11329.txt",
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:iteration_latency",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Even with high-speed interconnects like NVLink, communication overheads remain a major performance bottleneck. For example, Figure 1 shows that communication accounts for 9-23% of the end-to-end inference latency",
+   "locator": "§1 (txt line 68-75)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "up to 1.28x speedup in latency (baseline/ours) and up to 1.19x higher throughput (ours/baseline) across multiple models and workloads",
+  "metrics": [
+   "OTHER:iteration_latency",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:iteration_latency",
+   "stat": "mean",
+   "where": "Fig 13, 19, 21-22, 26-27 (per-iteration/prefill/decode latency)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Fig 11, 12, 15, 20 (tokens/s)"
+  },
+  {
+   "metric": "TBT",
+   "stat": "n/a",
+   "where": "evaluation setup only (chunked-prefill config); re-pass"
+  },
+  {
+   "metric": "TBT",
+   "stat": "n/a",
+   "where": "§5.2.1: bounded by chunked prefills (evaluation setup only; re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "latency",
+   "canonical": "OTHER:iteration_latency",
+   "definition_quote": "For end-to-end (e2e) results, we also perform warm-up and then measure latency using time.perf_counter(). We disable prefix caching and ignore detokenization time",
+   "locator": "App (B200 setup)",
+   "notes": "'Latency' = wall-clock time of a forward pass / batch (prefill-only batches of fixed token count), not request latency."
+  },
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Metrics: Latency and Tokens per second",
+   "locator": "Artifact appendix",
+   "notes": "Tokens per second; input vs output counting not defined."
+  }
+ ],
+ "slo_spec": "mentions interactive SLOs qualitatively; none specified",
+ "load_regime": "fixed (input,output)-length traces and ShareGPT/arXiv traces run offline with chunked prefill (chunk 2K, 4K for Mixtral); single-iteration microbenchmarks",
+ "tradeoff_acknowledged": "Chunk size trades TBT against throughput (smaller chunks -> lower TBT, lower throughput); TokenWeave applied only to batches with 1K+ tokens.",
+ "eval_type": "real-system",
+ "hardware": "8xH100 DGX (4xH100, 8xB200 in appendix)",
+ "models": "Llama-3.3-70B, Qwen2.5-72B, Mixtral-8x22B, Qwen3-235B-A22B",
+ "workloads": "ShareGPT, arXiv, synthetic fixed-length",
+ "confidence": "medium",
+ "extractor_notes": "No TTFT/TPOT/percentile reported; 'latency' is forward-pass latency. TBT is invoked only to justify chunked-prefill config.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"Figure 11. TokenWeave throughput gains for end-to-end workload traces. We show the measured throughput for ShareGPT, arXiv, as well as fixed (input, output)-length traces for different models on 8xH100 DGX.\"; plus single-iteration latency microbenchmarks (Fig 13); no arrival process",
+ "repass_log": [
+  "iteration_latency: result quote replaced with §1 design problem statement (communication overhead 9-23% of latency); stat mean->n/a (unspecified)",
+  "THR_TOK: abstract result only, no design statement -> moved to reported_metrics (already present)",
+  "TBT constraint: only evaluation-setup justification of chunked prefill -> moved to reported_metrics",
+  "load_class offline-batch"
+ ]
+}

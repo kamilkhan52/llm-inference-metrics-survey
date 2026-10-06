@@ -1,0 +1,82 @@
+{
+ "key": "arxiv_2411.06364",
+ "title": "EconoServe: Maximizing Multi-Resource Utilization with SLO Guarantees in LLM Serving",
+ "first_author": "Shen",
+ "year": 2024,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2411.06364",
+ "cluster": "D1",
+ "technique": "predicted-RL batching + KVC pipelining, multi-resource utilization maximization under SLO",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "EconoServe maximizes multi-resource utilization while ensuring service-level objective (SLO) guarantees",
+   "locator": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "ensuring service-level objective (SLO) guarantees",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "EconoServe increases throughput by up to 4$\\times$ with the same level of latency",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "EconoServe increases throughput by up to 4$\\times$ with the same level of latency, generates up to 91\\% lower job completion time and up to 91\\% higher SLO satisfaction ratio compared to vLLM",
+  "metrics": [
+   "SLO_ATT",
+   "THR_TOK",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Utilization of GPU compute and KV cache is the stated objective; throughput unit not stated. GPU count reduction at equal goodput also reported."
+}

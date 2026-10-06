@@ -1,0 +1,52 @@
+{
+ "key": "arxiv_2506.02634",
+ "title": "KVCache Cache in the Wild: Characterizing and Optimizing KVCache Cache at a Large Cloud Provider",
+ "first_author": "Wang",
+ "year": 2025,
+ "venue": "arXiv preprint (v5, Feb 2026)",
+ "url": "https://arxiv.org/abs/2506.02634",
+ "cluster": "D3",
+ "technique": "METRIC-PAPER: characterization of production KV$ reuse (skew, reuse-time/probability, lifespan, ideal hit ratio) from Alibaba traces, plus a workload-aware KV$ eviction policy using fitted per-category reuse-probability distributions",
+ "layer": "prefix/context-caching",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2506.02634.txt",
+ "optimized_metrics": [
+  {"metric": "OTHER:kv_cache_hit_ratio", "stat": "mean", "role": "objective",
+   "evidence": "Our policy WA achieves 8.1–23.9 % higher hit rate compared to other baselines, and it has a 1.5–3.9 % higher hit rate compared to the best of other baselines.",
+   "locator": "§4.2 evaluation (Fig 25-27)"},
+  {"metric": "OTHER:QTTFT", "stat": "mean", "role": "objective",
+   "evidence": "the queued TTFT (QTTFT) when serving different traces, i.e., the TTFT plus the time when waiting for GPU to process the request. We can see that WA achieves 28.3–41.9% QTTFT reduction thanks to the improved KV$ cache hit rate.",
+   "locator": "§4.2 Improved performance"}
+ ],
+ "headline_claim": {"text": "Based on the characterization, we further propose a workload-aware cache eviction policy that improves the serving performance under real-world traces, especially with limited cache capacity.",
+  "metrics": ["OTHER:kv_cache_hit_ratio", "OTHER:QTTFT"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "OTHER:kv_cache_hit_ratio", "stat": "ideal (infinite cache) and finite", "where": "Fig 4, 17, 25-27"},
+  {"metric": "OTHER:QTTFT", "stat": "not stated (mean presumed)", "where": "Fig 25-27"},
+  {"metric": "OTHER:kv_lifespan", "stat": "P99 97 s (to-B)", "where": "§1 observation 3, §3.4-3.5"},
+  {"metric": "MEMORY", "stat": "required cache size for ideal hit ratio", "where": "§3.5"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "TTFT", "canonical": "TTFT", "definition_quote": "which dramatically improves the reaction time (also termed time to first token, TTFT) of #Req1: it only needs to compute the K and V of “AI is” during the prefill.", "locator": "§2 Background", "notes": "informal; prefill only"},
+  {"term_as_written": "QTTFT", "canonical": "OTHER:QTTFT", "definition_quote": "queued TTFT (QTTFT) when serving different traces, i.e., the TTFT plus the time when waiting for GPU to process the request.", "locator": "§4.2 Improved performance", "notes": "TTFT inclusive of queueing; aggregation statistic (mean/percentile) not stated in text"},
+  {"term_as_written": "ideal cache hit ratio", "canonical": "OTHER:kv_cache_hit_ratio", "definition_quote": "assuming a cache having infinite capacity. ... for a total of N KV$ blocks that needed to be computed by LLM in a trace, if the hit rate is 62%, this implies that 62% of the N blocks can reuse a KV$ computed and cached in a prior request.", "locator": "§3.1 Fig 4", "notes": "block-level (not request-level) hit rate"},
+  {"term_as_written": "KV$ lifespan", "canonical": "OTHER:kv_lifespan", "definition_quote": "The lifespan of KV$ is ephemeral: the P99 lifespan of KV$ in to-B workloads is 97 seconds, so a small cache is typically sufficient for the KV$ cache.", "locator": "§1 observation 3", "notes": "tail percentile used to size cache"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "OTHER:kv_cache_hit_ratio", "critique_quote": "While the ideal hit ratio is high, it is smaller than the reported hit ratio (e.g., more than 80%) on synthetic workloads.", "locator": "§3.1"},
+  {"target_metric": "OTHER:kv_cache_hit_ratio", "critique_quote": "previous studies focusing on synthetic workloads", "locator": "abstract (observations not covered by prior synthetic-workload studies)"}
+ ],
+ "recommended_practice": [
+  {"quote": "Since the performance depends on cache capacity, we report the hit rates (as well as performance) by varying the cache capacity", "locator": "§4.2"},
+  {"quote": "the effectiveness of KV$ cache system components like cache eviction policy should be tailored to the KV$ reuse features of workloads.", "locator": "§1"}
+ ],
+ "slo_spec": null,
+ "load_regime": "trace replay of two production traces (Trace A, Trace B) with cache-capacity sweep",
+ "tradeoff_acknowledged": "WA gain shrinks as cache capacity grows (larger cache tolerates a less effective policy); smaller gains on Trace B (99% single-turn)",
+ "eval_type": "both",
+ "hardware": "8x A100 server with 1TB CPU memory (PCIe Gen4)",
+ "models": "Qwen-family models (GQA), various in characterization",
+ "workloads": "Alibaba Bailian production traces (Trace A, Trace B); to-B and to-C",
+ "confidence": "medium",
+ "extractor_notes": "Characterization paper with a caching-policy contribution; metric critique is only against synthetic-workload hit ratios. QTTFT statistic (mean vs percentile) not stated in the passages read; TTFT is not defined formally. Read abstract, intro, §2-§4.2 evaluation passages."
+}

@@ -1,0 +1,166 @@
+{
+ "key": "arxiv_2607.03948",
+ "title": "Online Linear Programming for Multi-Objective Routing in LLM Serving",
+ "first_author": "Chen",
+ "year": 2026,
+ "venue": "ICML 2026 (PMLR 306)",
+ "url": "https://arxiv.org/abs/2607.03948",
+ "cluster": "D2",
+ "technique": "Router for decode workers as online LP with time-coupled batch-slot and KV-cache constraints; bid-price control admits a request when its weighted SLO reward exceeds shadow prices; duals tracked by warm-started projected gradient; tail latency decomposed into per-request threshold-indicator rewards",
+ "layer": "cluster-routing/placement",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2607.03948.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "where α, β, γ, σ, ζ1, ζ2 ≥ 0 are parameters representing the relative importance of each objective.",
+   "locator": "§3.1 reward r_{j,g,k} = α·Thr − β·EEL − γ·TTFT + σ·QPS − ζ1·Tail EEL − ζ2·Tail TTFT",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "QPSj,g,k = 1 ... For QPS, the contribution of an action is simply 1, as each assigned request contributes one processed query",
+   "locator": "§3.1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "The end-to-end latency of request j is cj − tj. The average EEL is",
+   "locator": "§2 Objective Metrics (1); reward term β·EEL",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Average/Tail end-to-end latency (EEL) ... The average EEL is"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "The TTFT of request j is τj − tj. The average TTFT is",
+   "locator": "§2 Objective Metrics (2); reward term γ·TTFT",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Average/Tail time-to-first-token (TTFT) ... The average TTFT is"
+  },
+  {
+   "metric": "E2E",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "We also introduce an interesting and simple method to decompose statistical tail latency into an instant reward for the action. Taking tail TTFT as an example, suppose the servicelevel constraint is that the tail TTFT must be bounded by t′.",
+   "locator": "§3.1 (tail EEL reward ζ1·1{k+ô_j−t_j < t′1})",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "For a tail level x%, the x% tail EEL is the x% quantile of the multiset { cj − tj : j ∈ J }."
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "This guarantees that if the TTFT of a request is within the desired bound t′, a reward of 1 unit is added. To enforce a stricter tail TTFT requirement (e.g., the 99th percentile), we set a larger weight for ζ2",
+   "locator": "§3.1 (reward ζ2·1{k−t_j < t′2})",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "the x% tail TTFT is the x% quantile of { τj − tj : j ∈ J }"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "requests arrive sequentially and must be dispatched to parallel decode workers under tight batch-size and KVcache constraints.",
+   "locator": "abstract; §2 device feasibility constraints",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "We integrate our router into the Vidur simulator and demonstrate substantial improvements over standard baselines across multiple SLO regimes, including end-to-end latency, time-to-first-token, throughput, and tail performance.",
+  "metrics": [
+   "E2E",
+   "TTFT",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "mean/P95/P99",
+   "where": "Table 1, 2 (relative improvement vs Round-Robin), Figs 3-9"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "mean/tail (99%)",
+   "where": "Figs 3-9"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Table 1 'Thr.', Figs 4-9"
+  },
+  {
+   "metric": "OTHER:slo_column",
+   "stat": "n/a",
+   "where": "Table 1/2 column 'SLO↓' (definition not found in extracted text)"
+  },
+  {
+   "metric": "OTHER:router_latency",
+   "stat": "n/a",
+   "where": "§3.3: 1-2 ms per routing period on i9 CPU"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency (EEL)",
+   "canonical": "E2E",
+   "definition_quote": "Let cj denote the period when request j completes (i.e., its final token is processed). The end-to-end latency of request j is cj − tj.",
+   "locator": "§2 Objective Metrics (1)",
+   "notes": "t_j is the time the request arrives at the router AFTER prefill completes (prefill is done upstream under PD disaggregation), so E2E here excludes prefill; time unit is decode iterations (periods)."
+  },
+  {
+   "term_as_written": "tail EEL",
+   "canonical": "E2E",
+   "definition_quote": "For a tail level x%, the x% tail EEL is the x% quantile of the multiset { cj − tj : j ∈ J }.",
+   "locator": "§2",
+   "notes": "Tail optimized via threshold-indicator rewards, not by direct quantile minimization; weights map to target quantile."
+  },
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "Let τj denote the period when request j starts decoding, i.e., when ... its first output token is generated. The TTFT of request j is τj − tj.",
+   "locator": "§2 Objective Metrics (2)",
+   "notes": "Measured from router arrival (post-prefill), so it is effectively router/decode-queue wait plus first decode iteration, NOT the user-visible TTFT including prefill. Under PD mixing (App. A) it includes prefill."
+  },
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "We do not explicitly report time-per-output-token (TPOT) since TPOT can be recovered as end-to-end latency minus TTFT and normalized by oj .",
+   "locator": "Remark 2.1",
+   "notes": "TPOT is not reported."
+  },
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Let N tok(T) be the total number of decode tokens processed over periods 1, . . . , T across all devices. The (average) token throughput over the horizon is N tok(T)/T.",
+   "locator": "§2 System-level metrics (3)",
+   "notes": "Decode tokens only, per period (not per GPU), summed across devices."
+  }
+ ],
+ "slo_spec": "No fixed SLO values; operators choose thresholds t′1 (tail E2E) and t′2 (tail TTFT) and weights (α,β,γ,σ,ζ1,ζ2); e.g. weights (0,0,0,0,1,1) for tail emphasis, t′2=49 periods in the tail-weight study.",
+ "load_regime": "Poisson arrivals, λ=0.4 (stable) and λ=0.5 (mild overload), plus non-stationary 0.4->0.6 shift; ConvSharegpt-like conversational dataset sampled randomly",
+ "tradeoff_acknowledged": "Weighting average latency (0,1,1,0,0,0) lowers mean EEL/TTFT but can worsen tail metrics 'because the policy is not incentivized to protect the slowest requests'; overload (λ=0.5) deteriorates tails unless tail weights are large.",
+ "eval_type": "simulation",
+ "hardware": "Vidur simulator, 4 simulated A100 GPUs",
+ "models": "not stated in extracted sections (Vidur profile)",
+ "workloads": "conversational dataset (Zheng et al., 2023a, LMSYS-style), Poisson arrivals; synthetic prefill/decode ratios 1:4, 4:1 in appendix",
+ "confidence": "high",
+ "extractor_notes": "TAIL IN OBJECTIVE: yes, but not as a percentile statistic: the tail terms are indicator rewards 1{latency < t'} (threshold attainment), and the weight zeta indirectly sets the achieved quantile (Fig: 'Tail weights and the achieved tail quantile'). Results table reports P95/P99 EEL. Closest to the user's Vidur RL-routing setting: same simulator, Vidur default baselines (RR, LOR, Random, Power-of-2). Router is decode-side after PD disaggregation, so TTFT/E2E definitions start after prefill. Mean-latency vs tail trade-off shown explicitly.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "For the real dataset, the request arrival process is modeled as a stationary Poisson process, with an arrival rate λ ∈ {0.4, 0.5}.",
+ "repass_log": [
+  "new record"
+ ]
+}

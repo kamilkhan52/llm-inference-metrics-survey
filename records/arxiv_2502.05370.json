@@ -1,0 +1,132 @@
+{
+  "key": "arxiv_2502.05370",
+  "title": "Taming Latency-Memory Trade-Off in MoE-Based LLM Serving via Fine-Grained Expert Offloading",
+  "first_author": "Hanfei Yu",
+  "year": 2025,
+  "venue": "EuroSys'26",
+  "url": "https://arxiv.org/abs/2502.05370",
+  "cluster": "D4",
+  "technique": "FineMoE: fine-grained expert maps (iteration-level gate probabilities) plus prompt semantic embeddings to guide expert prefetching, caching and offloading between CPU and GPU memory",
+  "layer": "MoE-serving",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2502.05370.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We aim to achieve both low memory footprint and inference latency by proposing fine-grained expert offloading.",
+      "locator": "§3.1",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We aim to achieve both low memory footprint and inference latency by proposing fine-grained expert offloading.",
+      "locator": "§3.1",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "The objective is to minimize the on-demand loading latency (ideally T = 0 with perfect predictions) while limiting the total memory footprint of cached experts to satisfy the available GPU memory M.",
+      "locator": "§3 problem formulation",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "We opt for lossless serving to design FineMoE because this line of methods avoids modifying models, hence assuring generation quality.",
+      "locator": "§2.3",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:expert_hit_rate",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We should minimize expert miss and mitigate mispredictions in expert offloading.",
+      "locator": "§3.1",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "FineMoE reduces inference latency by 47% and improves expert hit rate by 39% over state-of-the-art solutions.",
+    "metrics": [
+      "TTFT",
+      "TPOT",
+      "OTHER:expert_hit_rate"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 10, 15, 16"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "Fig 10, 12 (vs expert cache limit 6-96 GB), 15, 16"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 11 CDF of end-to-end request latency (online)"
+    },
+    {
+      "metric": "OTHER:expert_hit_rate",
+      "stat": "mean",
+      "where": "Figs 4, 8-10"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "expert cache budget sweeps and Expert Map Store overhead (§6.7)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "Time-To-First-Token (TTFT) is commonly employed, which measures the latency from receiving the user request until generating the first answer token.",
+      "locator": "§2.1",
+      "notes": "Described as the prefill-stage metric; measured from request receipt (would include any queueing)."
+    },
+    {
+      "term_as_written": "TPOT / TPS",
+      "canonical": "TPOT",
+      "definition_quote": "Tokens-Per-Second (TPS) or Time-Per-Output-Token (TPOT) is used to measure the generation rate of LLM serving.",
+      "locator": "§2.1",
+      "notes": "Used for decode stage; no formula given."
+    },
+    {
+      "term_as_written": "expert hit",
+      "canonical": "OTHER:expert_hit_rate",
+      "definition_quote": "an expert hit: the activated expert is already in GPU memory (otherwise on-demand loading from CPU)",
+      "locator": "§4 (paraphrase of 'defined as an expert hit')",
+      "notes": "Paraphrase; paper's text: experts present in GPU memory (defined as an expert hit). Otherwise miss."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "Offline serving (expert map store full) at small batch (default), batch sweep 1-8 on Mixtral-8x7B; online serving with 256 requests from Azure LLM inference traces at 2.91 req/s; expert cache limit sweep 6-96 GB",
+  "tradeoff_acknowledged": "The title trade-off: baselines achieve low latency with large memory footprint (e.g. no offload / ProMoE) or low memory with high latency (DeepSpeed, MoE-Infinity); FineMoE targets the Pareto point. Prefetch distance trades hit rate vs. overhead.",
+  "eval_type": "real-system",
+  "hardware": "Six NVIDIA RTX 3090 24GB GPUs (NVLink pairs), 32-core CPU, 480 GB RAM",
+  "models": "Mixtral-8x7B, Qwen1.5-MoE, Phi-3.5-MoE",
+  "workloads": "LMSYS-Chat-1M, ShareGPT prompts; Azure LLM inference traces for online",
+  "confidence": "high",
+  "extractor_notes": "'Inference latency' headline = TTFT and TPOT reduction (avg across baselines); memory is a constraint via cache budget. Expert hit rate is the intermediate proxy objective. Speeds measured at small batch (batch 1 default), and online at low rate 2.91 req/s; no tail percentiles reported (CDF only). Lossless (no accuracy numbers).",
+  "load_class": "mixed",
+  "load_class_quote": "Offline serving with the Expert Map Store in full capacity at small batch (§6.2, batch sweep 1-8) plus online serving: \"randomly sampled 256 requests (2.91 requests per second)\" from Azure traces (§6.3) = offline-batch + online-arrivals",
+  "repass_log": [
+    "TTFT/TPOT: abstract result and metric-measurement quotes replaced with §3.1 design goal (generic 'inference latency', mapped to TTFT/TPOT by the evaluation); stat n/a",
+    "expert_hit_rate: evidence replaced with §3.1 design goal; MEMORY (cache budget constraint)/QUALITY (lossless): design",
+    "load_class mixed"
+  ]
+}

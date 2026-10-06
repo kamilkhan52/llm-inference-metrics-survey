@@ -1,0 +1,75 @@
+{
+ "key": "arxiv_2403.00579",
+ "title": "NeuPIMs: NPU-PIM Heterogeneous Acceleration for Batched LLM Inferencing",
+ "first_author": "Heo",
+ "year": 2024,
+ "venue": "ASPLOS'24",
+ "url": "https://arxiv.org/abs/2403.00579",
+ "cluster": "D5",
+ "technique": "NPU+PIM heterogeneous accelerator with dual row buffers and sub-batch interleaving to overlap GEMM (NPU) and GEMV (PIM)",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2403.00579.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "We architect NeuPIMs such that it effectively balances the utilization of memory bandwidth and computational resources of the system to improve the overall inference throughput.",
+   "locator": "§1 (txt line 112-115)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "architect NeuPIMs such that it effectively balances the utilization of memory bandwidth and computational resources of the system to improve the overall inference throughput",
+   "locator": "§1 (txt line ~210)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "compared to GPU-only, NPU-only, and a naive NPU+PIM integrated acceleration approaches, NeuPIMs achieves 3x, 2.4x and 1.6x throughput improvement, respectively.",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Fig 12, 13, 14 (1k tokens/s)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "Table 4 NPU/PIM compute and memory bandwidth utilization"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "we simulate the inference serving for a fixed amount of time, randomly picking sequence lengths from the datasets ... We sample 10 different batches and use them to measure the throughputs of different hyperparameter combinations.",
+   "locator": "§8.1",
+   "notes": "Throughput unit is 1k tokens/s (Fig 14); input vs output token counting is never defined; simulated batches, not request arrivals."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch sizes (64-512) of sampled sequence lengths; throughput of steady-state batches",
+ "tradeoff_acknowledged": "none; says batching improves utilization 'while not sacrificing the latency requirement' without measuring latency",
+ "eval_type": "simulation",
+ "hardware": "NPU+PIM (cycle-accurate simulator extension), baselines A100 40GB and TPU-like NPU",
+ "models": "GPT3 (7B/13B/30B), LLaMA2, OPT, MPT, GPTNeoX",
+ "workloads": "ShareGPT, Alpaca",
+ "confidence": "medium",
+ "extractor_notes": "Throughput never formally defined; no latency metric is evaluated.",
+ "load_class": "analytical-or-simulated-only",
+ "load_class_quote": "\"Figure 12. Throughput comparison results of GPU-only, NPU-only, NPU+PIM, and NeuPIMs. We use the two datasets, (a) Alpaca and (b) ShareGPT, using the batch sizes including 64, 128, 256, 384, and 512.\"; evaluation on cycle-accurate simulators (ONNXim, DRAMsim3-based), fixed batches",
+ "repass_log": [
+  "THR_TOK: abstract result quote replaced with §1 design statement",
+  "UTIL: design",
+  "load_class analytical-or-simulated-only (cycle-accurate simulation, fixed batches 64-512)"
+ ]
+}

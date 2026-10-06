@@ -1,0 +1,161 @@
+{
+  "key": "arxiv_2401.08671",
+  "title": "DeepSpeed-FastGen: High-throughput Text Generation for LLMs via MII and DeepSpeed-Inference",
+  "first_author": "Connor Holmes",
+  "year": 2024,
+  "venue": "arXiv preprint (Microsoft DeepSpeed)",
+  "url": "https://arxiv.org/abs/2401.08671",
+  "cluster": "D1",
+  "technique": "Dynamic SplitFuse: decompose long prompts into chunks and compose them with decode tokens to fill a fixed per-forward-pass token budget; blocked KV cache",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.08671.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "When systems treat them as distinct phases, generation will be preempted by prompt processing that risks breaking the service level agreements (SLAs).",
+      "locator": "§1 (txt lines ~53-55); SLA defined §4.1.2",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TBT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "DeepSpeed-FastGen will consume tokens from incoming prompts at a rate that permits fast ongoing generation while adding tokens to the system that increase system utilization",
+      "locator": "§3.3 (txt lines ~214-216)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": null
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "providing lower latency and higher throughput streaming generation to all clients as compared to other state-of-the-art serving systems",
+      "locator": "§3.3 (txt lines ~217-219)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": null
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "providing lower latency and higher throughput streaming generation to all clients as compared to other state-of-the-art serving systems",
+      "locator": "§3.3 (txt lines ~217-219)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "up to 2.3x higher effective throughput, 2x lower latency on average, and up to 3.7x lower (token-level) tail latency, compared to state-of-the-art systems like vLLM",
+    "metrics": [
+      "GOODPUT",
+      "E2E",
+      "TBT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 4/5 throughput (rps) vs latency curves"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 4/5 latency curves"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "Fig 6, 9, 10 effective throughput"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P50",
+      "where": "Fig 5/7 generation latency P50/P90/P95"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P95",
+      "where": "Fig 5/7"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P95",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "Two key metrics for production readiness are throughput (measured in requests per second) and latency (the responsiveness of each request).",
+      "locator": "§4.1.1",
+      "notes": "requests/s, measured as total requests / end-to-end time of experiment"
+    },
+    {
+      "term_as_written": "throughput measurement",
+      "canonical": "THR_REQ",
+      "definition_quote": "The resulting latency of each request is measured at the endpoint and throughput is measured by the end-to-end time to complete the experiment.",
+      "locator": "§4.1.1",
+      "notes": "512 requests, 1-32 concurrent clients (closed loop)"
+    },
+    {
+      "term_as_written": "SLA (prompt latency)",
+      "canonical": "TTFT",
+      "definition_quote": "define the SLA for prompt latency as (tokens in prompt)/512 seconds (=512 tokens/s).",
+      "locator": "§4.1.2 (formula garbled in PDF: 'tokens in prompt / 512 seconds')",
+      "notes": "first-token SLA scales with prompt length: 512 prompt tokens/s"
+    },
+    {
+      "term_as_written": "SLA (generation latency)",
+      "canonical": "TPS_USER",
+      "definition_quote": "we set the SLA for generation latency on the Exponential Moving Average (EMA) to 2, 4, or 6 tokens/sec.",
+      "locator": "§4.1.2",
+      "notes": "per-request token generation rate, EMA-smoothed; basis 'human reading speed'"
+    },
+    {
+      "term_as_written": "effective throughput",
+      "canonical": "GOODPUT",
+      "definition_quote": "Requests that adhere to these SLAs are deemed successful, and the throughput of these successful requests is referred to as effective throughput.",
+      "locator": "§4.1.2",
+      "notes": "unit: requests/s of SLA-meeting requests (queries/s); peak of effective-throughput curve is 'optimal serving point'"
+    },
+    {
+      "term_as_written": "token-level tail latency / P95 generation latency",
+      "canonical": "TBT",
+      "definition_quote": "Figure 5 displays the P50, P90, and P95 latencies of the generation processes.",
+      "locator": "§4.4",
+      "notes": "'(token-level) tail latency' in the abstract; per-token generation latency distribution, exact unit (per-token vs per-request) not strictly defined"
+    }
+  ],
+  "slo_spec": "Effective-throughput SLA: prompt latency <= (prompt tokens)/512 s; generation EMA rate >= 2, 4 or 6 tokens/s (human reading speed); successful request must meet both.",
+  "load_regime": "closed-loop client sweep (1-32 concurrent clients, 512 requests), throughput-latency curves; also 16-replica load balancing",
+  "tradeoff_acknowledged": "Argues balance between throughput and latency; vLLM preemption of generation for prompts causes P90/P95 latency spikes (the trade-off they avoid).",
+  "eval_type": "real-system",
+  "hardware": "A100-80GB (4x for 70B), H100 (8x), A6000",
+  "models": "Llama-2 7B, 13B, 70B (also Mistral, Falcon, Mixtral supported)",
+  "workloads": "synthetic: normal-distributed prompt/generation lengths, averages 1200/2600 prompt and 128/60 generation, 30% variance",
+  "confidence": "high",
+  "extractor_notes": "Blog-style paper. 'latency' for 'throughput-latency curves' is per-request end-to-end latency; generation latency definition in Fig 5/7 is per-token latency percentile. 'Effective throughput' = goodput but in requests/s. Primary design metric is a per-forward-pass token budget; throughput/latency claims are evaluation outcomes. Tail percentiles P90/P95 only for generation latency. | TAIL AUDIT 2026-10-06: TBT tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TBT P95 (reported, Fig 5)",
+    "correction": "Demote TBT P95 'objective' to reported. Its SLA is prompt latency bound + EMA token rate >= 2/4/6 tok/s (no percentile).",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "we instantiate multiple clients (ranging from 1 to 32) concurrently and send requests (512 in total) to the server (§4.1.1; closed-loop client-count sweep, not an arrival-rate process)",
+  "repass_log": [
+    "GOODPUT: abstract result quote replaced by §1 design problem (generation preempted by prompt processing breaks SLAs); SLA framework in §4.1.2",
+    "TBT: P95 result quote replaced by §3.3 design statement; stat n/a unspecified (tail-audit: percentile only reported)",
+    "E2E: 'latency on average' abstract result replaced by §3.3 design statement; stat mean->n/a unspecified",
+    "THR_REQ: abstract problem statement replaced by §3.3 design statement",
+    "load_class online-arrivals (closed-loop concurrent clients)"
+  ]
+}

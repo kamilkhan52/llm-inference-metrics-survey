@@ -1,0 +1,131 @@
+{
+  "key": "arxiv_2504.02263",
+  "title": "MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregated Expert Parallelism",
+  "first_author": "Ruidong Zhu",
+  "year": 2025,
+  "venue": "arXiv preprint (v4, Jul 2025; ByteDance Seed)",
+  "url": "https://arxiv.org/abs/2504.02263",
+  "cluster": "D4",
+  "technique": "Disaggregate attention and FFN/expert modules onto separate GPUs with independent parallelism; ping-pong pipeline parallelism over micro-batches; custom M2N communication library; heterogeneous GPU deployment plan search",
+  "layer": "MoE-serving",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.02263.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "we focus on maximizing the cost-normalized decoding throughput, subject to a specified time-between-tokens (TBT) latency constraint. Specifically, for homogeneous deployment, we use per-GPU decoding throughput",
+      "locator": "§7.1 Metrics",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our goal is to identify the deployment plan that maximizes throughput per unit cost (e.g., dollar).",
+      "locator": "§4.2",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TBT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Following prior work [82], we set the TBT requirement to 150 milliseconds.",
+      "locator": "§7.1 Metrics; §4.2 constraint Titer <= SLO",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we set the TBT requirement to 150 milliseconds"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "this pipeline should be meticulously co-designed with the model parallelism strategies of each module to maximize GPU utilization while adhering to latency requirements.",
+      "locator": "§3",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "MegaScale-Infer achieves up to 1.90× higher per-GPU throughput than state-of-the-art solutions.",
+    "metrics": [
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Figs 8(a),(c), 9(a): per-GPU / per-cost decoding and end-to-end throughput"
+    },
+    {
+      "metric": "TBT",
+      "stat": "mean",
+      "where": "Figs 8(b), 9(b): mean time between tokens"
+    },
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "where": "Fig 10 throughput per unit power"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Fig 9 throughput per cost (normalized purchase price, Table 3)"
+    },
+    {
+      "metric": "OTHER:M2N_comm_latency",
+      "stat": "P99",
+      "where": "Figs 11-12 M2N median and P99 latency"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "per-GPU decoding throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "for homogeneous deployment, we use per-GPU decoding throughput, i.e., tokens generated per second, excluding the first output token, divided by the number of GPUs, as the primary metric. For heterogeneous deployment, we report per-cost decoding throughput.",
+      "locator": "§7.1 Metrics",
+      "notes": "Output tokens only, excludes first token and prefill; decode-phase only; normalized per GPU or per cost."
+    },
+    {
+      "term_as_written": "per-cost throughput",
+      "canonical": "COST",
+      "definition_quote": "Here we define cost with the normalized purchase price as shown in Table 3, which can easily be replaced by the rental price for cloud service",
+      "locator": "§7.2",
+      "notes": "Cost = normalized hardware purchase price."
+    },
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "when measuring decoding throughput and time between tokens, we exclude the prefill phase and consider only the iteration time and output tokens of the decoding phase.",
+      "locator": "§7.1",
+      "notes": "TBT = decode iteration time; reported as mean (also median/tail in M2N micro-benchmarks)."
+    }
+  ],
+  "slo_spec": "Single TBT requirement of 150 ms per token (following prior work) applied as constraint Titer <= SLO in deployment plan search; max global batch size found by binary search under it",
+  "load_regime": "Fixed (searched) global decode batch size per system under 150 ms TBT cap; prefill and decode temporally separated, decode-only measurement; synthetic/production-like in-house workload (median sequence length given)",
+  "tradeoff_acknowledged": "Disaggregation adds per-layer communication and does not reduce individual per-token latency; mean TBT is comparable to baselines (sometimes slightly higher), the gain is throughput at the same TBT bound.",
+  "eval_type": "real-system",
+  "hardware": "Homogeneous NVIDIA Ampere-class cluster (NVLink); heterogeneous H20 (attention) + L40S (experts)",
+  "models": "Mixtral 8x22B, DBRX, in-house Scaled-MoE (317B)",
+  "workloads": "In-house production-like requests; decode-phase benchmark",
+  "confidence": "high",
+  "extractor_notes": "Latency is a constraint, not an objective. The text of §4.2 says 'minimize the throughput per unit cost' but the evident intent (and Alg. 1: plan*.tpuc < plan.tpuc updates) is maximizing throughput per unit cost. Throughput excludes the first output token and prefill. M2N communication library reports median and P99 latency, but only for the micro-benchmark (not request-level). Reports 1.5-2.0x serving cost reduction in production.",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "M2N communication P99 latency and median (reported); TBT constraint 150 ms (no percentile)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "offline-batch",
+  "load_class_quote": "[the algorithm] determines the maximum global batch size that meets the SLO through binary search and obtains the optimal plan. (§4.2, Alg. 1; decode-only throughput at a fixed searched batch, no arrival process)",
+  "repass_log": [
+    "THR_TOK: design (§7.1 stated primary objective: maximize cost-normalized decoding throughput subject to TBT constraint)",
+    "COST: quote replaced with §4.2 'Our goal is to identify the deployment plan that maximizes throughput per unit cost' (avoids the 'minimize' typo)",
+    "TBT constraint: design; stat -> attainment (150 ms threshold requirement)",
+    "UTIL: abstract replaced with §3 design statement",
+    "load_class offline-batch (fixed searched global batch under TBT cap)"
+  ]
+}

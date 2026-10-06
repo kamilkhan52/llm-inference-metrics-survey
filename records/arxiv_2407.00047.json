@@ -1,0 +1,137 @@
+{
+  "key": "arxiv_2407.00047",
+  "title": "Queue Management for SLO-Oriented Large Language Model Serving",
+  "first_author": "Archit Patke",
+  "year": 2024,
+  "venue": "SoCC 2024",
+  "url": "https://arxiv.org/abs/2407.00047",
+  "cluster": "D1",
+  "technique": "QLM: global request queue with request groups/virtual queues; Request Waiting Time estimator + linear-programming scheduler orchestrating request pulling, eviction, load balancing and model swapping",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2407.00047.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "a queue management system for LLM serving that maximizes SLO attainment while maintaining high throughput.",
+      "locator": "§1 Intro (raw txt line 225)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "Each request arrives with a service-level objective (SLO) value that enforces the time to first token (TTFT) for the request.",
+      "locator": "Definition 2.2, §2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "these SLOs are defined with respect to the 99th percentile value of the time to first token (TTFT)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a queue management system for LLM serving that maximizes SLO attainment while maintaining high throughput.",
+      "locator": "§1 (Introduction, txt line ~118)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Optimal ordering of the request queue is critical to maintain SLOs while ensuring high resource utilization.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "QLM improves SLO attainment by 40-90% and throughput by 20-400% while maintaining or improving device utilization compared to other state-of-the-art LLM serving systems.",
+    "metrics": [
+      "SLO_ATT",
+      "THR_REQ",
+      "UTIL"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 9, 12 (request throughput)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 10, 13 (SLO satisfaction)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "GPU requirement reduction (Fig 9/12 captions)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "SLO",
+      "canonical": "TTFT",
+      "definition_quote": "Each request arrives with a service-level objective (SLO) value that enforces the time to first token (TTFT) for the request. While QLM primarily focuses on TTFT, it can be paired with another system such as Andes [25] to also maintain inter-token latency (ITL).",
+      "locator": "Definition 2.2",
+      "notes": "SLO is on TTFT only; ITL not guaranteed. TTFT effectively dominated by queue waiting time (RWT estimator)."
+    },
+    {
+      "term_as_written": "SLO values (P99 TTFT)",
+      "canonical": "TTFT",
+      "definition_quote": "Note that these SLOs are defined with respect to the 99th percentile value of the time to first token (TTFT).",
+      "locator": "§8 Evaluation setup",
+      "notes": "SLO thresholds: Interactive 20s, Batch-1 1 min, Batch-2 1 hour"
+    },
+    {
+      "term_as_written": "request throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "the request throughput (i.e., requests served per second)",
+      "locator": "§8.2",
+      "notes": "requests/s, not tokens/s"
+    },
+    {
+      "term_as_written": "token generation throughput (Theta)",
+      "canonical": "THR_TOK",
+      "definition_quote": "Output token generation throughput (tokens/s)",
+      "locator": "Appendix notation table",
+      "notes": "internal model parameter for the RWT estimator; output tokens only; assumed constant"
+    },
+    {
+      "term_as_written": "penalty term",
+      "canonical": "OTHER:SLO_penalty",
+      "definition_quote": "To model SLO attainment, we define a penalty term for each request group, which is the difference between waiting time and SLO value. If SLOs are met, all penalty terms would be smaller than 0.",
+      "locator": "§7 Global scheduler",
+      "notes": "LP objective is built on waiting time minus SLO (worst case over groups)"
+    }
+  ],
+  "slo_spec": "Three classes with TTFT SLOs: Interactive 20s, Batch-1 1 min, Batch-2 1 hour; defined w.r.t. 99th percentile TTFT; 'based on production requirements of a cloud provider'.",
+  "load_regime": "request-rate sweep (Poisson arrivals; 3,500 ShareGPT requests per trace; varying arrival rates to build queues)",
+  "tradeoff_acknowledged": "Model swapping/eviction overhead vs SLO; ITL/e2e SLOs explicitly not guaranteed (discussion).",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA A10 and A100 GPU clusters (up to 50 A100)",
+  "models": "Mistral-7B, Vicuna-13B, Llama-70B (fine-tuned variants)",
+  "workloads": "ShareGPT traces; Batch/interactive mix; 'mega prompt' workload (3K-4K tokens)",
+  "confidence": "high",
+  "extractor_notes": "Conclusion says 'end-to-end latency SLO attainment' while body defines SLO on TTFT only (discussion section says e2e SLOs would need modification) - inconsistent wording. SLOs are minutes-to-hours for batch (queue-wait scale), unlike interactive ms scale.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT @ P99 (SLO classes 20 s / 1 min / 1 h)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "Request arrivals are modeled with a Poisson distribution and queues are created by varying the arrival rates (§7/§8)",
+  "repass_log": [
+    "SLO_ATT: design",
+    "TTFT: design (SLO constraint); stat P99 explicit",
+    "THR_REQ: abstract result quote replaced by §1 design statement (maximizes SLO attainment while maintaining high throughput)",
+    "UTIL: design (stated requirement of ordering)",
+    "load_class online-arrivals"
+  ]
+}

@@ -1,0 +1,97 @@
+<section class="slide" id="s03" data-title="Definitions">
+<style>
+#s03 .slide-body { display: flex; flex-direction: column; gap: 8px; }
+#s03 .sch { position: relative; }
+#s03 .cols { height: auto; }
+#s03 .box { padding: 12px 16px; border-color: var(--ink-3); background: var(--panel); }
+#s03 .box p { margin: 0; font-size: 18px; }
+#s03 svg .br { stroke: var(--ink-2); stroke-width: 1.5; fill: none; }
+#s03 svg .brd { stroke: var(--ink-3); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+#s03 svg .tick { stroke: var(--ink); stroke-width: 2; }
+#s03 svg .ax { stroke: var(--ink-2); stroke-width: 2; fill: none; }
+#s03 svg text.big { font-size: 14px; font-weight: 600; }
+</style>
+<header class="slide-head">
+<div class="kicker">03 · Definitions</div>
+<h2>On one request's timeline, TPOT averages the gaps that TBT counts one by one.</h2>
+<div class="sub">TTFT = t₁ − a, counted from arrival, so it includes queueing; E2E = tₙ − a = TTFT + (n − 1)·TPOT.</div>
+</header>
+<div class="slide-body">
+<div class="sch">
+<svg id="s03-fig" viewBox="0 16 1160 274" width="1160" height="274" role="img" aria-label="Schematic timeline of one request, not to scale: arrival a, a queueing band, a prefill block, first token t1, then decode tokens t2 to t9 (n = 9) with one long stall gap between t5 and t6. TTFT spans a to t1, E2E spans a to t9, TPOT is the mean gap from t1 to t9, and TBT counts each gap as a sample.">
+<defs>
+<pattern id="s03-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<rect width="8" height="8" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="8" stroke="var(--ink-3)" stroke-width="2"/>
+</pattern>
+<marker id="s03-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-2)"/></marker>
+</defs>
+<text class="lbl faint" x="1160" y="12" text-anchor="end">not to scale</text>
+
+<!-- time axis -->
+<line class="ax" x1="30" y1="150" x2="1150" y2="150" marker-end="url(#s03-arr)"/>
+<text class="axis" x="1150" y="172" text-anchor="end">time</text>
+
+<!-- queueing + prefill -->
+<rect x="40" y="136" width="160" height="28" fill="url(#s03-hatch)" stroke="var(--ink-3)" stroke-width="1"/>
+<text class="lbl halo" x="120" y="155" text-anchor="middle">queueing</text>
+<rect x="200" y="136" width="90" height="28" fill="var(--ink-2)"/>
+<text x="245" y="155" text-anchor="middle" font-size="13" style="fill:#fff">prefill</text>
+
+<!-- ticks: a, t1..t9 -->
+<g class="tick">
+<line x1="40" y1="130" x2="40" y2="170"/>
+<line x1="290" y1="130" x2="290" y2="170"/>
+<line x1="365" y1="134" x2="365" y2="166"/>
+<line x1="440" y1="134" x2="440" y2="166"/>
+<line x1="515" y1="134" x2="515" y2="166"/>
+<line x1="590" y1="134" x2="590" y2="166"/>
+<line x1="780" y1="134" x2="780" y2="166"/>
+<line x1="855" y1="134" x2="855" y2="166"/>
+<line x1="930" y1="134" x2="930" y2="166"/>
+<line x1="1005" y1="134" x2="1005" y2="166"/>
+</g>
+<g class="axis" text-anchor="middle" style="fill:var(--ink);font-size:15px">
+<text x="40" y="124">a</text><text x="290" y="124">t₁</text><text x="365" y="124">t₂</text><text x="440" y="124">t₃</text>
+<text x="515" y="124">t₄</text><text x="590" y="124">t₅</text><text x="780" y="124">t₆</text><text x="855" y="124">t₇</text>
+<text x="930" y="124">t₈</text><text x="1005" y="124">t₉</text>
+</g>
+<text class="lbl halo" x="685" y="124" text-anchor="middle" style="font-weight:600">stall</text>
+<text class="lbl" x="40" y="204" text-anchor="start">arrival</text>
+<text class="lbl" x="290" y="204" text-anchor="middle">first token</text>
+
+<!-- brackets above -->
+<path class="br" d="M40,44 V36 H1005 V44"/>
+<text class="big" x="522" y="30" text-anchor="middle">E2E = tₙ − a</text>
+<path class="br" d="M40,78 V70 H290 V78"/>
+<text class="big" x="165" y="64" text-anchor="middle">TTFT</text>
+<path class="brd" d="M200,104 V96 H290 V104"/>
+<text class="lbl" x="300" y="104" text-anchor="start">prefill-only TTFT (a variant, see 13)</text>
+
+<!-- gap braces below -->
+<g class="br">
+<path d="M365,178 V184 H440 V178"/>
+<path d="M440,178 V184 H515 V178"/>
+<path d="M515,178 V184 H590 V178"/>
+<path d="M590,178 V184 H780 V178" style="stroke:var(--ink);stroke-width:2"/>
+<path d="M780,178 V184 H855 V178"/>
+<path d="M855,178 V184 H930 V178"/>
+<path d="M930,178 V184 H1005 V178"/>
+<path d="M290,178 V184 H365 V178"/>
+</g>
+<text class="lbl" x="402" y="203" text-anchor="middle">TBT sample</text>
+<text class="lbl" x="685" y="203" text-anchor="middle">TBT sample</text>
+<text class="lbl" x="685" y="224" text-anchor="middle" style="fill:var(--ink)">P99 TBT sees it; mean TPOT spreads it over 8 gaps</text>
+
+<!-- TPOT bracket -->
+<path class="br" d="M290,248 V256 H1005 V248"/>
+<text class="big" x="647" y="278" text-anchor="middle">TPOT = (tₙ − t₁)/(n − 1), the mean gap</text>
+<text class="lbl faint" x="1030" y="256" text-anchor="start">n = 9</text>
+</svg>
+</div>
+<div class="cols c2">
+<div class="box"><p>TPOT: one value per request, the mean gap. Its P99 is a tail over requests.</p></div>
+<div class="box"><p>TBT (each gap; vLLM calls it ITL): every gap is one sample. Its P99 is a tail over tokens and sees stalls.</p></div>
+</div>
+</div>
+<footer class="slide-foot"><div class="sources">[Syn] notation: DEFINITIONS §0, SYNTHESIS v6.1 §2 · [P] Etalon arxiv_2407.07000 §2.2 (TTFT includes scheduling delay); MLPerf LoadGen TPOT = (latency − TTFT)/(n − 1), INDUSTRY_DEFS §1 · schematic, not to scale</div><div class="pageno">03 / 14</div></footer>
+</section>

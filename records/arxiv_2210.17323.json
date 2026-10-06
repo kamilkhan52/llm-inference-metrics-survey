@@ -1,0 +1,111 @@
+{
+  "key": "arxiv_2210.17323",
+  "title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
+  "first_author": "Elias Frantar",
+  "year": 2022,
+  "venue": "ICLR'23",
+  "url": "https://arxiv.org/abs/2210.17323",
+  "cluster": "D4",
+  "technique": "one-shot weight-only post-training quantization (3-4 bit) via approximate second-order (OBQ-style) updates; dequantizing matrix-vector kernels",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2210.17323.txt",
+  "optimized_metrics": [
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "the parameters of GPT3-175B occupy 326GB (counting in multiples of 1024) of memory when stored in a compact float16 format. This exceeds the capacity of even the highest-end single GPUs, and thus inference must be performed using more complex and expensive setups, such as multi-GPU deployments.",
+      "locator": "§1 (txt line 53-56)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "precise enough to compress such models to 3 or 4 bits per parameter without significant loss of accuracy",
+      "locator": "§1 Contribution (txt line 95-96)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "language generation, one of the most appealing applications of these models, with the goal of latency reduction",
+      "locator": "§5 Practical Speedups (txt line 528-529)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "Table 6: Average per-token latency (batch size 1) when generating sequences of length 128."
+    },
+    {
+      "metric": "OTHER:quantization_time",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "efficient enough to execute on models with hundreds of billions of parameters in at most a few hours",
+      "locator": "§1 Contribution (txt line 93-94)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "end-to-end inference speedups over FP16, of around 3.25x when using high-end GPUs (NVIDIA A100) and 4.5x when using more cost-effective ones (NVIDIA A6000)",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Tables 1-5, Fig 1-3 (perplexity on WikiText2/PTB/C4, zero-shot accuracy)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Table 6 (ms per token, batch 1, 128 tokens)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "§5 (3-bit OPT-175B ~63GB; GPU count 5->1)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Table 6 GPU reduction (8->2, 5->1)"
+    },
+    {
+      "metric": "OTHER:quantization_time",
+      "stat": "n/a",
+      "where": "Table 1 runtimes"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Average per-token latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Table 6: Average per-token latency (batch size 1) when generating sequences of length 128.",
+      "locator": "§5 Table 6",
+      "notes": "Single-sequence decoding; FP16 baseline run on multiple GPUs (5x A100 or 8x A6000), quantized model on 1 A100 / 2 A6000, so speedup mixes quantization and GPU-count reduction (communication costs described as negligible)."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1, generating 128 tokens",
+  "tradeoff_acknowledged": "Method gives no speedup for the actual multiplications (no hardware support for mixed-precision operands); speedups come from reduced memory movement; 3-bit has noticeably higher perplexity for smaller models",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA A100 80GB, A6000 48GB",
+  "models": "OPT (125M-175B), BLOOM (176B)",
+  "workloads": "WikiText2, PTB, C4 perplexity; LAMBADA, ARC, PIQA zero-shot",
+  "confidence": "high",
+  "extractor_notes": "Primarily accuracy-vs-bitwidth/memory; latency is a secondary measured benefit at batch 1. The 3.25x/4.5x headline compares 1 A100 (3-bit) with 5 A100 FP16 (and 2xA6000 vs 8xA6000), i.e. GPU-count reduction included.",
+  "load_class": "single-sequence",
+  "load_class_quote": "Average per-token latency (batch size 1) when generating sequences of length 128. (Table 6)",
+  "repass_log": [
+    "MEMORY: evidence/locator replaced with design statement (was: 'reducing the bitwidth down to 3 or 4 bits per weight, with n...')",
+    "QUALITY: evidence/locator replaced with design statement (was: 'with negligible accuracy degradation relative to the uncompr...')",
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'language generation, one of the most appealing applications ...')",
+    "TOKEN_LAT: stat_basis explicit (mean)",
+    "OTHER:quantization_time: evidence/locator replaced with design statement (was: 'GPTQ can quantize GPT models with 175 billion parameters in ...')",
+    "load_class = single-sequence"
+  ]
+}

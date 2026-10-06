@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2407.00088",
+ "title": "T-MAC: CPU Renaissance via Table Lookup for Low-Bit LLM Deployment on Edge",
+ "first_author": "Jianyu Wei",
+ "year": 2024,
+ "venue": "EuroSys 2025",
+ "url": "https://arxiv.org/abs/2407.00088",
+ "cluster": "D5",
+ "technique": "lookup-table mpGEMM for low-bit LLMs on CPU",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "T-MAC demonstrates up to 4\u00d7 increase in throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "ENERGY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "70% reduction in energy consumption compared to llama.cpp",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "T-MAC demonstrates up to 4\u00d7 increase in throughput and 70% reduction in energy consumption compared to llama.cpp",
+  "metrics": [
+   "ENERGY",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "ENERGY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Edge, single-stream token generation tokens/s."
+}

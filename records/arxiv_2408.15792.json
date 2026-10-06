@@ -1,0 +1,144 @@
+{
+  "key": "arxiv_2408.15792",
+  "title": "Efficient LLM Scheduling by Learning to Rank",
+  "first_author": "Fu",
+  "year": 2024,
+  "venue": "NeurIPS'24 (arXiv preprint v1)",
+  "url": "https://arxiv.org/abs/2408.15792",
+  "cluster": "D1",
+  "technique": "learning-to-rank predictor of relative output-length order to approximate SJF/SRTF in vLLM, with starvation prevention (max_waiting_time)",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2408.15792.txt",
+  "optimized_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "by scheduling requests on-the-fly based on the predicted rankings, we can approximate the SRTF/SJF schedule, hence reduce average latency and improve throughput, respectively",
+      "locator": "§1 (txt lines ~79-81)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we can approximate the SRTF/SJF schedule, hence reduce average latency"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "by scheduling requests on-the-fly based on the predicted rankings, we can approximate the SRTF/SJF schedule, hence reduce average latency and improve throughput, respectively (batch generation)",
+      "locator": "§1 (txt lines ~78-81)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "FAIRNESS",
+      "stat": "max",
+      "role": "constraint",
+      "evidence": "Executing following SJF/SRTF may lead to starvation for long requests, whose users may wait very long to obtain a response.",
+      "locator": "§4.3 Starvation Prevention",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:kendall_tau",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "our goal is to optimize the predictor model P to generate predictions with a larger Kendall's Tau, which are more correlated to the ground truth.",
+      "locator": "§4.1 (txt line ~215)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "2.8x lower latency in chatbot serving and 6.5x higher throughput in synthetic data generation",
+    "metrics": [
+      "NORM_LAT",
+      "THR_REQ"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "where": "Fig 3 (mean per-token latency)"
+    },
+    {
+      "metric": "NORM_LAT",
+      "stat": "P90",
+      "where": "Fig 3/4 (P90 per-token latency)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Table 1 (burst of 2k requests, requests/s)"
+    },
+    {
+      "metric": "FAIRNESS",
+      "stat": "max",
+      "where": "max_waiting_time"
+    },
+    {
+      "metric": "OTHER:kendall_tau",
+      "stat": "n/a",
+      "where": "Fig 2b, predictor comparison"
+    },
+    {
+      "metric": "NORM_LAT",
+      "stat": "P90",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "per-token latency (average and p90)",
+      "canonical": "NORM_LAT",
+      "definition_quote": "For chatbot serving, we measure average and p90 per-token latency, which is the per-request latency divided by the output length.",
+      "locator": "§5.1 Evaluation metrics",
+      "notes": "s/token; per-request e2e latency / output length; mean and P90 across requests"
+    },
+    {
+      "term_as_written": "throughput (requests/second)",
+      "canonical": "THR_REQ",
+      "definition_quote": "For offline synthetic generation tasks, we use throughput (requests/second) to indicate request generation speed.",
+      "locator": "§5.1",
+      "notes": "offline burst; req/s"
+    },
+    {
+      "term_as_written": "Kendall's Tau",
+      "canonical": "OTHER:kendall_tau",
+      "definition_quote": "Kendall's Tau coefficient [4] (we use the Kendall's Tau-b variant) can characterize the correlation between two rankings. Kendall's Tau ranges from -1 to 1.",
+      "locator": "§3 / §4.1",
+      "notes": "proxy metric: similarity between predicted schedule and oracle SJF/SRTF; shown to correlate with lower latency"
+    },
+    {
+      "term_as_written": "max_waiting_time",
+      "canonical": "FAIRNESS",
+      "definition_quote": "we propose a max_waiting_time fairness metric to evaluate the fairness at per-request level",
+      "locator": "§4.3",
+      "notes": "longest wait of any request; starvation measure"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep on real workloads (chatbot, ShareGPT/LMSYS-Chat-1M) plus offline burst of 2k requests for batch generation",
+  "tradeoff_acknowledged": "SJF/SRTF may starve long requests; mitigated with starvation counter/priority quantum; predictor adds small overhead",
+  "eval_type": "real-system",
+  "hardware": "DGX with 8x A100 40GB (NVLink); some experiments on single A100 80GB",
+  "models": "Llama-3 8B and 70B (70B on 8 GPUs TP)",
+  "workloads": "ShareGPT, LMSYS-Chat-1M (1k requests per test for serving, 10k training samples)",
+  "confidence": "high",
+  "extractor_notes": "Latency in the headline is mean (and P90) per-token latency = e2e latency / output length (normalized). Intro states throughput and latency both desired; chatbot task targets latency, batch generation targets throughput. Kendall's Tau is an intermediate proxy objective for the predictor. Built on vLLM v0.4.1. | TAIL AUDIT 2026-10-06: demoted NORM_LAT@P90 (non-tail entry kept)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "NORM_LAT (per-token latency) mean + P90, reported",
+    "correction": "Demote NORM_LAT P90 'objective' to reported. FAIRNESS max (max_waiting_time starvation guard) is a fairness metric, not a latency-tail objective; keep as is.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "mixed",
+  "load_class_quote": "chatbot latency: 'increasing arrival rates' on ShareGPT/LMSYS-Chat-1M (Fig 3, §5); batch generation throughput: 'A burst of submission is a workload in which users submit lots of requests' (2k-request burst, Table 1)",
+  "repass_log": [
+    "NORM_LAT: abstract/intro quote replaced by §1 design statement; stat mean explicit ('reduce average latency'); tail-audit P90 demotion already applied, nothing further",
+    "THR_REQ: result quote replaced by §1 design statement (improve throughput for batch generation)",
+    "FAIRNESS: eval-metric quote replaced by §4.3 starvation-prevention design statement",
+    "kendall_tau: design (stated goal)",
+    "load_class mixed (online rate sweep + offline 2k burst)"
+  ]
+}

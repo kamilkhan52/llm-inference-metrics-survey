@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2501.08090",
+ "title": "Hierarchical Autoscaling for Large Language Model Serving with Chiron",
+ "first_author": "Patke",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2501.08090",
+ "cluster": "D2",
+ "technique": "hierarchical backpressure autoscaler using queue size, utilization and SLOs",
+ "layer": "cluster-routing/placement",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "Chiron achieves up to 90% higher SLO attainment",
+   "locator": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves GPU efficiency by up to 70%",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Chiron achieves up to 90% higher SLO attainment and improves GPU efficiency by up to 70% compared to existing solutions",
+  "metrics": [
+   "SLO_ATT",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. SLOs described as seconds (interactive) vs minutes-hours (batch), metric not named."
+}

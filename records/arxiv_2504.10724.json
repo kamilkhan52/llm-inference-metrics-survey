@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2504.10724",
+ "title": "HELIOS: Adaptive Model And Early-Exit Selection for Efficient LLM Inference Serving",
+ "first_author": "Avinash Kumar",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2504.10724",
+ "cluster": "D4",
+ "technique": "multi-model early-exit switching + partial layer loading to enlarge batches",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "HELIOS achieves $1.48\\times$ higher throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves both token generation latency and batch sizes",
+   "locator": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "$15.14\\times$ larger batch size",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "HELIOS achieves $1.48\\times$ higher throughput and $15.14\\times$ larger batch size compared to existing EE-LLM frameworks",
+  "metrics": [
+   "MEMORY",
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

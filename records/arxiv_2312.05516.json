@@ -1,0 +1,102 @@
+{
+ "key": "arxiv_2312.05516",
+ "title": "Stateful Large Language Model Serving with Pensieve",
+ "first_author": "Yu",
+ "year": 2025,
+ "venue": "EuroSys'25",
+ "url": "https://arxiv.org/abs/2312.05516",
+ "cluster": "D3",
+ "technique": "stateful multi-turn serving: two-tier (GPU+CPU) KV cache of conversation history with eviction/swap scheduling, plus a generalized PagedAttention kernel for multi-token queries over non-contiguous cache",
+ "layer": "prefix/context-caching",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2312.05516.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Pensieve is designed to optimize both peak throughput and latency of serving LLM in conversational scenarios.",
+   "locator": "§6.1 Performance Metric",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Pensieve is designed to optimize both peak throughput and latency of serving LLM in conversational scenarios. ... we measure the achieved serving throughput and 90-percentile normalized latency",
+   "locator": "§6.1 Performance Metric (but see extractor_notes: §6.2 says mean)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "The normalized latency is calculated as the mean of each request's end-to-end latency divided by its output length (§6.2); contrast §6.1: \"90-percentile normalized latency\""
+  }
+ ],
+ "headline_claim": {
+  "text": "Pensieve can achieve 1.14-3.0x the throughput of vLLM and TensorRT-LLM and significantly reduce latency.",
+  "metrics": [
+   "THR_REQ",
+   "NORM_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Fig 10-13 (req/s at a fixed per-token latency target, e.g. 120 ms/token)"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 10-13 normalized latency (s/token) vs throughput"
+  },
+  {
+   "metric": "OTHER:kernel_latency",
+   "stat": "n/a",
+   "where": "§6.3 attention kernel microbenchmark"
+  },
+  {
+   "metric": "OTHER:prefill_tokens",
+   "stat": "mean",
+   "where": "avg tokens processed in prefill (recomputation avoided), §6.2"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "90-percentile normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "we measure the achieved serving throughput and 90-percentile normalized latency, which is calculated as the end-to-end request serving latency divided by the number of output tokens.",
+   "locator": "§6.1 Performance Metric",
+   "notes": "States P90 here."
+  },
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "The normalized latency is calculated as the mean of each request's end-to-end latency divided by its output length, as done in [27, 52].",
+   "locator": "§6.2",
+   "notes": "States mean here; internal inconsistency with §6.1 (P90 vs mean). Output length only in denominator."
+  },
+  {
+   "term_as_written": "serving throughput (at latency target)",
+   "canonical": "THR_REQ",
+   "definition_quote": "Pensieve's throughput is 1.36x of vLLM and 1.14x of TensorRT-LLM for serving OPT-13B at 120 ms per token latency, and 1.70x of vLLM and 1.58x of TensorRT-LLM for serving Llama 2-13B at 180 ms per token latency.",
+   "locator": "§6.2",
+   "notes": "Throughput in req/s read off the normalized-latency vs throughput curve at a chosen per-token latency target (100-400 ms/token, picked per model/dataset); requests are conversation turns."
+  }
+ ],
+ "slo_spec": "No formal SLO; comparison at a per-model normalized-latency level (OPT-13B 120 ms/token, Llama2-13B 100-180 ms/token, Llama2-70B 400 ms/token).",
+ "load_regime": "request-rate sweep; conversations arrive Poisson, simulated user think time between turns; ShareGPT and UltraChat",
+ "tradeoff_acknowledged": "Swap/transfer overheads and GPU-cache contention under high rates (GPU-only cache variant loses gain); CPU cache transfer 18-20% throughput drop when swapping in both directions without optimization.",
+ "eval_type": "real-system",
+ "hardware": "Azure NC A100 v4, up to 4x A100-80GB, 24-core EPYC, 220 GB RAM",
+ "models": "OPT-13B, Llama 2-13B (1 GPU); OPT-66B, Llama 2-70B (4 GPUs)",
+ "workloads": "ShareGPT, UltraChat multi-turn conversation traces with Poisson arrivals and think time",
+ "confidence": "high",
+ "extractor_notes": "The metric paragraph (§6.1) says 90-percentile normalized latency but §6.2 and the figures define it as the MEAN of per-request E2E/output length (copied from vLLM). The stat is recorded as mean; flag as ambiguous. Latency/throughput are per conversation turn request, with history length counted only in prefill.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "we simulate a request's arrival time by sampling from a Poisson distribution under different request rates (§6.1)",
+ "repass_log": [
+  "THR_REQ, NORM_LAT: design ('Pensieve is designed to optimize both peak throughput and latency')",
+  "NORM_LAT stat: explicit but internally inconsistent in paper (§6.1 '90-percentile' vs §6.2 'mean'); kept mean per §6.2/Fig 10 definition, conflict noted in stat_quote",
+  "added load_class online-arrivals"
+ ]
+}

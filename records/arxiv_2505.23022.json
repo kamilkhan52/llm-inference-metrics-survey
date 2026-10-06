@@ -1,0 +1,69 @@
+{
+ "key": "arxiv_2505.23022",
+ "title": "Scorpio: Serving Right Requests at the Right Time for Heterogeneous SLOs in LLM Inference",
+ "first_author": "Tang",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2505.23022",
+ "cluster": "D1",
+ "technique": "SLO-oriented scheduler: TTFT Guard (least-deadline-first, rejection) + TPOT Guard (admission, credit-based batching)",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "designed to maximize system goodput and SLO attainment for workloads with heterogeneous SLOs",
+   "locator": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "designed to maximize system goodput and SLO attainment for workloads with heterogeneous SLOs",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Scorpio improves system goodput by up to 14.4x and SLO adherence by up to 46.5% under high load",
+  "metrics": [
+   "GOODPUT",
+   "SLO_ATT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. TTFT and TPOT are the SLO metrics."
+}

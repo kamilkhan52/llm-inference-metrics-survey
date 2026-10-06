@@ -1,0 +1,52 @@
+{
+ "key": "arxiv_2512.03024",
+ "title": "TokenPowerBench: Benchmarking the Power Consumption of LLM Inference",
+ "first_author": "Niu",
+ "year": 2025,
+ "venue": "AAAI 2026 (arXiv v1)",
+ "url": "https://arxiv.org/abs/2512.03024",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: lightweight benchmark measuring GPU/CPU/DRAM/node power without external meters, phase-aligned (prefill vs decode) energy attribution, and energy-normalized metrics (joules per token / response) with sweeps over batch, context length, parallelism, quantization",
+ "layer": "energy/cost",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2512.03024.txt",
+ "optimized_metrics": [
+  {"metric": "ENERGY", "stat": "mean", "role": "objective",
+   "evidence": "TokenPowerBench introduces a set of energy-centric metrics including Joules per token, Joules per response and instantaneous power draw. These metrics are aligned with the internal execution phases of transformer-based LLMs (prefill and decode), enabling fine-grained attribution of energy costs.",
+   "locator": "Conclusion"}
+ ],
+ "headline_claim": {"text": "by varying batch size, context length, parallelism strategy and quantization, users can quickly assess how each setting affects joules per token and other energy-efficiency metrics.",
+  "metrics": ["ENERGY"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "ENERGY", "stat": "mean J/token (total, GPU, prefill, decode)", "where": "Fig 2-6"},
+  {"metric": "THR_TOK", "stat": "tokens/s", "where": "§Quantization (FP8 48-63 tokens/s largest batch)"},
+  {"metric": "UTIL", "stat": "memory-bandwidth utilization", "where": "§Quantization"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "total energy", "canonical": "ENERGY", "definition_quote": "E_total = E_Prefill + E_Decode = E_GPU + E_CPU + E_DRAM + E_Others", "locator": "§Execution and Measurement, Eq. 1-2", "notes": "node-level scope: GPU via NVML/DCGM, CPU and DRAM via RAPL, full node via IPMI or rack PDU"},
+  {"term_as_written": "energy per token / response", "canonical": "ENERGY", "definition_quote": "Users can get the data such as energy per token, energy per response, energy per second, peak power, and energy consumed during prefill stage. Because every value is computed directly from the aligned samples, there is no need for post-hoc scaling or hand calculations.", "locator": "§Report Generation", "notes": "no explicit formula for J/token; tokens normalization (input vs output) not stated; Fig 2b is 'Decode Energy per Token'"},
+  {"term_as_written": "phase attribution", "canonical": "ENERGY", "definition_quote": "Each power sample is tagged with the stage that is active at that moment. After the run we integrate these tagged samples to obtain two clear numbers: energy consumed during prefill and energy consumed during decode.", "locator": "§Execution and Measurement (temporal view)", "notes": ""},
+  {"term_as_written": "normalized metric suite", "canonical": "ENERGY", "definition_quote": "It introduces a normalized metric suite (Joules/token, power imbalance, energy-delay product) and automates parameter sweeps over key inference configuration dimensions.", "locator": "§Related Work", "notes": "power imbalance and energy-delay product are named but never formally defined in the text"},
+  {"term_as_written": "three-level measurement model", "canonical": "ENERGY", "definition_quote": "TokenPowerBench defines a three-level measurement model—from GPU-only telemetry to full-system power monitoring using IPMI and rack-level PDUs", "locator": "Conclusion", "notes": "scope of energy measurement is configurable"},
+  {"term_as_written": "workload profiles", "canonical": "OTHER:load_profile", "definition_quote": "Three workload configurations were used during the token generation stage to simulate the workloads of real-world scenarios: Standard Load, High Concurrency, and High Throughput", "locator": "§Parallelism Strategy Study", "notes": "parameters in figure caption (e.g. batch 128/256, tokens 500/2000)"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "ENERGY", "critique_quote": "MLPerf Inference benchmark standardizes performance benchmarking across a range of machine learning (ML) tasks but does not systematically capture end-to-end power or normalize energy to LLM-specific service units (e.g., Joules per generated token, per prompt).", "locator": "Introduction"},
+  {"target_metric": "ENERGY", "critique_quote": "Samsi propose a more focused academic approach using direct hardware telemetry (nvidia-smi/DCGM) to measure only the accelerator's power consumption.", "locator": "Related Work"},
+  {"target_metric": "ENERGY", "critique_quote": "LLM-Inference-bench is a inference benchmark across diverse hardware but limits its power analysis to the accelerators themselves.", "locator": "Related Work"}
+ ],
+ "recommended_practice": [
+  {"quote": "Benchmarking LLM inference power consumption is fundamentally different from benchmarking throughput or latency. Unlike traditional performance metrics, energy consumption is shaped by hardware heterogeneity, software stack complexity, and workload dynamics.", "locator": "§Architecture"},
+  {"quote": "Instead of reporting a single performance number, it systematically varies key parameters to build a detailed power profile across different operational conditions.", "locator": "§Configuration"},
+  {"quote": "GPUs typically account for over 60% of total energy use, while fans contribute only a few percent.", "locator": "§Execution and Measurement (spatial view)"}
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch-size sweep 32-1024 (also 1 in design), context-length bins 0-2K/2K-5K/5K-10K, three load profiles (Standard / High Concurrency / High Throughput)",
+ "tradeoff_acknowledged": "Larger batch lowers J/token with diminishing returns beyond batch 256; longer prompts raise J/token (about 3x from 2K to 10K for Llama3-70B); FP8 cuts J/token ~30% for Llama3-405B; pure TP best energy efficiency vs PP",
+ "eval_type": "real-system",
+ "hardware": "8-node cluster, 4x H100 (94GB) per node, 2x Xeon Gold 6426Y, 512GB RAM",
+ "models": "Llama3 1B-405B, Mistral 7B-8x22B, Qwen 8B-480B, Falcon 7B-180B",
+ "workloads": "Alpaca, LongBench",
+ "confidence": "medium",
+ "extractor_notes": "Energy benchmark; no latency metric is proposed. J/token denominator not specified (input+output vs output). Tokens/s is quoted only incidentally. Layout-mode text garbled in figures; read via non-layout pdftotext."
+}

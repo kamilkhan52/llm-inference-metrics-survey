@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2506.10470",
+ "title": "TD-Pipe: Temporally-Disaggregated Pipeline Parallelism Architecture for High-Throughput LLM Inference",
+ "first_author": "Hongbin Zhang",
+ "year": 2025,
+ "venue": "ICPP 2025",
+ "url": "https://arxiv.org/abs/2506.10470",
+ "cluster": "D5",
+ "technique": "temporally-disaggregated pipeline parallelism",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "TD-Pipe effectively increases the throughput of LLM inference by up to 1.91",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "TD-Pipe effectively increases the throughput of LLM inference by up to 1.91 \u00d7 over the existing tensor parallel approach and 2.73 \u00d7 over the existing pipeline parallel approach",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Pipeline bubbles (utilization) are the mechanism."
+}

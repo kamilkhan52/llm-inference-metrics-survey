@@ -1,0 +1,68 @@
+<section class="slide" id="s13" data-title="Same name, different quantity">
+<style>
+#s13 .slide-body { display:flex; flex-direction:column; gap:6px; }
+#s13 .s13-fig { flex:0 0 auto; }
+#s13 .s13-cap { font-size:12.5px; color:var(--ink-3); margin:0; }
+#s13 .s13-body { font-size:16px; line-height:1.4; color:var(--ink); margin:4px 0 0; max-width:1140px; }
+</style>
+<header class="slide-head">
+<div class="kicker">13 · Same name, different quantity</div>
+<h2>One metric name, several quantities: TTFT, goodput and throughput each have rival definitions.</h2>
+<div class="sub">Papers assigned to each definition variant among the 143 full-text records available when the taxonomy was built; a paper can fall into several variants.</div>
+</header>
+<div class="slide-body">
+<div class="s13-fig"><svg id="s13-svg" role="img" aria-label="Three horizontal bar panels, papers per definition variant, scale 0 to 20. TTFT: arrival 16, prefill duration 15 (5 then measured under load), offline 7, includes KV loading 4, pipeline 3, scale-up wait 2, queueing separate 1, no start point stated 20. Goodput: max rate at X percent attainment 13, measured rate 5, SLO-meeting tokens per second 3, five variants with 1 each. Token throughput: input plus output 7, output over prefill plus decode 13, decode only 8, prefill only 8, not stated 8." viewBox="0 0 1160 332" width="1160" height="332"></svg></div>
+<p class="s13-cap">Variant assignments listed paper by paper in analysis/def_variants.py; counts are papers and are not mutually exclusive.</p>
+<p class="s13-body">Benchmark harnesses agree that TTFT includes server-side queueing, and on TPOT, but differ on ITL, on which tokens throughput counts, and on goodput; MLPerf gates TTFT and TPOT each at P99; 11 of 13 max-rate (GP1) goodput papers use 90 %.</p>
+</div>
+<footer class="slide-foot"><div class="sources">[D] data/def_variants.json (TTFT|*, GOODPUT|*, THR_TOK|*; TTFT|unstated by script) ← analysis/def_variants.py; notes/DEFINITIONS.md §1.1, §1.8, §1.10 · [P] definition quotes in DEFINITIONS.md; notes/INDUSTRY_DEFS.md §1 (MLPerf rules, LoadGen), §2 (vLLM serve.py), §3–4 (GenAI-Perf, SGLang)</div><div class="pageno">13 / 14</div></footer>
+<script type="application/json" id="s13-data">{"id": "def_variants", "population": "143 full-text records", "rows": [{"row_id": "TTFT|T1", "metric": "TTFT", "variant_code": "T1", "label": "T1 start = request arrival/submission, queueing stated as included", "n": 16, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T2", "metric": "TTFT", "variant_code": "T2", "label": "T2 TTFT defined as = prefill (phase) duration/delay", "n": 15, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T2a", "metric": "TTFT", "variant_code": "T2a", "label": "T2a ... yet measured under load with queueing (inconsistency flagged by extractor)", "n": 5, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T3", "metric": "TTFT", "variant_code": "T3", "label": "T3 measured offline / single request (no queueing by construction)", "n": 7, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T5", "metric": "TTFT", "variant_code": "T5", "label": "T5 includes KV loading/transfer from another tier", "n": 4, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T6", "metric": "TTFT", "variant_code": "T6", "label": "T6 covers a whole pre-generation pipeline (RAG / reasoning / tools)", "n": 3, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T7", "metric": "TTFT", "variant_code": "T7", "label": "T7 includes model scale-up / model switching wait", "n": 2, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|T8", "metric": "TTFT", "variant_code": "T8", "label": "T8 queueing explicitly separated (TTFT excl. queue, QTTFT incl.)", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP1", "metric": "GOODPUT", "variant_code": "GP1", "label": "GP1 max request rate at X% SLO attainment", "n": 13, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP2", "metric": "GOODPUT", "variant_code": "GP2", "label": "GP2 measured rate (or count) of SLO-meeting requests", "n": 5, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP3", "metric": "GOODPUT", "variant_code": "GP3", "label": "GP3 SLO-meeting tokens per s", "n": 3, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP4", "metric": "GOODPUT", "variant_code": "GP4", "label": "GP4 fraction of requests meeting deadlines", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP5", "metric": "GOODPUT", "variant_code": "GP5", "label": "GP5 no SLO: accepted (correct) tokens per s", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP6", "metric": "GOODPUT", "variant_code": "GP6", "label": "GP6 only fully completed in-SLO requests count (aborted work = 0)", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP7", "metric": "GOODPUT", "variant_code": "GP7", "label": "GP7 applications completed before deadline", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "GOODPUT|GP8", "metric": "GOODPUT", "variant_code": "GP8", "label": "GP8 smooth goodput (benefit minus idle-latency penalty)", "n": 1, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "THR_TOK|K1", "metric": "THR_TOK", "variant_code": "K1", "label": "K1 input + output tokens", "n": 7, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "THR_TOK|K2", "metric": "THR_TOK", "variant_code": "K2", "label": "K2 output tokens over prefill+decode time", "n": 13, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "THR_TOK|K3", "metric": "THR_TOK", "variant_code": "K3", "label": "K3 decode phase only (prefill time excluded)", "n": 8, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "THR_TOK|K4", "metric": "THR_TOK", "variant_code": "K4", "label": "K4 prefill / input tokens only", "n": 8, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "THR_TOK|K5", "metric": "THR_TOK", "variant_code": "K5", "label": "K5 token accounting not stated", "n": 8, "src": "def_variants.py", "loc": "V", "unc": "exact count (assignment by DEF agent)"}, {"row_id": "TTFT|unstated", "metric": "TTFT", "variant_code": "unstated", "label": "no start point stated", "n": 20, "src": "records + def_variants.py", "loc": "TTFT definitions in no TTFT variant", "unc": "exact count"}]}</script>
+</section>
+<script>
+(function(){
+  var root=document.getElementById('s13'); if(!root) return;
+  var data=JSON.parse(root.querySelector('#s13-data').textContent);
+  var rows={}; data.rows.forEach(function(r){rows[r.row_id]=r;});
+  var SH={T1:'from arrival, queueing included',T2:'= prefill duration',T3:'offline / one request',T5:'includes KV loading',T6:'whole pre-generation pipeline',T7:'includes scale-up wait',T8:'queueing kept separate',unstated:'no start point stated',
+    GP1:'max rate at X % attainment',GP2:'measured rate of SLO-meeting requests',GP3:'SLO-meeting tokens/s',GP4:'a fraction, not a rate',GP5:'no SLO (accepted tokens/s)',GP6:'completed requests only',GP7:'applications by deadline',GP8:'smooth goodput',
+    K1:'input + output',K2:'output, over prefill + decode time',K3:'decode phase only',K4:'prefill / input only',K5:'not stated'};
+  var panels=[
+   {t:'TTFT: where does it start?',m:'TTFT',v:['T1','T2','T3','T5','T6','T7','T8','unstated'],hatch:'unstated'},
+   {t:'Goodput: what counts?',m:'GOODPUT',v:['GP1','GP2','GP3','GP4','GP5','GP6','GP7','GP8']},
+   {t:'Token throughput: which tokens?',m:'THR_TOK',v:['K1','K2','K3','K4','K5'],hatch:'K5'}];
+  var NS='http://www.w3.org/2000/svg', svg=root.querySelector('#s13-svg');
+  function el(n,a,p,txt){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;(p||svg).appendChild(e);return e;}
+  var defs=el('defs',{});
+  var pat=el('pattern',{id:'s13-hatch',width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
+  el('rect',{width:6,height:6,fill:'var(--panel)'},pat);
+  el('line',{x1:0,y1:0,x2:0,y2:6,stroke:'var(--ink-3)','stroke-width':2},pat);
+  function wrap(s,n){var w=s.split(' '),l=[],c='';w.forEach(function(x){if((c+' '+x).trim().length>n&&c){l.push(c);c=x;}else c=(c+' '+x).trim();});if(c)l.push(c);return l;}
+  var PW=370, GAP=25, LW=178, BX=LW+6, BW=150, RH=33, TOP=34, sc=BW/20;
+  panels.forEach(function(p,i){
+    var x0=i*(PW+GAP);
+    var g=el('g',{transform:'translate('+x0+',0)'});
+    el('text',{x:0,y:16,'font-size':14,'font-weight':600},g,p.t);
+    var h=p.v.length*RH;
+    [0,5,10,15,20].forEach(function(t){
+      el('line',{x1:BX+t*sc,x2:BX+t*sc,y1:TOP-6,y2:TOP+h,stroke:'var(--rule)','stroke-width':1},g);
+      el('text',{x:BX+t*sc,y:TOP+h+15,'text-anchor':'middle',class:'axis'},g,String(t));
+    });
+    el('text',{x:BX+BW/2,y:TOP+h+30,'text-anchor':'middle',class:'lbl','font-size':11},g,'papers');
+    p.v.forEach(function(c,j){
+      var r=rows[p.m+'|'+c], y=TOP+j*RH, n=r.n;
+      var lines=wrap(SH[c],27);
+      var t=el('text',{x:LW,y:y+(lines.length>1?10:15),'text-anchor':'end',class:'lbl','font-size':12},g);
+      lines.forEach(function(L,k){var s=el('tspan',{x:LW,dy:k?13:0},t,L);});
+      var hatch=(p.hatch===c);
+      var b=el('rect',{x:BX,y:y+3,width:n*sc,height:14,fill:hatch?'url(#s13-hatch)':'var(--ink-2)',stroke:hatch?'var(--ink-3)':'none','stroke-width':1},g);
+      if(c==='T2a'){}
+      if(c==='T2'){var a=rows['TTFT|T2a'];
+        el('rect',{x:BX,y:y+3,width:a.n*sc,height:14,fill:'var(--ink)'},g);
+        el('text',{x:BX,y:y+29,class:'faint','font-size':12},g,a.n+' then measured under load');}
+      if(c==='GP1'){el('text',{x:BX,y:y+29,class:'faint','font-size':12},g,'(X = 90 % in 11 of 13)');}
+      el('text',{x:BX+n*sc+5,y:y+15,class:'num','font-size':13,'font-weight':600},g,String(n));
+      if(window.DeckTip){window.DeckTip.attach(b,'<b>'+r.row_id+'</b><br>'+r.label+'<br>n = '+r.n+' papers<br>'+r.src+' · '+r.loc+' · '+r.unc);}
+    });
+  });
+})();
+</script>

@@ -1,0 +1,96 @@
+{
+ "key": "arxiv_2309.17453",
+ "title": "Efficient Streaming Language Models with Attention Sinks",
+ "first_author": "Xiao",
+ "year": 2024,
+ "venue": "ICLR'24",
+ "url": "https://arxiv.org/abs/2309.17453",
+ "cluster": "D3",
+ "technique": "StreamingLLM: keep KV of 4 initial 'attention sink' tokens plus a sliding window of recent tokens (rolling KV cache with re-assigned positions) so a finite-window LLM streams to unbounded length without fine-tuning",
+ "layer": "KV-compression",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2309.17453.txt",
+ "optimized_metrics": [
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "StreamingLLM, an efficient framework that enables LLMs trained with a finite length attention window to generalize to infinite sequence length without any fine-tuning ... stable and efficient language modeling with up to 4 million tokens and more.",
+   "locator": "abstract (perplexity stability, Fig 3, 5)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "during the decoding stage, caching previous tokens' Key and Value states (KV) consumes extensive memory ... Window attention ... ensures constant memory usage and decoding speed after the cache is initially filled",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "caching previous tokens' Key and Value states (KV) consumes extensive memory ... which can lead to excessive memory usage and increasing decoding latency",
+   "locator": "§1 (problem statement; Fig 1a)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "In streaming settings, StreamingLLM outperforms the sliding window recomputation baseline by up to 22.2x speedup.",
+  "metrics": [
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "perplexity Fig 3, 5, Tables 1-3, 6 (PG19); StreamEval accuracy Fig 9, Table 7; ARC/LAMBADA/etc. with pre-trained sink token"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "Fig 10 per-token decoding latency vs cache size"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Fig 10 memory usage"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "per-token decoding latency / speedup",
+   "canonical": "TOKEN_LAT",
+   "definition_quote": "As shown in Figure 10, as the cache size increases, StreamingLLM's decoding speed has a linear growth. The sliding window with re-computation baseline has a quadratic rise in decoding latency. Thus, StreamingLLM achieves an impressive speedup, reaching up to 22.2x per token.",
+   "locator": "§4.5 / Fig 10 caption",
+   "notes": "Batch-1 per-token decode time vs attention-window size on one A6000 (HF Transformers); the 22.2x is versus a recompute baseline, not versus a dense KV cache. Not defined formally."
+  },
+  {
+   "term_as_written": "perplexity",
+   "canonical": "QUALITY",
+   "definition_quote": "Perplexity is evaluated on 400K tokens in the concatenated PG19 test set.",
+   "locator": "Table 6 caption",
+   "notes": "Language-modelling perplexity is the quality proxy, over streams up to 4M tokens."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch=1 streaming single sequence; no serving load",
+ "tradeoff_acknowledged": "Does not extend the context window or long-term memory; tasks needing information outside the window fail (Limitations). Increasing cache size does not consistently lower perplexity.",
+ "eval_type": "real-system",
+ "hardware": "single NVIDIA A6000 GPU",
+ "models": "Llama-2-7/13/70B, MPT-7/30B, Falcon-7/40B, Pythia-2.9/6.9/12B",
+ "workloads": "PG19 concatenated books (up to 4M tokens), ARC, LAMBADA, StreamEval (new), long-context LongBench-like QA",
+ "confidence": "high",
+ "extractor_notes": "Not a serving-system paper: the objective is stable quality at unbounded length under bounded memory; the efficiency metric is batch-1 per-token decode latency vs a quadratic recompute baseline. 'Speedup' has no throughput meaning here.",
+ "load_class": "single-sequence",
+ "load_class_quote": "Figure 10: Comparison of per-token decoding latency and memory usage between the sliding window approach with re-computation baseline and StreamingLLM, plotted against the cache size (single streaming sequence, no request load)",
+ "repass_log": [
+  "QUALITY, MEMORY: design (abstract / §1 statements)",
+  "TOKEN_LAT: abstract '22.2x speedup' result replaced by §1 problem statement on decoding latency; stat mean -> n/a (stat_basis unspecified; single-sequence speed excluded from mean/tail analysis)",
+  "added load_class single-sequence"
+ ]
+}

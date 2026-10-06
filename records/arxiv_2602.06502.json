@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2602.06502",
+ "title": "DualMap: Enabling Both Cache Affinity and Load Balancing for Distributed LLM Serving",
+ "first_author": "Yuan",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2602.06502",
+ "cluster": "D2",
+ "technique": "dual-hash mapping with power-of-two-choices: cache affinity + load balancing, SLO-aware routing",
+ "layer": "cluster-routing/placement",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "improves effective request capacity by up to 2.25$\\times$ under the same TTFT SLO constraints",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "under the same TTFT SLO constraints",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "DualMap improves effective request capacity by up to 2.25$\\times$ under the same TTFT SLO constraints compared with SOTA work",
+  "metrics": [
+   "THR_REQ",
+   "TTFT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"effective request capacity\" is effectively goodput-like (max load meeting TTFT SLO); coded THR_REQ with TTFT constraint."
+}

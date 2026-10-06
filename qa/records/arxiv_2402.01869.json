@@ -1,0 +1,105 @@
+{
+ "key": "arxiv_2402.01869",
+ "title": "InferCept: Efficient Intercept Support for Augmented Large Language Model Inference",
+ "first_author": "Reyna Abhyankar",
+ "year": 2024,
+ "venue": "ICML'24 (arXiv preprint v2)",
+ "url": "https://arxiv.org/abs/2402.01869",
+ "cluster": "D6",
+ "technique": "min-waste handling of API/tool interceptions: chunked recomputation, chunked swap, per-request choice among discard/preserve/swap by memory-waste equations",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2402.01869.txt",
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "INFERCEPT minimizes the GPU resource waste caused by LLM interceptions and dedicates saved memory for serving more requests.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "INFERCEPT improves the overall serving throughput by 1.6x-2x and completes 2x more requests per second compared to the state-of-the-art LLM inference systems.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "P50",
+   "role": "objective",
+   "evidence": "serving throughput as normalized latency (i.e., the median of every request's end-to-end latency divided by its output length) when varying request load",
+   "locator": "\u00a75.1"
+  },
+  {
+   "metric": "FAIRNESS",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "minimize overall GPU memory waste while ensuring fairness",
+   "locator": "\u00a71 / \u00a74.4 (FCFS by original arrival time)"
+  }
+ ],
+ "headline_claim": {
+  "text": "INFERCEPT improves the overall serving throughput by 1.6x-2x and completes 2x more requests per second compared to the state-of-the-art LLM inference systems.",
+  "metrics": [
+   "THR_REQ",
+   "NORM_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "NORM_LAT",
+   "stat": "P50",
+   "where": "Figs 2-4 first row"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Fig 2 second row (completed req/s)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "Fig 2 third row"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Fig 3 GPU waste %"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "the median of every request's end-to-end latency divided by its output length",
+   "locator": "\u00a75.1",
+   "notes": "interception time removed from e2e latency; used as the proxy for serving throughput (sustainable rate at same normalized latency)"
+  },
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_REQ",
+   "definition_quote": "the number of finished requests per second (i.e., throughput)",
+   "locator": "\u00a75.1",
+   "notes": ""
+  },
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "the time from request arrival to the first generated token (i.e., TTFT)",
+   "locator": "\u00a75.1",
+   "notes": ""
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "request-rate sweep (Poisson arrivals) on mixed augmentation workload and single-type workloads",
+ "tradeoff_acknowledged": "vanilla vLLM has better TTFT than some baselines; no explicit InferCept trade-off stated beyond swap/recompute choices",
+ "eval_type": "real-system",
+ "hardware": "A100 80GB (6B on 1 GPU; 13B/30B multi-GPU)",
+ "models": "GPT-J 6B, Vicuna 13B, Llama 3? 70B-class (see paper)",
+ "workloads": "mixed augmentation workload (math, QA, VE, chatbot, image, TTS)",
+ "confidence": "medium",
+ "extractor_notes": "Primary stated target is minimizing GPU memory waste from interceptions, translating into throughput/normalized-latency gains. Models field not verified in detail."
+}

@@ -1,0 +1,118 @@
+{
+ "key": "arxiv_2405.19888",
+ "title": "Parrot: Efficient Serving of LLM-based Applications with Semantic Variable",
+ "first_author": "Chaofan Lin",
+ "year": 2024,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2405.19888",
+ "cluster": "D6",
+ "technique": "Semantic Variable abstraction exposes request dataflow and per-variable performance criteria (latency vs throughput) to the service; DAG-aware scheduling, objective deduction, prefix sharing, cross-request pipelining",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2405.19888.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "the system should minimize the end-to-end time it takes to receive the final summary, rather than the latency of individual requests.",
+   "locator": "§3 Misaligned Scheduling Objectives",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Figure 11 presents the average end-to-end latency"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "the ideal scheduling strategy should maximize the throughput ... (using higher batch sizes) during the map stage and minimize ... request latency during the reduce stage.",
+   "locator": "§3",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "setting that an LLM engine can keep its generation latency ... under 40 ms/s for latency-sensitive requests",
+   "locator": "§8.1 (txt lines 630-631)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "Parrot can achieve up to an order-of-magnitude improvement for popular and practical use cases of LLM applications. [Intro: up to 11.7× speedup or 12× higher throughput compared with the state-of-the-art solutions]",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_TOK"
+  ],
+  "locator": "abstract; §1"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Figs 11-14, 17 (average E2E latency per application)"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 19 (chat in mixed workload)"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "where": "Fig 10, Fig 16 (latency per output token)"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "Fig 18 / Fig 19 (map-reduce throughput)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency (application level)",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "the system should minimize the end-to-end time it takes to receive the final summary, rather than the latency of individual requests.",
+   "locator": "§3",
+   "notes": "Application-level E2E = time from submission of the whole workflow (e.g. map-reduce summary, multi-agent) to the final output; includes inter-request network/queue overheads, which Parrot removes by server-side dataflow. Evaluation reports 'Average E2E latency' of chain/map-reduce/multi-agent apps."
+  },
+  {
+   "term_as_written": "performance criteria (end-to-end latency or throughput)",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "The get operation supports annotation of performance criteria, showing the end-to-end performance requirement of an application, which can be end-to-end latency or throughput (extensible to more criteria like per-token latency when streaming, and time-to-first-token).",
+   "locator": "§4.2",
+   "notes": "Per-Semantic-Variable criterion; throughput-preferred vs latency-sensitive; deduced backwards from final outputs; latency-sensitive requests go to engines with capacity-limited batches, throughput-preferred requests (e.g. Map tasks of a task group) to large-batch engines."
+  },
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "the latency per output token, i.e. TPOT (Time-per-output-token) for vLLM, with continuous batching enabled, experiences a notable uptick when the engine's workload using a batch capacity beyond 6144.",
+   "locator": "§8.1",
+   "notes": "Used only to set the baseline engine capacity; latency target 'under 40 ms/s' [sic, per token] for latency-sensitive requests."
+  },
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "normalized latency (measured as request latency per number of output tokens)",
+   "locator": "§8.3",
+   "notes": "Used for chat requests in the mixed chat+map-reduce workload (Fig 19)."
+  }
+ ],
+ "slo_spec": "No percentile SLOs; per-engine capacity threshold derived from TPOT knee (40 ms per token, 6144 batched tokens) for latency-sensitive requests.",
+ "load_regime": "application workload runs at varying chunk size/output length and number of concurrent apps; mixed chat+map-reduce; no request-rate sweep with SLOs",
+ "tradeoff_acknowledged": "Request-level: per-request latency of individual requests may be sacrificed for application-level completion time ('The latency of individual requests can sacrificed so as to reduce the completion time of the entire DAG'); throughput-oriented batching raises per-request latency (§3: 8.2x throughput for 95% higher latency).",
+ "eval_type": "real-system",
+ "hardware": "Server with 1x NVIDIA A100 80GB; server with 4x NVIDIA A6000 48GB",
+ "models": "LLaMA 7B/13B (plus Vicuna-class chat workloads)",
+ "workloads": "Chain/Map-Reduce summarization, Bing Copilot trace, GPTs apps, MetaGPT multi-agent, mixed chat+map-reduce",
+ "confidence": "high",
+ "extractor_notes": "Key distinction made explicit: request-level latency (what existing services optimize) vs application end-to-end time (what Parrot optimizes) - PROGRAM_JCT is measured as average E2E latency of the application run, includes client-server network latency in the baseline. No tail percentiles. 'ms/s' unit in text for per-token target is a typo-like unit. Throughput appears both as objective for map tasks and as headline (12x).",
+ "load_class": "mixed",
+ "load_class_quote": "arrival time follows Poisson distri ... mix of requests from chat applications at a rate of 1 req/s [§8: ShareGPT/Bing Copilot request-rate sweeps (Poisson), but chain/map-reduce app latencies measured as app runs at varying chunk size/output length without arrival process]",
+ "repass_log": [
+  "PROGRAM_JCT: design quote kept; stat_basis explicit (evaluation states average E2E latency)",
+  "THR_TOK: trimmed result sentence from design quote",
+  "E2E constraint recoded to TPOT: the 40 ms/s bound is a per-token generation latency; evidence replaced by verbatim quote"
+ ]
+}

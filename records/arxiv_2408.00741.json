@@ -1,0 +1,132 @@
+{
+  "key": "arxiv_2408.00741",
+  "title": "DynamoLLM: Designing LLM Inference Clusters for Performance and Energy Efficiency",
+  "first_author": "Jovan Stojkovic",
+  "year": 2024,
+  "venue": "arXiv preprint (HPCA'25)",
+  "url": "https://arxiv.org/abs/2408.00741",
+  "cluster": "D2",
+  "technique": "Hierarchical controllers reconfigure per-request-type instance pools (count, tensor parallelism, GPU frequency) using energy-performance profiles to minimize energy under TTFT/TBT SLOs",
+  "layer": "energy/cost",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2408.00741.txt",
+  "optimized_metrics": [
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The optimization target of the solver is to minimize the total energy consumption (E)",
+      "locator": "§V solver (txt ~line 364)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "we assume an SLO such that the P99 tail latency is within 5× of the execution time of a request on an unloaded system",
+      "locator": "§III Service SLO (txt line 247)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "P99 tail latency is within 5× of the execution time of a request on an unloaded system"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "We define SLOs for TTFT and TBT based on maximum achievable performance, described in Table IV. ... We set the SLOs to 5× the latency of a single request running isolated on a system",
+      "locator": "§III-A",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we assume an SLO such that the P99 tail latency is within 5× of the execution time of a request on an unloaded system"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "DynamoLLM automatically and dynamically reconfigures the inference cluster to optimize for energy and cost of LLM serving under the service's performance SLOs.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "at a service-level, DynamoLLM conserves 53% energy and 38% operational carbon emissions, and reduces 61% cost to the customer, while meeting the latency SLOs.",
+    "metrics": [
+      "ENERGY",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "ENERGY",
+      "stat": "mean",
+      "where": "Figs 6-7, 12 (Wh/energy vs baselines, loads)"
+    },
+    {
+      "metric": "ENERGY",
+      "stat": "P50",
+      "where": "Fig 8 power P50/P99"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "§VI latency comparison (P50 and P99 TTFT/TBT vs SinglePool)"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "where": "§VI latency comparison (P50 and P99)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "§VI-F user cost (GPU servers 40 -> 24.6; $1362.7/hour) and carbon"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT, TBT, throughput",
+      "canonical": "TTFT",
+      "definition_quote": "TTFT is the latency of generating the first output token; while TBT is the latency to generate each new output token.",
+      "locator": "§II Performance metrics for LLMs",
+      "notes": "TBT here is per-new-token latency; queueing inclusion not stated"
+    },
+    {
+      "term_as_written": "energy efficiency",
+      "canonical": "ENERGY",
+      "definition_quote": "To quantify the energy efficiency, we measure the energy consumption in Watt-hours (Wh) while meeting certain latency SLOs.",
+      "locator": "§II",
+      "notes": "absolute Wh over an experiment, not Wh per token"
+    },
+    {
+      "term_as_written": "SLO",
+      "canonical": "SLO_ATT",
+      "definition_quote": "We set the SLOs to 5× the latency of a single request running isolated on a system [30].",
+      "locator": "§III-A",
+      "notes": "SLO = 5x unloaded latency for TTFT and TBT per request-length bucket (Table IV); relaxed services 10x or 20x; evaluated at P99"
+    }
+  ],
+  "slo_spec": "TTFT and TBT SLOs per 9 request-length buckets (SS..LL; thresholds at 33rd/66th/100th percentile of Azure Conversation trace lengths), set to 5x the isolated single-request latency, P99 tail within SLO; looser 10x/20x discussed",
+  "load_regime": "trace replay (Azure Conversation and Coding week-long traces; 1-hour open-source traces) plus Poisson Low/Medium/High load sweep",
+  "tradeoff_acknowledged": "Energy-vs-latency: DynamoLLM raises P50 TTFT and TBT by 11.4% and 7.6% over SinglePool while reducing P99 TTFT/TBT by 5.3% and 11.1% (text as written); savings shrink at higher load (51% / 40% / 23.4% at low/medium/high); reconfiguration overheads",
+  "eval_type": "both",
+  "hardware": "NVIDIA DGX H100 servers (profiling and experiments); cluster-scale simulation",
+  "models": "Llama2-70B, Mixtral-8x7B (others)",
+  "workloads": "Azure LLM inference traces (Conversation, Coding), open-source production traces",
+  "confidence": "high",
+  "extractor_notes": "Energy is the objective, latency only a constraint (SLO stated as P99 within 5x unloaded execution time). Fig 7 text: the P99 TTFT/TBT reduction (5.3%/11.1%) and P50 increase (11.4%/7.6%) are relative to SinglePool. Energy unit is Wh over an experiment window, not per token.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT, TBT @ P99 within 5x isolated latency",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "trace replay of week-long Azure Conversation/Coding traces plus Poisson Low/Medium/High load sweep (§VI)",
+  "repass_log": [
+    "all entries design (energy minimization objective, cost, TTFT/TBT SLO constraints)",
+    "TTFT stat_basis explicit (P99 within 5x); TBT SLO is '5x isolated latency' with the P99 statement from the same SLO definition (§III), kept as P99",
+    "load_class online-arrivals"
+  ]
+}

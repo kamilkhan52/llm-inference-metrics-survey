@@ -1,0 +1,105 @@
+{
+ "key": "arxiv_2511.02230",
+ "title": "Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live",
+ "first_author": "Hanchen Li",
+ "year": 2025,
+ "venue": "PVLDB (arXiv preprint v7)",
+ "url": "https://arxiv.org/abs/2511.02230",
+ "cluster": "D6",
+ "technique": "KV-cache time-to-live pinning across tool calls (cost-benefit TTL from reload cost and queueing delay) + program-level FCFS scheduling",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2511.02230.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "We present Continuum, a serving system to optimize job completion time for multi-turn agent workloads by introducing time-to-live mechanism for KV cache retention.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "role": "objective",
+   "evidence": "Continuum achieves better P90 and P95 latency",
+   "locator": "Fig 11 caption / \u00a76"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "per-turn queueing delay reduction brought retaining KV cache",
+   "locator": "\u00a71 Fig 1, \u00a73.2"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "balances the benefit of potential reuse against its cost ... need to maintain system throughput for other requests",
+   "locator": "\u00a74.1 (Cost term = lost throughput from pinned memory); abstract 'while improving throughput'"
+  }
+ ],
+ "headline_claim": {
+  "text": "Continuum improves the average job completion times by over 8x while improving throughput.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Figs 8-9 (average job duration vs jobs/s)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "Figs 8,11 (P90/P95)"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "jobs per second, throughput 1.10-3.22x"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "mean",
+   "where": "Fig 1,4 per-program queueing delay"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "delay",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "Delay Reduction: Continuum achieves significant delay reduction ... ",
+   "locator": "\u00a76",
+   "notes": "'delay' and 'job completion time/job duration' used interchangeably for a whole multi-turn agent program (all turns plus tool times); reported mean and P90/P95"
+  },
+  {
+   "term_as_written": "Jobs Per Second (JPS)",
+   "canonical": "THR_REQ",
+   "definition_quote": "Jobs Per Second (JPS)",
+   "locator": "Figs 8-11 x-axis",
+   "notes": "offered job (agent program) arrival rate; throughput gain read as higher sustainable JPS"
+  },
+  {
+   "term_as_written": "per-turn queueing delay",
+   "canonical": "QUEUE",
+   "definition_quote": "When the next inference step begins, ... must wait in the waiting queue for other requests to free up GPU memory before starting inference. This per-turn queueing delay can accumulate",
+   "locator": "\u00a71",
+   "notes": "paraphrased from interleaved columns; verify"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "job arrival-rate sweep (jobs per second) with real agent traces (SWE-Bench, BFCL)",
+ "tradeoff_acknowledged": "pinned KV cache occupies GPU memory and can hurt throughput/other requests if TTL too long; handled by cost term and TTL expiry",
+ "eval_type": "real-system",
+ "hardware": "A100-SXM, H100, B200 (up to 4xB200); Company A internal testbed",
+ "models": "Llama-3.1 8B/70B, Gemma-3 12B, GLM-4.5 355B",
+ "workloads": "SWE-Bench, BFCL v4 web search traces, OpenHands/multi-SWE-bench agents",
+ "confidence": "medium",
+ "extractor_notes": "Objective is program-level JCT (mean headline, P90/P95 also shown); throughput is secondary improvement. Definition quotes for delay are loose (text interleaved in two-column layout)."
+}

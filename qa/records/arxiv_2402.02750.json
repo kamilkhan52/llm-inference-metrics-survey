@@ -1,0 +1,87 @@
+{
+ "key": "arxiv_2402.02750",
+ "title": "KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache",
+ "first_author": "Zirui Liu",
+ "year": 2024,
+ "venue": "ICML'24 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2402.02750",
+ "cluster": "D3",
+ "technique": "tuning-free 2-bit KV cache quantization: keys per-channel, values per-token, with a full-precision residual window",
+ "layer": "KV-compression",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2402.02750.txt",
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "max",
+   "role": "objective",
+   "evidence": "KIVI can enable Llama, Falcon, and Mistral models to maintain almost the same quality while using 2.6x less peak memory (including model weight). This reduction in memory usage enables up to 4x larger batch size",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "bringing 2.35x ~ 3.47x throughput on real LLM inference workload",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "KIVI can enable Llama, Falcon, and Mistral models to maintain almost the same quality",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "KIVI can enable Llama, Falcon, and Mistral models to maintain almost the same quality while using 2.6x less peak memory (including model weight). This reduction in memory usage enables up to 4x larger batch size, bringing 2.35x ~ 3.47x throughput on real LLM inference workload.",
+  "metrics": [
+   "MEMORY",
+   "THR_TOK",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Tables 1-4 (CoQA/TruthfulQA/GSM8K/LongBench accuracy, F1, EM, BLEU)"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "max",
+   "where": "Fig 5 peak memory"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 5"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "KIVI enables up to 4x larger batch size and gives 2.35x ~ 3.47x larger throughput.",
+   "locator": "\u00a74.3",
+   "notes": "throughput not formally defined (units/token counting unstated); measured by increasing batch size until OOM"
+  },
+  {
+   "term_as_written": "peak memory",
+   "canonical": "MEMORY",
+   "definition_quote": "size until out of memory and report the peak memory usage and throughput between KIVI (with residual length 32 and 128) and FP16 baseline for the Llama-2-7B model.",
+   "locator": "\u00a74.3",
+   "notes": "includes model weights"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "offline batch-size sweep until OOM; ShareGPT-synthesized workload (avg prompt 161, output 338 tokens)",
+ "tradeoff_acknowledged": "small accuracy drop at 2-bit on some tasks; speedup not further optimized (unfused quantization)",
+ "eval_type": "real-system",
+ "hardware": "single NVIDIA A100 80GB",
+ "models": "Llama-2-7B/13B, Falcon-7B, Mistral-7B",
+ "workloads": "CoQA, TruthfulQA, GSM8K, LongBench; ShareGPT-synthesized throughput workload",
+ "confidence": "medium",
+ "extractor_notes": "Primary objective is KV memory reduction at preserved quality; throughput is a consequence via larger batch. No latency (TTFT/TPOT) is optimized or reported."
+}

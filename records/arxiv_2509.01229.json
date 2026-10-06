@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2509.01229",
+ "title": "LiquidGEMM: Hardware-Efficient W4A8 GEMM Kernel for High-Performance LLM Serving",
+ "first_author": "Huanqi Hu",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2509.01229",
+ "cluster": "D4",
+ "technique": "W4A8 GEMM kernel with fast dequantization and implicit pipeline",
+ "layer": "quantization/sparsity/model-compression",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:GEMM_kernel_speedup",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "LiquidGEMM achieves up to 2.90x speedup over state-of-the-art W4A8 kernels",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "up to 4.94x end-to-end system-level speedup",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "LiquidGEMM achieves up to 2.90x speedup over state-of-the-art W4A8 kernels and up to 4.94x end-to-end system-level speedup",
+  "metrics": [
+   "E2E",
+   "OTHER:GEMM_kernel_speedup"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:GEMM_kernel_speedup",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Kernel speedup is the primary target; the end-to-end speedup metric (latency vs throughput) is not specified."
+}

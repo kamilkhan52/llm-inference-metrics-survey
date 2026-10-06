@@ -1,0 +1,92 @@
+{
+  "key": "arxiv_2408.13510",
+  "title": "Intelligent Router for LLM Workloads: Improving Performance Through Workload-Aware Load Balancing",
+  "first_author": "Kunal Jain",
+  "year": 2024,
+  "venue": "arXiv preprint (v2, Jan 2025)",
+  "url": "https://arxiv.org/abs/2408.13510",
+  "cluster": "D2",
+  "technique": "Heuristic-guided RL router across LLM instances using a trainable response-length predictor and a prefill/decode workload-mixing impact estimator in the reward",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2408.13510.txt",
+  "optimized_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our goal is to minimize end-to-end latency by assigning requests to LLM instances",
+      "locator": "§3 problem statement (txt l.~153)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "reward formulation: a) a negative penalty for requests in the queue, decreasing as requests are processed ... b) a positive reward for each completed request, and c) a workload impact estimator-based penalty",
+      "locator": "§5.3 Reward Design",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    }
+  ],
+  "headline_claim": {
+    "text": "achieves over 11% lower end-to-end latency than existing approaches on a mix of public datasets and 7.8% lower end-to-end latency on real workload data with diverse input and output trends from Cloud Provider X",
+    "metrics": [
+      "E2E"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Table 2/3, Fig 1b (avg E2E latency, improvement %)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 1c, Fig 5, Fig 6b average TTFT"
+    },
+    {
+      "metric": "TBT",
+      "stat": "mean",
+      "where": "Fig 5a average TBT; Fig 6c TBT distribution"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 6a prompt and generation throughput"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "mean",
+      "where": "Fig 5c queue length at router and model instances"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT, TBT",
+      "canonical": "TTFT",
+      "definition_quote": "we report the end-to-end latency, Time-To-First-Token (TTFT), which is the time taken for the user to see the initial response, and Time-Between-Tokens (TBT), which is the average token streaming latency (Patel et al., 2023). Additionally, we report the throughput achieved by different approaches.",
+      "locator": "§6 Evaluation metrics",
+      "notes": "TBT defined as the average token streaming latency (a per-request-average, TPOT-like) while Fig 6c shows a TBT distribution; TTFT = time until user sees initial response (queueing at router/instance implicit); throughput reported as prompt and generation throughput, units not defined"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed average arrival rate (lambda = 20 req/s, requests sampled uniformly at random from dataset), 4 instances; real workload trace from Cloud Provider X",
+  "tradeoff_acknowledged": "Round Robin initially has better average TBT than RL early on, but TBT grows over time as more requests accumulate; workload-guided penalties keep prompt/generation throughput similar to RR (no throughput gain claimed)",
+  "eval_type": "both",
+  "hardware": "4x V100 (main), A100 with Llama-3.1-8B (generalization); simulator/profiles for Llama-2-7b on V100",
+  "models": "Llama-2-7b-hf (main), Llama-3.1-8B",
+  "workloads": "mix of public datasets (§4) and real workloads from Cloud Provider X",
+  "confidence": "high",
+  "extractor_notes": "objective is mean end-to-end latency only (no tail percentile). E2E here is request completion latency including queueing at router/instance. Improvements are modest (11.06% table; 7.8% real trace) and classical heuristics (JSQ, max-capacity, min-min) beat RR by only 0.46-2.6%. The abstract states the scheduler can 'serve as a standard for benchmarking'. No SLO.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "'fixed average arrival rate (lambda = 20 req/s, requests sampled uniformly at random from dataset)' on 4 instances; real workload trace from Cloud Provider X",
+  "repass_log": [
+    "second E2E entry (abstract 'over 11% lower end-to-end latency') dropped as duplicate of the design entry; remaining E2E quote replaced by problem statement 'Our goal is to minimize end-to-end latency by assigning requests to LLM instances'; stat unspecified -> n/a (was mean; only the evaluation reports averages)",
+    "QUEUE reward design kept; stat n/a",
+    "load_class online-arrivals"
+  ]
+}

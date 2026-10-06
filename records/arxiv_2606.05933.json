@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2606.05933",
+ "title": "Beyond Greedy Chunking: SLO-Aware Sliding-Window Scheduling for LLM Inference",
+ "first_author": "Chen",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2606.05933",
+ "cluster": "D1",
+ "technique": "SLO-aware sliding-window chunking and batch construction",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "SlidingServe can improve service capacity by up to 30%",
+   "locator": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "while maintaining strict QoS guarantees",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "SlidingServe can improve service capacity by up to 30% compared to advanced scheduling systems under various load conditions, and further reduces the rate of SLO violation by 16%-53%",
+  "metrics": [
+   "SLO_ATT",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"system throughput\" and \"service capacity\" both appear; capacity mapped to THR_REQ."
+}

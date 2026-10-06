@@ -1,0 +1,108 @@
+{
+  "key": "arxiv_2502.14866",
+  "title": "LServe: Efficient Long-sequence LLM Serving with Unified Sparse Attention",
+  "first_author": "Shang Yang",
+  "year": 2025,
+  "venue": "MLSys'25",
+  "url": "https://arxiv.org/abs/2502.14866",
+  "cluster": "D3",
+  "technique": "unified block-sparse attention: static streaming heads (half of heads) + dynamic hierarchical KV page selection with reuse, plus KV quantization, in fused kernels for prefill and decode",
+  "layer": "long-context",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2502.14866.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "For the prefilling stage, we use time-to-first-token (TTFT) as a key metric",
+      "locator": "§4.1 Metrics (txt line 661)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "for the decoding stage, we emphasize minimizing the per-token generation latency.",
+      "locator": "§4.1 Metrics (txt line 662-664)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our primary focus is on serving throughput.",
+      "locator": "§4.1 Metrics (txt line 661)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "without sacrificing the long-context capabilities of the original dense, floating-point models",
+      "locator": "§1 contributions / §4.2",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "On average, LServe accelerates LLM prefilling by up to 2.9x and decoding by 1.3-2.1x over vLLM, maintaining long-context accuracy.",
+    "metrics": [
+      "TTFT",
+      "TOKEN_LAT",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 10 (relative decoding throughput normalized to LServe), Fig 11 (prefill speed)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "where": "Fig 12-16 kernel/step latency (ms), speedup breakdown"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "Tables 2-4, Fig 9 (LongBench, RULER, NIAH, AIME, MATH500)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "For the prefilling stage, we use time-to-first-token (TTFT) as a key metric",
+      "locator": "§4.1",
+      "notes": "Not formally defined; Fig 11 plots prefilling speed normalized to LServe. Offline single-request long-context prefill; no queueing."
+    },
+    {
+      "term_as_written": "per-token generation latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "for the decoding stage, we emphasize minimizing the per-token generation latency",
+      "locator": "§4.1",
+      "notes": "Fig 10 y-axis is 'relative throughput of each system, normalized by the speed of LServe'; per-step decode latency in ms/step used in §3.5 with batch size 32."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed batch size / batch=1 style kernel benchmarks at fixed context lengths (16K-512K); no request-rate sweep",
+  "tradeoff_acknowledged": "Small accuracy deltas vs dense (LongBench avg 38.9 -> 38.6 on Llama-3-8B); larger token budget (8192 vs 4096) up to 6% slower",
+  "eval_type": "real-system",
+  "hardware": "8x A100 80GB; single L40S 48GB",
+  "models": "Llama-3-8B, Llama-2-7B, Minitron-4B, DeepSeek-R1-Distill-Llama-8B",
+  "workloads": "LongBench, RULER, NIAH, AIME2024, MATH500; synthetic fixed-length sequences for speed",
+  "confidence": "medium",
+  "extractor_notes": "Kernel/system speed paper, not request-level serving. No percentiles, SLOs, or arrival process. Two-column text extraction; metrics paragraph says 'Our primary focus is on serving throughput' but plots are speed ratios, not tokens/s values.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Figure 10: Decoding Speed Evaluation. The y-axis indicates the relative throughput of each system, normalized by the speed of LServe. (§4.3; fixed context lengths, no request-rate sweep; ablations at unit batch size)",
+  "repass_log": [
+    "TTFT: evidence/locator replaced with design statement (was: 'For the prefilling stage, we use time-to-first-token (TTFT) ...')",
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'for the decoding stage, we emphasize minimizing the per-toke...')",
+    "THR_TOK: evidence/locator replaced with design statement (was: 'Our primary focus is on serving throughput....')",
+    "load_class = offline-batch"
+  ]
+}

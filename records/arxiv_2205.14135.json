@@ -1,0 +1,106 @@
+{
+ "key": "arxiv_2205.14135",
+ "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
+ "first_author": "Dao",
+ "year": 2022,
+ "venue": "NeurIPS'22 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2205.14135",
+ "cluster": "D5",
+ "technique": "IO-aware tiled exact attention fusing softmax into one kernel, recomputation in backward, minimizing HBM reads/writes",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2205.14135.txt",
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "An important question is whether making attention faster and more memory-efficient can help Transformer models address their runtime and memory challenges for long sequences.",
+   "locator": "§1 (txt line 40-42)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "One of our goals is to not store O(N^2) intermediate values for the backward pass.",
+   "locator": "§3.1 (txt line 270)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:HBM_accesses",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Our goal is to reduce the amount of HBM accesses (to sub-quadratic in N).",
+   "locator": "§3.1 (txt line 235)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "IO-aware exact attention algorithm (exactness: no approximation, unlike approximate attention that trades off model quality)",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "FlashAttention trains Transformers faster than existing baselines: 15% end-to-end wall-clock speedup on BERT-large (seq. length 512) compared to the MLPerf 1.1 training speed record, 3× speedup on GPT-2 (seq. length 1K), and 2.4× speedup on long-range arena (seq. length 1K-4K).",
+  "metrics": [
+   "OTHER:kernel_speedup"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "where": "Fig 3 left, Fig 8 (attention runtime fwd+bwd, fwd only on T4)"
+  },
+  {
+   "metric": "OTHER:training_wallclock",
+   "stat": "n/a",
+   "where": "Tables 1-3 (BERT, GPT-2, LRA)"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Fig 3 right"
+  },
+  {
+   "metric": "OTHER:HBM_accesses",
+   "stat": "n/a",
+   "where": "Fig 2 left (GB)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "perplexity, LRA, Path-X"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "wall-clock speedup",
+   "canonical": "OTHER:kernel_speedup",
+   "definition_quote": "Approximate attention methods have attempted to address this problem by trading off model quality to reduce the compute complexity, but often do not achieve wall-clock speedup.",
+   "locator": "abstract",
+   "notes": "Speedup = runtime ratio vs PyTorch/other attention; no serving latency or throughput metric defined"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch size / sequence-length sweep (kernel microbenchmarks; training runs)",
+ "tradeoff_acknowledged": "Backward pass has more FLOPs than standard attention due to recomputation, but fewer HBM accesses, so is faster; on T4 less speedup due to smaller SRAM; for seq>1K some approximate methods are faster.",
+ "eval_type": "real-system",
+ "hardware": "A100 40GB, T4, 8xA100 for training",
+ "models": "BERT-large, GPT-2 small/medium, LRA, Path-X",
+ "workloads": "training and attention microbenchmarks; no serving workload",
+ "confidence": "high",
+ "extractor_notes": "Kernel-level paper; design targets kernel runtime (HBM IO) and memory, not end-to-end serving metrics. Evaluated mostly on TRAINING; inference only appears as a forward-only speedup on T4. Largely out of serving scope (training-focused); recorded as kernel baseline. No TTFT/throughput/latency in serving sense.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"(seq. length 1024, head dim. 64, 16 heads, batch size 64) on A100 GPU\" (Fig 2 caption, txt line 342); fixed-batch kernel microbenchmarks and training runs, no request arrivals",
+ "repass_log": [
+  "evidence_kind=design for all 4 entries",
+  "kernel_speedup and MEMORY quotes replaced with design statements (§1 question; §3.1 goal)",
+  "load_class offline-batch"
+ ]
+}

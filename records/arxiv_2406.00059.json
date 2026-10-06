@@ -1,0 +1,80 @@
+{
+ "key": "arxiv_2406.00059",
+ "title": "Conveyor: Efficient Tool-aware LLM Serving with Tool Partial Execution",
+ "first_author": "Yechen Xu",
+ "year": 2024,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2406.00059",
+ "cluster": "D6",
+ "technique": "Tool partial execution: start executing a tool while the LLM is still decoding its plan, via a tool-developer interface and partial-execution-aware scheduler",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2406.00059.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "We build Conveyor, an LLM serving system that enables tool partial execution to significantly reduce the total request completion latency",
+   "locator": "§1 contributions",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "We run each workload 100 times and collect the average latency"
+  }
+ ],
+ "headline_claim": {
+  "text": "tool partial execution can improve request completion latency by up to 38.8%",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 6 (average request completion latency, 100 runs, error bars)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 8 theoretical vs empirical latency improvement"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "request completion latency",
+   "canonical": "E2E",
+   "definition_quote": "Without tool partial execution, the total execution time is Lold = sum_{i=1..n} (g_i + t_i) + g_{n+1}.",
+   "locator": "§3.4",
+   "notes": "Latency of one tool-assisted request = sum over rounds of LLM generation time g_i (prefill+decode) and tool time t_i, incl. final decode; best case sum max{g_i,t_i}+g_{n+1}. This is a multi-round (program-like) completion time per request, single-request, no queueing."
+  },
+  {
+   "term_as_written": "relative latency improvement",
+   "canonical": "E2E",
+   "definition_quote": "with a corresponding relative latency improvement given by (sum (g_i+t_i)+g_{n+1}) / (sum max{g_i,t_i}+g_{n+1}) - 1",
+   "locator": "§3.4",
+   "notes": "Improvement is defined as old/new - 1, so the Validation workload's '376.4%' is a ratio-based speedup, not a percentage reduction; abstract's 38.8% is the same definition."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "single request run 100 times per workload (average latency and std); no load sweep",
+ "tradeoff_acknowledged": "Improvement depends heavily on tool characteristics; not all workloads benefit equally (Validation 376.4% from early abort).",
+ "eval_type": "real-system",
+ "hardware": "2x NVIDIA RTX 3090 (2x Xeon Gold 5215), PyTorch + FlashInfer",
+ "models": "not stated in the sections read (LLM served in PyTorch implementation)",
+ "workloads": "Six constructed tool scenarios: CodeGen, Search, Planning, Validation, etc.",
+ "confidence": "medium",
+ "extractor_notes": "Abstract's '38.8%' is a ratio-defined improvement (old/new - 1), so the 376.4% figure appears in the text with the same definition. Evaluated one request at a time: no throughput, TTFT or tail metrics. Request completion latency here spans multiple LLM-tool rounds, i.e. PROGRAM_JCT-like.",
+ "load_class": "single-sequence",
+ "load_class_quote": "We run each workload 100 times and collect the average latency [§5 Fig 6: single request per run, no load sweep]",
+ "repass_log": [
+  "E2E: headline result only and duplicate of PROGRAM_JCT (request completion latency); moved to reported_metrics",
+  "PROGRAM_JCT: §1 design quote kept; stat explicit (average latency)"
+ ]
+}

@@ -1,0 +1,117 @@
+{
+ "key": "arxiv_2405.19888",
+ "title": "Parrot: Efficient Serving of LLM-based Applications with Semantic Variable",
+ "first_author": "Chaofan Lin",
+ "year": 2024,
+ "venue": "OSDI'24 (arXiv preprint v1)",
+ "url": "https://arxiv.org/abs/2405.19888",
+ "cluster": "D6",
+ "technique": "Semantic Variable abstraction exposing request dependencies/performance criteria; DAG-aware scheduling, objective deduction, prefix-sharing kernels",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2405.19888.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "LLM-based applications are more concerned about the end-to-end experience, rather than the latency of individual requests.",
+   "locator": "\u00a73 (Misaligned Scheduling Objectives)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "The get operation supports annotation of performance criteria, showing the end-to-end performance requirement of an application, which can be end-to-end latency or throughput",
+   "locator": "\u00a74.2"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "the ideal scheduling strategy should maximize the throughput [of the map stage] ... while minimizing request latency during the reduce stage",
+   "locator": "\u00a73"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "we use the setting that an LLM engine can keep its generation latency under 40 ms/s for latency-sensitive requests",
+   "locator": "\u00a78.1"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "the primary goal of Parrot's scheduler is to meet the varied performance goals of LLM applications while optimizing GPU cluster utilization.",
+   "locator": "\u00a75.4"
+  }
+ ],
+ "headline_claim": {
+  "text": "Parrot achieves up to 11.7x speedup or 12x higher throughput compared with the state-of-the-art solutions.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_REQ"
+  ],
+  "locator": "\u00a71"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Figs 11-14,17-18 (average E2E latency / JCT of applications)"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 19 chat apps"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "where": "Figs 10,16,19 (decode time per token)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 15 Bing Copilot request latency"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Fig 18"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "the latency per output token, i.e. TPOT (Time-per-output-token)",
+   "locator": "\u00a78.1",
+   "notes": "engine capacity threshold set so per-token latency stays under 40 ms"
+  },
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "normalized latency (measured as request latency per number of output tokens)",
+   "locator": "\u00a78.4",
+   "notes": "output-length normalized"
+  },
+  {
+   "term_as_written": "end-to-end latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "should minimize the end-to-end time it takes to receive the final summary, rather than the latency of individual requests",
+   "locator": "\u00a73",
+   "notes": "application-level, includes client network latency (emulated 200-300 ms per request) in baselines"
+  }
+ ],
+ "slo_spec": "no SLO attainment; latency-sensitive engine capacity bounded so token latency <40 ms/s (approx. under 6144 batched tokens)",
+ "load_regime": "mix of per-app runs and request-rate sweeps (chat vs map-reduce mixed); not trace replay",
+ "tradeoff_acknowledged": "latency vs throughput conflict: large batch sizes increase throughput but degrade latency; individual request latency may be sacrificed for application-level latency",
+ "eval_type": "real-system",
+ "hardware": "A100 80GB (LLaMA 7B/13B), cluster of 4x A6000 48GB",
+ "models": "LLaMA 7B, 13B",
+ "workloads": "chain/map-reduce summary, Bing Copilot, GPTs apps, MetaGPT multi-agent, ShareGPT chat",
+ "confidence": "high",
+ "extractor_notes": "Objective is application-level E2E latency or throughput per app, chosen via declared criteria; arguably dual (per-request objective deduced). Metrics are means; no tails."
+}

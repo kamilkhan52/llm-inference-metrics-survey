@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2504.03648",
+ "title": "AIBrix: Towards Scalable, Cost-Effective Large Language Model Inference Infrastructure",
+ "first_author": "AIBrix Team",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2504.03648",
+ "cluster": "D2",
+ "technique": "cloud-native stack: LoRA mgmt, autoscaling, prefix-aware routing, distributed KV cache, SLO-driven GPU optimizer",
+ "layer": "cluster-routing/placement",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "leading to a 50% increase in throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "a 70% reduction in inference latency",
+   "locator": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "maximize cost efficiency while maintaining service guarantees",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "AIBrix incorporates a distributed KV cache, boosting token reuse across nodes, leading to a 50% increase in throughput and a 70% reduction in inference latency",
+  "metrics": [
+   "COST",
+   "E2E",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Multi-component infrastructure paper; headline numbers attach only to the distributed KV cache; \"inference latency\" unspecified."
+}

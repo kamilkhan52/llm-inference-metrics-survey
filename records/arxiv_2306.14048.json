@@ -1,0 +1,118 @@
+{
+ "key": "arxiv_2306.14048",
+ "title": "H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models",
+ "first_author": "Zhang",
+ "year": 2023,
+ "venue": "NeurIPS'23",
+ "url": "https://arxiv.org/abs/2306.14048",
+ "cluster": "D3",
+ "technique": "KV cache eviction keeping a balance of recent tokens and 'heavy hitter' tokens ranked by accumulated attention score; fixed KV budget (e.g. 20%)",
+ "layer": "KV-compression",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2306.14048.txt",
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we introduce a novel approach for implementing the KV cache which significantly reduces its memory footprint.",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "an ideal KV cache should have (i) a small cache size to reduce memory footprint, (ii) a low miss rate to maintain the performance and long-content generation ability of LLMs",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we implement H2O on top of FlexGen that can easily adapt different cache eviction techniques to produce a system with high-throughput inference",
+   "locator": "§1 (contributions)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "We provide a general framework that can support any KV cache eviction algorithm and enhance throughput and reduce the latency of LLM generation with careful implementation.",
+   "locator": "§4 Implementation Details",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "H2O with 20% heavy hitters improves the throughput over three leading inference systems DeepSpeed Zero-Inference, Hugging Face Accelerate, and FlexGen by up to 29x, 29x, and 3x on OPT-6.7B and OPT-30B. With the same batch size, H2O can reduce the latency by up to 1.9x.",
+  "metrics": [
+   "THR_TOK",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Fig 4-5, Tables 1-2 (lm-eval-harness tasks, XSUM ROUGE, perplexity); 5-10x KV reduction at comparable accuracy"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "KV cache budget % (e.g. 20%); up to 5x footprint reduction"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Tables 3, 4, 5"
+  },
+  {
+   "metric": "OTHER:batch_time",
+   "stat": "n/a",
+   "where": "Table 5 latency (s) at fixed batch size"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "generation throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "The evaluation metric is generation throughput, which is the number of generated tokens / (prompt time + decoding time).",
+   "locator": "§5.2",
+   "notes": "Output tokens only, per whole run of a fixed batch; denominator includes prefill (prompt) time and the time to construct the H2O KV cache; single GPU; throughput benefits come mostly from larger batch / avoiding offloading."
+  },
+  {
+   "term_as_written": "latency (s)",
+   "canonical": "E2E",
+   "definition_quote": "All the speedup results are tested in an end-to-end setting, including both the pre-filling and generation phases. And it includes the time for constructing the H2O KV cache.",
+   "locator": "§5.2; Table 5 (latency in seconds for given prompt+generation length at a fixed batch size)",
+   "notes": "Latency = wall-clock time to finish a fixed batch of prompt+generation, not per-token or per-request; no queueing, no arrival process."
+  },
+  {
+   "term_as_written": "latency (s)",
+   "canonical": "OTHER:batch_time",
+   "definition_quote": "Table 5: Generation throughput and latency on an A100 GPU. In the sequence length row, we use \"7000 + 1024\" to denote a prompt length of 7000 and a generation length of 1024.",
+   "locator": "Table 5",
+   "notes": "wall-clock time to generate a whole fixed batch (prompt+generation lengths, given batch size) offline; not TTFT/TPOT or per-request latency"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "offline batch, synthetic prompts padded to equal length, fixed batch sizes; XSUM real dataset",
+ "tradeoff_acknowledged": "Accuracy vs KV budget: comparable accuracy at <=20% budget; 'strided'/'fixed' sparse baselines fail at 20% budget; extreme budgets degrade.",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA T4 (16GB) with CPU offload; A100 80GB",
+ "models": "OPT-6.7B/13B/30B/66B, LLaMA-7B/13B/30B, GPT-NeoX-20B",
+ "workloads": "lm-eval-harness/HELM tasks, XSUM, synthetic fixed-length prompts",
+ "confidence": "high",
+ "extractor_notes": "Algorithm optimizes KV cache size subject to accuracy (formulated as dynamic submodular eviction with an approximation guarantee); throughput is a systems consequence (bigger batch, no offload). Latency is whole-batch completion time, not TTFT/TPOT. No request-level SLO.",
+ "load_class": "offline-batch",
+ "load_class_quote": "Table 5: Generation throughput and latency on an A100 GPU. In the sequence length row, we use \"7000 + 1024\" to denote a prompt length of 7000 and a generation length of 1024 (fixed Batch size column, synthetic prompts)",
+ "repass_log": [
+  "MEMORY/QUALITY: design (abstract/§1 design sentences)",
+  "THR_TOK: abstract result replaced by §1 design sentence ('system with high-throughput inference')",
+  "TOKEN_LAT (mean) recoded to OTHER:batch_time (Table 5 latency is whole-batch completion time at fixed batch size); evidence replaced by §4 design statement; reported E2E n/a also recoded; definition added",
+  "added load_class offline-batch"
+ ]
+}

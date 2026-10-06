@@ -1,0 +1,146 @@
+{
+ "key": "arxiv_2410.18038",
+ "title": "POD-Attention: Unlocking Full Prefill-Decode Overlap for Faster LLM Inference",
+ "first_author": "Kamath",
+ "year": 2025,
+ "venue": "ASPLOS'25",
+ "url": "https://arxiv.org/abs/2410.18038",
+ "cluster": "D5",
+ "technique": "fused SM-aware attention kernel that runs prefill and decode attention concurrently within hybrid batches",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2410.18038.txt",
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "POD-Attention aims to maximize the utilization of both compute and memory bandwidth",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:attn_kernel_runtime",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "While prior work has focused on optimizing the linear operations [23, 33, 62], they do not optimize the attention computation of a hybrid batch.",
+   "locator": "§1 (txt line 105-107)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "POD-Attention speeds up attention computation by up to 59% (mean 28%), enabling higher throughput and lower latency LLM inference compared to the use of independently optimized prefill and decode attention kernels.",
+  "metrics": [
+   "OTHER:attn_kernel_runtime",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "mean",
+   "where": "Fig 12 (requests per minute, offline)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P50",
+   "where": "Tables 5-7"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P99",
+   "where": "Tables 5-7"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P50",
+   "where": "Tables 5-7"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P99",
+   "where": "Tables 5-7"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P50",
+   "where": "Tables 5-6"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "where": "Tables 5-6"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Tables 5-6: % requests with stalls at 200 ms / 500 ms"
+  },
+  {
+   "metric": "ENERGY",
+   "stat": "n/a",
+   "where": "§5.1 energy reduction remark"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P99",
+   "where": "headline/evaluation (demoted by tail audit)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "produces the first output token, whose latency is called time-to-first-token (TTFT)",
+   "locator": "§2",
+   "notes": "Prefill phase latency; queueing not stated explicitly but online TTFT reaches 10+ s at load, so it evidently includes queueing."
+  },
+  {
+   "term_as_written": "TBT",
+   "canonical": "TBT",
+   "definition_quote": "The latency taken to generate each output token is called time-between-tokens (TBT).",
+   "locator": "§2",
+   "notes": "Per-token decode latency; stalls = TBT above a threshold."
+  },
+  {
+   "term_as_written": "offline throughput",
+   "canonical": "THR_REQ",
+   "definition_quote": "For offline inference, we report the number of requests processed per minute.",
+   "locator": "§5.1 Workloads and metrics",
+   "notes": "Requests/min, not tokens/s."
+  },
+  {
+   "term_as_written": "request execution latency",
+   "canonical": "E2E",
+   "definition_quote": "Request latency can be used to approximate system throughput in online inference.",
+   "locator": "§5.3.3",
+   "notes": "End-to-end definition not given."
+  }
+ ],
+ "slo_spec": "TBT stall thresholds 200 ms and 500 ms ('TBT SLO'); fraction of requests with at least one stall reported; no attainment target",
+ "load_regime": "offline fixed batch of long requests (throughput); online QPS sweep on 2K-request workloads",
+ "tradeoff_acknowledged": "Explicit TTFT-vs-TBT trade-off between vLLM (prefill-prioritizing: low TTFT, high TBT) and Sarathi (low TBT, higher TTFT); POD narrows it. Sarathi has some throughput reduction vs vLLM.",
+ "eval_type": "real-system",
+ "hardware": "1-2x NVIDIA A100 80GB",
+ "models": "Yi-6B, Llama-2-7B, Llama-3-8B",
+ "workloads": "internal enterprise trace (mean ctx 10.5K), arXiv-Summarization (mean 9.5K); 16K-token offline requests",
+ "confidence": "high",
+ "extractor_notes": "Optimizes a kernel; end-to-end evidence is via Sarathi-Serve. Tail (P99) TBT and stall fraction are used as evidence of benefit, but the method itself only targets kernel runtime/utilization. | TAIL AUDIT 2026-10-06: TBT tail stat -> n/a (metric targeted, percentile only reported)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "TBT P99, TTFT P99 (reported vs vLLM/Sarathi)",
+  "correction": "Demote TBT P99 'objective' to reported. Kernel paper; objective is attention runtime/utilization/throughput.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "mixed",
+ "load_class_quote": "\"We evaluate both offline and online inference scenarios. For offline inference, we report the number of requests processed per minute. For online inference, we report TTFT, TBT and request execution latency\" (§5.1)",
+ "repass_log": [
+  "UTIL: design (abstract 'aims to maximize the utilization')",
+  "attn_kernel_runtime: result quote replaced with design statement (§1: prior work does not optimize hybrid-batch attention)",
+  "THR_REQ: abstract 'enabling higher throughput' = result only, no design statement -> demoted (already in reported, Fig 12)",
+  "TBT: demoted per tail_audit correction (kernel paper; TBT only evidence of benefit); already in reported_metrics",
+  "load_class mixed (offline throughput + online QPS)"
+ ]
+}

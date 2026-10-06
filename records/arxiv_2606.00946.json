@@ -1,0 +1,107 @@
+{
+  "key": "arxiv_2606.00946",
+  "title": "Lodestar: An Online-Learning LLM Inference Router",
+  "first_author": "Gangmuk Lim",
+  "year": 2026,
+  "venue": "arXiv preprint (v1, 31 May 2026)",
+  "url": "https://arxiv.org/abs/2606.00946",
+  "cluster": "D2",
+  "technique": "online-learned MLP reward predictor (reward = -TTFT) over per-request cluster-state and request features; route each request to argmax predicted reward",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2606.00946.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We use \u2212TTFT as the main reward in this paper",
+      "locator": "\u00a71 (p.2); \u00a74.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We use \u2212TTFT as the main reward in this paper"
+    }
+  ],
+  "headline_claim": {
+    "text": "Lodestar achieves 1.41\u00d7 lower average TTFT and 1.47\u00d7 lower P99 TTFT on average (up to 2.15\u00d7/1.86\u00d7 on homogeneous and 4.38\u00d7/4.42\u00d7 on heterogeneous clusters) compared to a state-of-the-art prefix cache and load-aware heuristic",
+    "metrics": [
+      "TTFT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Figs 1,6-9,11,14"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Figs 1,6-9,14"
+    },
+    {
+      "metric": "OTHER:routing_overhead_ms",
+      "stat": "n/a",
+      "where": "Fig 12 (E2E routing overhead)"
+    },
+    {
+      "metric": "OTHER:predictor_error",
+      "stat": "n/a",
+      "where": "Figs 3,5,10"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "reward",
+      "canonical": "TTFT",
+      "definition_quote": "We define the reward as the negative of observed TTFT, y_imax = \u2212TTFT_imax, where imax is the selected instance index.",
+      "locator": "\u00a74.1",
+      "notes": "per-request scalar reward; TTFT in seconds (footnote 7)"
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "all input tokens in parallel and emits the first output token",
+      "locator": "\u00a72 background (prefill description)",
+      "notes": "TTFT is never given a formal definition; queueing is implicitly included since 'requests (queueing delay)' is a routing feature and TTFT is the observed latency at the client/gateway"
+    },
+    {
+      "term_as_written": "why TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "Lodestar optimizes time-to-first-token (TTFT) latency for two reasons: TTFT is critical to the user experience, and Time-per-output-token (TPOT) or end-to-end latency is not the right metric to optimize. The time that TPOT and end-to-end latency are observed is much further in the future than the routing decision time. Additionally, they are affected by one more unknown factor, the number of decode tokens, becoming even a more noisy signal.",
+      "locator": "\u00a74.1",
+      "notes": "explicit justification for choosing TTFT as reward; credit-assignment delay and decode-length noise"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep (RPS fixed per run, e.g. ToolAgent RPS 12/22, Conversation RPS 21) over Mooncake trace workloads; also prefix-sharing-ratio sweeps and workload shifts for online adaptation",
+  "tradeoff_acknowledged": "Prefix-cache locality vs load balance is the tension in routing (fixed heuristic thresholds are workload dependent); learned policy adds routing overhead on the critical path (measured Fig 12). No explicit metric trade-off.",
+  "eval_type": "real-system",
+  "hardware": "public-cloud K8s: 8x NVIDIA A30 (homogeneous); 8 A30 + 8 V100 (heterogeneous); L20 cluster for motivation",
+  "models": "Llama3 8B (FP16, vLLM v1, chunked prefill); DeepSeek 7B in motivation",
+  "workloads": "Mooncake conversation, toolagent, synthetic; prefix-sharing ratio workloads",
+  "confidence": "high",
+  "extractor_notes": "Objective is per-request TTFT (mean-reward learning); P99 is only a reported outcome, though ablation notes consistent-hashing filter 'damps tail TTFT'. TTFT, P99 never formally defined. TPOT/E2E explicitly rejected as the reward. No SLO/goodput. Baseline set: Least-request, Prefix-cache(\u03c4), Prefix-cache-and-load-aware (AIBrix), Mooncake simulator-based. | TAIL AUDIT 2026-10-06: demoted TTFT@P99 (non-tail entry kept)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT mean (reward -TTFT); P99 TTFT reported",
+    "correction": "Remove TTFT P99 'objective'; keep mean TTFT objective. P99 is headline-only.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "repass_log": [
+    "TTFT objective: evidence_kind=design ('-TTFT as main reward' is the reward definition)",
+    "TTFT stat mean -> n/a, stat_basis unspecified (paper never states mean/percentile of the targeted reward; mean and P99 only appear as reported results)",
+    "tail_audit correction already applied (P99 demoted earlier)",
+    "added load_class online-arrivals",
+    "orchestrator: TTFT stat n/a -> mean (per-request reward -TTFT; RL maximizes expected return = mean TTFT)"
+  ],
+  "load_class": "online-arrivals",
+  "load_class_quote": "Left: RPS=5, avg input length=4K, Right: RPS=10, avg input length=1K (Fig 1 caption, \u00a73.2)"
+}

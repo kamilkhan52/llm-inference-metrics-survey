@@ -1,0 +1,101 @@
+{
+ "key": "arxiv_2502.04563",
+ "title": "WaferLLM: Large Language Model Inference at Wafer Scale",
+ "first_author": "He",
+ "year": 2025,
+ "venue": "OSDI'25 (arXiv v3)",
+ "url": "https://arxiv.org/abs/2502.04563",
+ "cluster": "D5",
+ "technique": "wafer-scale LLM parallelism (PLMR model), MeshGEMM/MeshGEMV, shift-based KV cache management",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2502.04563.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TPS_USER",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Since LLMs generate many tokens, especially in the test-time scaling scenario, such as the OpenAI-o1/o3 and DeepSeek-R1, inference is constrained by GEMV latency, making it inherently memory-bandwidth-bound.",
+   "locator": "§1 (txt line 60-64); metric TPR defined in §7 'maximum per-request throughput'",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "running complete LLM inference on a single chip, minimizing costly off-chip communication and maximizing on-chip memory bandwidth utilization",
+   "locator": "§1 (txt line 60-63)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "For full LLM inference, WaferLLM achieves 10-20x speedups over A100 GPU clusters running SGLang and vLLM.",
+  "metrics": [
+   "TPS_USER",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TPS_USER",
+   "stat": "mean",
+   "where": "Table 2 (TPR)"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "end-to-end latency vs core count"
+  },
+  {
+   "metric": "ENERGY",
+   "stat": "mean",
+   "where": "GEMV/inference energy"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "utilization comparisons"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "subsumed by TPR=1/TPOT; §2 motivation only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TPR",
+   "canonical": "TPS_USER",
+   "definition_quote": "we define Throughput per Request (TPR) as a key metric. TPR is derived from the more widely used Time per Output Token (TPOT), with TPR = 1/TPOT.",
+   "locator": "§7 Experiment metric",
+   "notes": "Per-request token rate (tokens/s), batch-1 style; same idea as tokens/s/user."
+  },
+  {
+   "term_as_written": "end-to-end throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "the end-to-end throughput is calculated as the total number of tokens generated during the decode phase divided by the total time spent in the prefill and decode phases",
+   "locator": "§7.1",
+   "notes": "Output tokens only; includes prefill time in the denominator."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch=1 single-request; fixed input/output lengths (e.g. 2048/2048 combos)",
+ "tradeoff_acknowledged": "none; notes that more GPUs raise concurrent-query throughput but not per-request speed",
+ "eval_type": "real-system",
+ "hardware": "Cerebras WSE-2 (+ simulator for scaling); baselines 8-16x A100 with SGLang, vLLM",
+ "models": "LLaMA3-8B, LLaMA2-13B (subsets of CodeLLaMA-34B, QWen2-72B)",
+ "workloads": "fixed-length prompts",
+ "confidence": "high",
+ "extractor_notes": "TPR = 1/TPOT is the batch-1 per-user token rate; included as TPS_USER per request. Single-stream latency emphasis (GEMV, decode).",
+ "load_class": "single-sequence",
+ "load_class_quote": "\"To evaluate the maximum per-request throughput performance of LLM inference systems on different hardware, we define Throughput per Request (TPR) as a key metric.\" (§7); batch=1, fixed input/output lengths",
+ "repass_log": [
+  "TPS_USER (TPR): design (§1 problem statement), stat_basis unspecified, stat mean->n/a",
+  "UTIL: abstract result quote replaced with §1 design goal",
+  "TPOT: only §2 motivation, equivalent to TPR=1/TPOT -> moved to reported_metrics",
+  "ENERGY: abstract result only ('16x more energy-efficient'), no design statement -> moved to reported_metrics (already present)",
+  "load_class single-sequence"
+ ]
+}

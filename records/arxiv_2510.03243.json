@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2510.03243",
+ "title": "Ranking Before Serving: Low-Latency LLM Serving via Pairwise Learning-to-Rank",
+ "first_author": "Tao",
+ "year": 2025,
+ "venue": "ISC High Performance 2026 (per S2; verify)",
+ "url": "https://arxiv.org/abs/2510.03243",
+ "cluster": "D1",
+ "technique": "prompt-aware pairwise learning-to-rank approximating SJF",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "significantly reduces latency by up to 15.7x compared to the vLLM default scheduler",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "PARS significantly reduces latency by up to 15.7x compared to the vLLM default scheduler",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Abstract says only \"latency\" (and \"low latency and high throughput\" in motivation) without saying which latency; E2E chosen as most literal given HOL-blocking framing."
+}

@@ -1,0 +1,144 @@
+{
+  "key": "arxiv_2504.07494",
+  "title": "Apt-Serve: Adaptive Request Scheduling on Hybrid Cache for Scalable LLM Inference Serving",
+  "first_author": "Shihong Gao",
+  "year": 2025,
+  "venue": "SIGMOD 2025 (Proc. ACM Manag. Data 3(3))",
+  "url": "https://arxiv.org/abs/2504.07494",
+  "cluster": "D1",
+  "technique": "hybrid cache (KV cache + memory-efficient hidden-state cache) to enlarge batch size, plus adaptive batch-composition scheduling that maximizes reduction of total pending time subject to a cache memory constraint (with SLO-aware demotion of violated requests)",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.07494.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "We focus on improving the effective throughput of LLM inference services, which currently experience performance bottlenecks due to the rapid decline in TTFT SLO attainment as the request rate increases.",
+      "locator": "§3 (txt line ~309-311)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "We focus on improving the effective throughput of LLM inference services, which currently experience performance bottlenecks due to the rapid decline in TTFT SLO attainment as the request rate increases.",
+      "locator": "§3 (txt line ~309-311)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "serving at least 70% of requests within the target SLOs of (TTFT=1 second, 99th percentile TBT=1 second)"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The goal is to maximize the reduction of overall pending time across all unfinished requests, subject to a memory constraint for cache storage.",
+      "locator": "§4.2 / Definition 1 (txt ~line 1000)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "SLO attainment rate is calculated by the number of served user requests that satisfy both TTFT and P99 TBT SLOs divided by the total number of requests",
+      "locator": "§6.2 Metrics",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the target SLOs of (TTFT=1 second, 99th percentile TBT=1 second)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "to obtain a larger attainable batch size, Apt-Serve introduces a novel hybrid KV cache and hidden cache scheme",
+      "locator": "§1 (txt line ~133-134)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Apt-Serve achieves up to 8.8x improvement in effective throughput compared to the state-of-the-art inference serving systems.",
+    "metrics": [
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "Fig 8 effective throughput across datasets/models"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 1, 2, 4, 9"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "Fig 10 tail latency (starvation analysis); described as 'tail latency' of requests"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "request rate sustained at attainment level"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT / TBT",
+      "canonical": "TTFT",
+      "definition_quote": "Time To First Token (TTFT), measuring the duration of the prefill phase; ii) Time Between Tokens (TBT), quantifying the time between consecutive token generations during the decode phase.",
+      "locator": "§1",
+      "notes": "TTFT described as prefill phase duration but SLO violations are attributed to queueing/pending delays, so TTFT effectively includes waiting"
+    },
+    {
+      "term_as_written": "P99 TBT",
+      "canonical": "TBT",
+      "definition_quote": "P99 TBT refers to the 99th percentile of TBT latency for each individual request, where the generation of one output token in the decode phrase contributes to a TBT latency value",
+      "locator": "§3.1 footnote 1",
+      "notes": "per-request P99 over that request's token gaps, then request counted as meeting SLO if its own P99 TBT <= SLO"
+    },
+    {
+      "term_as_written": "effective throughput",
+      "canonical": "GOODPUT",
+      "definition_quote": "effective throughput [12, 62, 89] which is defined as the highest sustainable online request rate that meets specified SLOs attainment criteria, such as serving at least 70% of requests within the target SLOs of (TTFT=1 second, 99th percentile TBT=1 second)",
+      "locator": "§1",
+      "notes": "max request rate (req/s) at an attainment level (90% attainment used in §3.1 example; 70% in intro example)"
+    },
+    {
+      "term_as_written": "SLO attainment rate",
+      "canonical": "SLO_ATT",
+      "definition_quote": "The SLO attainment rate is calculated by the number of served user requests that satisfy both TTFT and P99 TBT SLOs divided by the total number of requests during the whole serving process.",
+      "locator": "§6.2 Metrics",
+      "notes": "joint TTFT + per-request P99 TBT"
+    }
+  ],
+  "slo_spec": "Application-driven SLOs (Table 3): TTFT / P99 TBT in s - ShareGPT 13B 1.0/1.0, 30B 1.5/1.0, 66B 2.0/1.0; HumanEval 0.5/0.5, 1/0.5, 1.5/0.5; LongBench 4.0/1.0, 4.5/1.0, 5.0/1.0 (set by principle of prior work [89]: TTFT relaxed for long prompts and grows with model size). Attainment threshold used to read effective throughput (e.g. 90%).",
+  "load_regime": "request-rate sweep (Poisson arrivals; 1,000 sampled requests per dataset)",
+  "tradeoff_acknowledged": "SLO-aware demotion of violated requests starves ~10% of requests (high tail latency); trading SLO attainment against tail latency possible via a decaying factor (0.4 variant). Hidden cache adds extra linear-transform cost that slows batches (manageable extra TBT).",
+  "eval_type": "real-system",
+  "hardware": "A100 40GB (1, 2, 4 GPUs, NVLink)",
+  "models": "OPT-13B, OPT-30B, OPT-66B",
+  "workloads": "ShareGPT, HumanEval, LongBench (summarisation, length-limited for OPT)",
+  "confidence": "high",
+  "extractor_notes": "Optimizes effective throughput via TTFT attainment; formal scheduling objective is sum of per-request 'pending time' reduction (a queueing proxy) under a memory cap. Per-request P99 TBT is the TBT SLO statistic (not a system-wide percentile). Fig 10 'tail latency' of starved requests is a reported side effect.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TTFT attainment + TBT @ P99 (per-request P99 TBT <= SLO) -> SLO attainment",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "arrivals following a Poisson distribution (§3); request-rate sweep, 1,000 sampled requests per dataset (§6)",
+  "repass_log": [
+    "GOODPUT: abstract quote replaced by §3 design focus statement",
+    "TTFT: abstract problem statement replaced by §3 focus statement; stat attainment explicit (threshold SLO)",
+    "QUEUE: design (formal objective)",
+    "TBT: design (SLO); stat P99 explicit",
+    "MEMORY: abstract problem replaced by §1 design statement (larger attainable batch size via hybrid cache)",
+    "load_class online-arrivals"
+  ]
+}

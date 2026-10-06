@@ -1,0 +1,111 @@
+{
+  "key": "arxiv_2211.10438",
+  "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
+  "first_author": "Guangxuan Xiao",
+  "year": 2022,
+  "venue": "ICML'23",
+  "url": "https://arxiv.org/abs/2211.10438",
+  "cluster": "D4",
+  "technique": "W8A8 post-training quantization; offline migration of activation outlier difficulty to weights via per-channel smoothing scale",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2211.10438.txt",
+  "optimized_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "existing methods cannot maintain accuracy and hardware efficiency at the same time. We propose SmoothQuant, a training-free, accuracy-preserving, and general-purpose post-training quantization (PTQ) solution",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:batch_time",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Due to the huge computation and communication overhead, the inference latency may also be unacceptable to real-world applications.",
+      "locator": "§1 (txt line ~42-44)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Quantization is a promising way to reduce the cost of LLMs (Dettmers et al., 2022; Yao et al., 2022). By quantizing the weights and activations with low-bit integers, we can reduce GPU memory requirements, in size and bandwidth,",
+      "locator": "§1 (txt line ~47-51)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "We demonstrate up to 1.56x speedup and 2x memory reduction for LLMs with negligible loss in accuracy.",
+    "metrics": [
+      "OTHER:batch_time",
+      "MEMORY",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Tables 3-7 (zero-shot accuracy, perplexity)"
+    },
+    {
+      "metric": "OTHER:batch_time",
+      "stat": "mean",
+      "where": "Fig 8, 9, Tables 10-11 (context-stage latency, batch 4)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Table 8 (per-token decoding latency, up to 1.42x)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 8, 9, Table 10 (peak GPU memory, #GPUs)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "context stage latency",
+      "canonical": "E2E",
+      "definition_quote": "We measure the end-to-end latency of generating all hidden states for a batch of 4 sentences in one pass, i.e., the context stage latency.",
+      "locator": "§5.3",
+      "notes": "This 'end-to-end latency' is a single forward pass over the prompt (prefill-only), batch size 4 - not request completion time. Peak GPU memory recorded as aggregated peak."
+    },
+    {
+      "term_as_written": "per-token decoding latency",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "SmoothQuant constantly reduces the per-token decoding latency compared to FP16 (up to 1.42x speedup).",
+      "locator": "§5.3 Decoding-stage, Table 8",
+      "notes": "Not further defined."
+    },
+    {
+      "term_as_written": "context-stage latency",
+      "canonical": "OTHER:batch_time",
+      "definition_quote": "We measure the end-to-end latency of generating all hidden states for a batch of 4 sentences in one pass, i.e., the context stage latency.",
+      "locator": "§5.3",
+      "notes": "single forward pass over a fixed batch; not per-request serving latency"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "fixed batch size (4) forward pass; sequence lengths 128-1024; decoding-stage table",
+  "tradeoff_acknowledged": "Coarser (faster) quantization schemes O1->O3 lose some accuracy; LLM.int8() baseline slows inference in most cases",
+  "eval_type": "real-system",
+  "hardware": "A100-80GB (PyTorch and FasterTransformer implementations); 8-16 GPU nodes for 530B",
+  "models": "OPT, BLOOM, GLM-130B, MT-NLG 530B, Llama-1/2, Falcon, Mistral, Mixtral",
+  "workloads": "LAMBADA, HellaSwag, PIQA, WinoGrande, OpenBookQA, RTE, COPA, WikiText, MMLU",
+  "confidence": "high",
+  "extractor_notes": "'End-to-end latency' here = context-stage (prefill) forward latency for batch 4; conflicts with common E2E usage (request completion). Latency measured per forward pass, not serving.",
+  "load_class": "offline-batch",
+  "load_class_quote": "We measure the end-to-end latency of generating all hidden states for a batch of 4 sentences in one pass, i.e., the context stage latency. (§5.3)",
+  "repass_log": [
+    "E2E: evidence/locator replaced with design statement (was: 'We demonstrate up to 1.56x speedup and 2x memory reduction f...')",
+    "E2E: recoded to OTHER:batch_time (recoded E2E -> OTHER:batch_time: single forward pass over a fixed batch of 4 sentences (context stage) and a decoding-stage table; no arrivals)",
+    "MEMORY: evidence/locator replaced with design statement (was: 'SmoothQuant enables serving 530B LLM within a single node .....')",
+    "reported E2E -> OTHER:batch_time",
+    "load_class = offline-batch"
+  ]
+}

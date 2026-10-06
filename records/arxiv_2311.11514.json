@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2311.11514",
+ "title": "HexGen: Generative Inference of Large Language Model over Heterogeneous Environment",
+ "first_author": "Jiang",
+ "year": 2023,
+ "venue": "ICML 2024",
+ "url": "https://arxiv.org/abs/2311.11514",
+ "cluster": "D2",
+ "technique": "asymmetric TP/PP partition + constrained-optimization scheduling across heterogeneous cross-datacenter GPUs",
+ "layer": "energy/cost",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "achieve up to 2.3 times lower latency deadlines",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "tolerate up to 4 times more request rates",
+   "locator": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "given the same budget",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "HexGen can choose to achieve up to 2.3 times lower latency deadlines or tolerate up to 4 times more request rates compared with the homogeneous baseline given the same budget",
+  "metrics": [
+   "COST",
+   "E2E",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"latency deadlines\" is not defined in the abstract (SLO deadline vs latency); mapped to E2E. Scheduling objective also stated as \"maintaining acceptable latency levels\"."
+}

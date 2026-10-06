@@ -1,0 +1,72 @@
+<section class="slide" id="s01" data-title="Answer">
+<style>
+  #s01 .slide-body { display: flex; flex-direction: column; justify-content: center; gap: 34px; padding-bottom: 14px; }
+  #s01 .s01-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  #s01 .s01-tile { height: 214px; box-sizing: border-box; padding: 20px 24px 18px; display: flex; flex-direction: column; border-width: 1px; border-top-width: 4px; }
+  #s01 .s01-big { font-family: var(--font-display); font-weight: 600; font-size: 64px; line-height: 1; font-variant-numeric: tabular-nums lining-nums; letter-spacing: -0.01em; }
+  #s01 .s01-tile.near .s01-big { color: var(--near); }
+  #s01 .s01-tile.far .s01-big { color: var(--far); }
+  #s01 .s01-line { font-size: 19px; line-height: 1.3; margin-top: 14px; color: var(--ink); }
+  #s01 .s01-pop { font-weight: 600; }
+  #s01 .s01-tile.near .s01-pop { color: var(--near); }
+  #s01 .s01-tile.far .s01-pop { color: var(--far); }
+  #s01 .s01-meta { margin-top: auto; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.4; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  #s01 .s01-callout { border-left: 3px solid var(--conv); padding: 10px 0 10px 18px; font-family: var(--font-display); font-size: 22px; line-height: 1.35; }
+  #s01 .s01-callout .s01-ours { color: var(--conv); font-weight: 600; }
+</style>
+<header class="slide-head">
+  <div class="kicker">01 · Answer</div>
+  <h2>Papers maximize throughput most often; tails enter as distributional SLOs, rarely as the objective.</h2>
+  <div class="sub">What 137 full-text LLM inference-optimization papers (2022–26) design for, and how they define the metrics they use.</div>
+</header>
+<div class="slide-body">
+  <script type="application/json" id="s01-data">
+  {"rows": [
+    {"file": "obj_con_by_family.json", "row_id": "throughput", "family": "throughput", "label": "throughput (tokens, requests)", "n": 137, "obj_n": 57, "obj_pct": 41.605839416058394, "obj_ci_lo": 33.7, "obj_ci_hi": 50.0, "con_n": 2, "con_pct": 1.4598540145985401, "con_ci_lo": 0.4, "con_ci_hi": 5.2, "src": "records", "loc": "summary_v3.txt family shares", "tag": "D", "unc": "exact count; Wilson 95 % CI", "note": ""},
+    {"file": "tail_tiers.json", "row_id": "online_mixed|2a", "tier": "2a", "label": "distributional target: percentile SLO, attainment, goodput, per-token deadline", "k": 32, "n": 77, "pct": 41.55844155844156, "ci_lo": 31.2, "ci_hi": 52.7, "src": "records", "loc": "analysis_v3.py tier()", "tag": "D", "unc": "exact count; Wilson 95 % CI", "note": ""},
+    {"file": "tail_tiers.json", "row_id": "all|1a", "tier": "1a", "label": "percentile minimized", "k": 2, "n": 137, "pct": 1.4598540145985401, "ci_lo": 0.4, "ci_hi": 5.2, "keys": ["arxiv_2502.13965", "arxiv_2602.11688"], "src": "records", "loc": "analysis_v3.py tier()", "tag": "D", "unc": "exact count; Wilson 95 % CI", "note": ""},
+    {"file": "tail_tiers.json", "row_id": "all|1b", "tier": "1b", "label": "tail named as design aim", "k": 3, "n": 137, "pct": 2.18978102189781, "ci_lo": 0.7, "ci_hi": 6.2, "keys": ["arxiv_2407.00023", "arxiv_2507.17769", "arxiv_2508.06948"], "src": "records", "loc": "analysis_v3.py tier()", "tag": "D", "unc": "exact count; Wilson 95 % CI", "note": ""}
+  ]}
+  </script>
+  <div class="s01-tiles">
+    <div class="box near s01-tile" id="s01-tile-a" data-row="throughput">
+      <div class="s01-big num">42&nbsp;%</div>
+      <div class="s01-line"><span class="s01-pop">of papers</span> make throughput an objective</div>
+      <div class="s01-meta">57 of 137 · CI 34–50&nbsp;%</div>
+    </div>
+    <div class="box far s01-tile" id="s01-tile-b" data-row="online_mixed|2a">
+      <div class="s01-big num">42&nbsp;%</div>
+      <div class="s01-line"><span class="s01-pop">of online/mixed-load papers</span> set a distributional latency target</div>
+      <div class="s01-meta">32 of 77 · percentile SLO, attainment, goodput, per-token deadline</div>
+    </div>
+    <div class="box near s01-tile" id="s01-tile-c" data-row="all|1a">
+      <div class="s01-big num">2 of 137</div>
+      <div class="s01-line">minimize a latency percentile</div>
+      <div class="s01-meta">GORGO, Autellix; 5 naming tails as an aim</div>
+    </div>
+  </div>
+  <div class="s01-callout" id="s01-callout">Tail-targeting routers exist but are rare (OLP router, GORGO); most designs bound tails with SLOs.</div>
+</div>
+<footer class="slide-foot">
+  <div class="sources">[D] data/obj_con_by_family.json (throughput); data/tail_tiers.json (online_mixed|2a, all|1a, all|1b); Wilson 95 % CIs · [P] arxiv_2602.11688 §2.3; arxiv_2502.13965 §1, §3 · [Syn] SYNTHESIS v6.1 §0, §9</div>
+  <div class="pageno">01 / 14</div>
+</footer>
+</section>
+<script>
+(function () {
+  const root = document.getElementById('s01');
+  if (!root || !window.DeckTip) return;
+  const rows = JSON.parse(root.querySelector('#s01-data').textContent).rows;
+  const by = Object.fromEntries(rows.map(r => [r.row_id, r]));
+  const t = by['throughput'], b = by['online_mixed|2a'], a1 = by['all|1a'], b1 = by['all|1b'];
+  const fmt = x => x.toFixed(1);
+  DeckTip.attach(root.querySelector('#s01-tile-a'),
+    `row_id: throughput (data/obj_con_by_family.json)<br>objective ${t.obj_n}/${t.n} = ${fmt(t.obj_pct)} %, Wilson 95 % CI ${t.obj_ci_lo}–${t.obj_ci_hi} %<br>src: ${t.src}; loc: ${t.loc}<br>unc: ${t.unc}`);
+  DeckTip.attach(root.querySelector('#s01-tile-b'),
+    `row_id: online_mixed|2a (data/tail_tiers.json)<br>${b.k}/${b.n} = ${fmt(b.pct)} %, Wilson 95 % CI ${b.ci_lo}–${b.ci_hi} %<br>tier 2a: ${b.label}<br>distributional, often over per-request means<br>unc: ${b.unc}`);
+  DeckTip.attach(root.querySelector('#s01-tile-c'),
+    `rows all|1a + all|1b (data/tail_tiers.json)<br>1a ${a1.k}/${a1.n}: GORGO (−p95 TTFT fitness, arxiv_2602.11688 §2.3), Autellix (P95/P99, arxiv_2502.13965 §1, §3)<br>1b ${b1.k}/${b1.n}: Preble, Kairos, PolyServe<br>unc: ${a1.unc}`);
+  DeckTip.attach(root.querySelector('#s01-callout'),
+    `[Syn] SYNTHESIS v6.1 §0.3, §6<br>OLP router: tail-threshold indicator rewards (arxiv_2607.03948 §3.1); GORGO: −p95 TTFT fitness (arxiv_2602.11688 §2.3)`);
+})();
+</script>

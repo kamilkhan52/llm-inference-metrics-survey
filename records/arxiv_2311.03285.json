@@ -1,0 +1,137 @@
+{
+  "key": "arxiv_2311.03285",
+  "title": "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
+  "first_author": "Ying Sheng",
+  "year": 2023,
+  "venue": "MLSys 2024 (arXiv v3)",
+  "url": "https://arxiv.org/abs/2311.03285",
+  "cluster": "D2",
+  "technique": "adapters in host memory with Unified Paging (adapter weights and KV in one paged pool), custom heterogeneous-rank batching kernels, adapter-aware tensor parallelism, adapter clustering and early-abort admission control",
+  "layer": "LoRA/multi-model",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2311.03285.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our batching strategy aims to support online and high-throughput serving of many LoRA adapters simultaneously.",
+      "locator": "§4 Batching and scheduling (txt l.~200)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "To efficiently use the GPU memory and reduce fragmentation, S-LoRA proposes Unified Paging.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:num_served_adapters",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "To support many adapters, S-LoRA stores them in the main memory and dynamically loads the adapter weights needed for the currently running batch into GPU memory",
+      "locator": "§5 Memory management (txt l.~249)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QOE",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We quantify the user's satisfaction with a reward function r: R+ -> [0, 1] that maps the first token latency of a request to a scalar in between [0, 1]",
+      "locator": "App. B Admission control in S-LoRA",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "if no request is dropped, and the number of incoming requests is larger than the system capacity for long enough, the serving system is bound to violate the SLO. We implemented an abort strategy to mimic admission control in S-LoRA, called early abort strategy.",
+      "locator": "§5.3 / txt l.~236-240",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "S-LoRA can improve the throughput by up to 4 times and increase the number of served adapters by several orders of magnitude.",
+    "metrics": [
+      "THR_REQ",
+      "OTHER:num_served_adapters"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Figs 5-7, Tables 2-3 (req/s)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 5 (average request latency)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Figs 6-7 (average first token latency)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Figs 6-7, 10 (first token within 6 s)"
+    },
+    {
+      "metric": "QOE",
+      "stat": "mean",
+      "where": "user satisfaction, Fig 10, Appendix B"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "SLO attainment is defined as the percentage of requests that return the first token in 6 seconds.",
+      "locator": "§7.1 Metrics",
+      "notes": "SLO is on first-token latency only; fixed 6 s threshold"
+    },
+    {
+      "term_as_written": "first token latency",
+      "canonical": "TTFT",
+      "definition_quote": "we report the throughput, average request latency, average first token latency, and SLO attainment",
+      "locator": "§7.1 Metrics",
+      "notes": "not formally defined; arrival-to-first-token incl. queueing implied by the abort rule 'ct - rt_k + l_prefill > tl_max'"
+    },
+    {
+      "term_as_written": "user satisfaction",
+      "canonical": "QOE",
+      "definition_quote": "we introduce a new metric termed user satisfaction (see Appendix B), which offers a more fine-grained analysis of the first token latency. Intuitively, a shorter first token latency gives a higher satisfaction. The satisfaction becomes 0 if the first token latency exceeds the SLO.",
+      "locator": "§7.1 Metrics",
+      "notes": "App. B: reward r: R+ -> [0,1] mapping first-token latency; objective max sum r(t_i); a soft-threshold alternative to hard-SLO attainment"
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "Table 3. Throughput (req/s) comparison between S-LoRA, vLLM-packed, and PEFT.",
+      "locator": "Table 3 / Figs 5-7",
+      "notes": "unit is requests/s; not defined in text; workload has random input/output lengths [8,512], so tokens/s is not reported"
+    }
+  ],
+  "slo_spec": "first-token latency SLO of 6 seconds (fixed) for SLO attainment and user satisfaction; early-abort uses tl_max = max allowed first-token latency",
+  "load_regime": "synthetic Gamma-process arrivals per adapter (rate power-law alpha, CV cv, total rate R, 5 min) with request-rate sweeps; real LMSYS Chatbot Arena trace downsampled; adapter-count sweeps",
+  "tradeoff_acknowledged": "adapter heterogeneity/rank adds batching and communication overhead (reported small); early-abort drops requests likely to miss SLO to raise user satisfaction; S-LoRA-merge advantage only for tiny adapter counts",
+  "eval_type": "real-system",
+  "hardware": "single A10G (24GB), A100 (40GB/80GB), multi-A100; host memory 64-670 GB",
+  "models": "Llama-7B/13B/30B/70B with LoRA adapters (Table 1 settings S1-S6)",
+  "workloads": "synthetic Gamma traces (input and output lengths uniform in [8,512]) and LMSYS Chatbot Arena trace (avg 85 input / 165 output tokens, about 26 adapters)",
+  "confidence": "high",
+  "extractor_notes": "Throughput unit is requests/s, not tokens/s. The headline optimization is throughput plus adapter count; SLO attainment and the new user-satisfaction metric are only optimized by the early-abort admission control (scheduler add-on), based on first-token latency only. Number of served adapters coded OTHER:num_served_adapters.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "'using the Gamma process' per-adapter arrivals with mean rate R, rate sweeps; plus downsampled LMSYS Chatbot Arena trace (§7.1, txt l.~445-448)",
+  "repass_log": [
+    "THR_REQ quote replaced: result headline -> design aim (batching supports high-throughput serving)",
+    "OTHER:num_served_adapters quote replaced by memory-management design statement",
+    "QOE and SLO_ATT quotes replaced: eval sentence -> design (reward function over first-token latency, early-abort admission control); these apply only to the early-abort add-on",
+    "load_class online-arrivals"
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "key": "arxiv_2402.02057",
+  "title": "Break the Sequential Dependency of LLM Inference Using Lookahead Decoding",
+  "first_author": "Yichao Fu",
+  "year": 2024,
+  "venue": "ICML'24 (arXiv v1)",
+  "url": "https://arxiv.org/abs/2402.02057",
+  "cluster": "D4",
+  "technique": "exact parallel decoding via Jacobi iteration with lookahead branch generating n-grams and verification branch; no draft model; Lookahead Parallelism across GPUs",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2402.02057.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Given the pressing need for low latency in various applications, improving autoregressive decoding remains a central challenge.",
+      "locator": "§1",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "It allows trading per-step log(FLOPs) to reduce the number of total decoding steps (step compression ratio S)",
+      "locator": "abstract / §4.2",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "an exact, parallel decoding algorithm that accelerates LLM decoding without needing auxiliary models or data stores",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Our implementation of LOOKAHEAD DECODING can speed up autoregressive decoding by up to 1.8x on MT-bench and 4x with strong scaling on multiple GPUs in code completion tasks.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 5-7: tokens/s of single-batch inference and speedup vs autoregressive; Tab 2-3"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "compression ratio S in Tab 2-3, Fig 8"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Rouge scores / Tab 2 (non-greedy)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "step compression ratio S",
+      "canonical": "ACCEPT",
+      "definition_quote": "We define the S = step compression ratio as the number of autoregressive steps divided by the number of LOOKAHEAD DECODING steps to generate the same length of the sequence.",
+      "locator": "§4.2",
+      "notes": "quote reassembled from two-column text; analogous to mean accepted length per step"
+    },
+    {
+      "term_as_written": "throughput of single batch inference",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "We measure the throughput of single batch inference against these baseline settings",
+      "locator": "§5 setup (txt line 432)",
+      "notes": "'Throughput' = tokens/s of one sequence (batch size 1), i.e. decode speed, not system throughput"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 (single-batch inference); discussion notes compute-bound large-batch serving may cause slowdowns",
+  "tradeoff_acknowledged": "Needs surplus per-step FLOPs; in compute-bound settings (large batch serving) it may slow down; lower speedup on larger models and on GPUs with fewer FLOPs (RTX3090 ~30% vs A100 >50% on MT-Bench). Sampling gives smaller speedups than greedy.",
+  "eval_type": "real-system",
+  "hardware": "A100 80GB (S1), DGX 8xA100 40GB (S2), RTX 3090",
+  "models": "LLaMA-2-Chat 7B/13B, CodeLlama(-Instruct) 7B/13B/34B, LLaMA-2 70B",
+  "workloads": "MT-Bench, HumanEval, MBPP, GSM8K, ClassEval, CNN/DM, XSum",
+  "confidence": "high",
+  "extractor_notes": "Text uses 'throughput' for single-stream tokens/s; baseline HuggingFace greedy search plus FlashAttention. arXiv v1 read.",
+  "load_class": "single-sequence",
+  "load_class_quote": "We measure the throughput of single batch inference against these baseline settings (§5.1)",
+  "repass_log": [
+    "TOKEN_LAT: abstract result quote replaced with §1 design statement; stat n/a",
+    "ACCEPT/QUALITY: design (abstract statements of method design)",
+    "load_class single-sequence"
+  ]
+}

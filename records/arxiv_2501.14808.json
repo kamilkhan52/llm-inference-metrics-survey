@@ -1,0 +1,150 @@
+{
+  "key": "arxiv_2501.14808",
+  "title": "HyGen: Efficient LLM Serving via Elastic Online-Offline Request Co-location",
+  "first_author": "Ting Sun",
+  "year": 2025,
+  "venue": "arXiv preprint (v4)",
+  "url": "https://arxiv.org/abs/2501.14808",
+  "cluster": "D1",
+  "technique": "online-offline co-location: linear-regression batch-latency predictor + SLO-aware profiler setting a per-batch latency budget; SLO-aware offline scheduling with prefix-sharing maximization and starvation prevention",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2501.14808.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "formulated as a constrained optimization problem that maximizes throughput with prefix sharing while preserving strict latency SLOs",
+      "locator": "§1 contributions (txt line ~83)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "These requirements often manifest in different statistical metrics—from strict P99 latency bounds to mean performance targets—making it difficult to establish unified resource-sharing policies.",
+      "locator": "§1 (txt lines ~61-63); SLO metrics in §5.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We evaluate HyGen under four SLO metrics (mean TBT, P99 TBT, mean TTFT, and P99 TTFT)"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "These requirements often manifest in different statistical metrics—from strict P99 latency bounds to mean performance targets—making it difficult to establish unified resource-sharing policies.",
+      "locator": "§1 (txt lines ~61-63); SLO metrics in §5.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We evaluate HyGen under four SLO metrics (mean TBT, P99 TBT, mean TTFT, and P99 TTFT)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "role": "constraint",
+      "evidence": "These requirements often manifest in different statistical metrics—from strict P99 latency bounds to mean performance targets—making it difficult to establish unified resource-sharing policies.",
+      "locator": "§1 (txt lines ~61-63); SLO metrics in §5.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We evaluate HyGen under four SLO metrics (mean TBT, P99 TBT, mean TTFT, and P99 TTFT)"
+    },
+    {
+      "metric": "TBT",
+      "stat": "mean",
+      "role": "constraint",
+      "evidence": "These requirements often manifest in different statistical metrics—from strict P99 latency bounds to mean performance targets—making it difficult to establish unified resource-sharing policies.",
+      "locator": "§1 (txt lines ~61-63); SLO metrics in §5.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We evaluate HyGen under four SLO metrics (mean TBT, P99 TBT, mean TTFT, and P99 TTFT)"
+    }
+  ],
+  "headline_claim": {
+    "text": "HyGen achieves up to 3.9-5.8x throughput gains over online and hybrid serving baselines, while ensuring latency SLOs.",
+    "metrics": [
+      "THR_TOK",
+      "TTFT",
+      "TBT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 3, 10"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Fig 3, 10"
+    },
+    {
+      "metric": "TBT",
+      "stat": "mean",
+      "where": "Fig 3, 10"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "where": "Fig 3, 10"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 4 offline/total throughput (TPS)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "QPS (also reported)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT / TBT",
+      "canonical": "TTFT",
+      "definition_quote": "Online serving demands low and stable response times, measured by Time to First Token (TTFT) and Time Between Tokens (TBT)",
+      "locator": "§1",
+      "notes": "TTFT and TBT not otherwise formally defined (used without definition)"
+    },
+    {
+      "term_as_written": "evaluation metrics",
+      "canonical": "TBT",
+      "definition_quote": "For interference evaluation, we focus on Time to First Token (TTFT) and Time Between Tokens (TBT), including their mean and 99th percentile (P99) values. Throughput is measured in tokens per second (TPS) and queries per second (QPS).",
+      "locator": "§5.1 Metrics",
+      "notes": "both mean and P99 used as SLO statistics; throughput TPS (token type not stated) and QPS"
+    },
+    {
+      "term_as_written": "SLO via interference tolerance ratio",
+      "canonical": "OTHER:interference_tolerance_ratio",
+      "definition_quote": "HyGen's ability to meet stringent SLOs under varying online QPS settings on the four aforementioned metrics, each with 5% interference tolerance.",
+      "locator": "§5.3",
+      "notes": "SLO expressed as allowed % degradation of an online metric vs online-only baseline (tolerance 5%-50%, e.g. P99 TTFT 8%, mean TBT 10-50%); inferred from usage, baseline definition not stated verbatim"
+    }
+  ],
+  "slo_spec": "SLOs are relative: interference tolerance ratio (e.g. 5%, 8%, 10-50%) applied to one or more of mean/P99 TTFT and mean/P99 TBT; the profiler binary-searches a batch-latency budget to meet the SLO on online requests. Multiple SLOs can be met simultaneously.",
+  "load_regime": "trace replay (Azure LLM inference conversation trace 2023, Mooncake trace) scaled to a target QPS, with an offline backlog (arXiv summarization)",
+  "tradeoff_acknowledged": "Online SLO headroom vs offline throughput: looser interference tolerance yields higher offline throughput; HyGen gets up to 84.3% of pure-offline Sarathi total throughput.",
+  "eval_type": "real-system",
+  "hardware": "A100 40GB, A40 48GB (4x), A5000 24GB",
+  "models": "Llama2-7B, Qwen-14B, Mistral-7B, Yi-34B (TP2/PP2), Sheared-LLaMA-2.7B",
+  "workloads": "Azure LLM inference trace 2023 (online); Mooncake trace; arXiv summarization, CNN/DailyMail, MMLU (offline)",
+  "confidence": "high",
+  "extractor_notes": "Rare case where both mean and P99 are separate SLO targets for TTFT and TBT. TTFT/TBT never formally defined. Token type for TPS not stated.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TBT and TTFT @ mean or P99 (selectable SLO metric, tolerance ratio)",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "Online workloads are based on the conversation trace from Azure LLM inference trace 2023, a one-hour production trace with real-world requests and timestamps ... sampled to achieve the desired QPS (§5.1); offline backlog of arXiv summarization",
+  "repass_log": [
+    "THR_TOK: design (constrained optimization maximizing throughput)",
+    "TTFT/TBT x4: evidence replaced by §1 design statement of SLO statistics (P99 bounds or mean targets); stat_basis explicit, selectable per deployment",
+    "load_class online-arrivals (trace replay + offline backlog)"
+  ]
+}

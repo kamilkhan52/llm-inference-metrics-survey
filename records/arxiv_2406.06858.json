@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2406.06858",
+ "title": "FLUX: Fast Software-based Communication Overlap On GPUs Through Kernel Fusion",
+ "first_author": "Li-Wen Chang",
+ "year": 2024,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2406.06858",
+ "cluster": "D5",
+ "technique": "fine-grained communication-computation overlap by kernel fusion",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "up to 1.66x and 1.30x speedups for prefill and decoding inference over vLLM",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "it can achieve up to 1.24x speedups for training over Megatron-LM on a cluster of 128 GPUs with various GPU generations and interconnects, and up to 1.66x and 1.30x speedups for prefill and decoding inference over vLLM",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "OTHER:training_step_time",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"speedups\" unspecified; paper targets hiding communication latency (\"up to 96% of communication\")."
+}

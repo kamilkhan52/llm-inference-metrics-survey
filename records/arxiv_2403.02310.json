@@ -1,0 +1,136 @@
+{
+  "key": "arxiv_2403.02310",
+  "title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+  "first_author": "Agrawal",
+  "year": 2024,
+  "venue": "OSDI'24",
+  "url": "https://arxiv.org/abs/2403.02310",
+  "cluster": "D1",
+  "technique": "chunked prefills + stall-free batching with a token budget derived from the TBT SLO",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2403.02310.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "we use a throughput metric, Capacity, defined as the maximum request load (queries-per-second) a system can sustain while meeting certain latency targets. Higher capacity is desirable because it reduces the cost of serving.",
+      "locator": "\u00a72.4",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "role": "constraint",
+      "evidence": "we define the SLO on P99 TBT to be equal to 5x and 25x the execution time of a decode iteration for a request (with prefill length of 4k and 32 batch size) running without any prefill interference",
+      "locator": "\u00a75.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we define the SLO on P99 TBT to be equal to 5x and 25x the execution time of a decode iteration; We focus on ... the 99th percentile (P99) for TBT values"
+    },
+    {
+      "metric": "TBT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Stall-free scheduling unlocks the opportunity to improve throughput with large batch sizes while minimizing the effect of batching on latency.",
+      "locator": "\u00a71 (txt lines ~65-67)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "OTHER:pipeline_bubbles",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "this allows us to create balanced micro-batching based schedules that significantly reduce pipeline bubbles and improve GPU utilization",
+      "locator": "\u00a71 (txt line ~157-160)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "For Mistral-7B on single A100 GPUs, we achieve 2.6x higher serving capacity and up to 3.7x higher serving capacity for the Yi-34B model on two A100 GPUs as compared to vLLM. When used with pipeline parallelism on Falcon-180B, Sarathi-Serve provides up to 5.6x gain in the end-to-end serving capacity.",
+    "metrics": [
+      "GOODPUT"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "Fig 10, 11, 13 (max capacity under SLO)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P50",
+      "where": "Table 4, \u00a75.4"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "where": "Fig 1b, 12, Table 4"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "P50",
+      "where": "\u00a75.1 sustainability check (median scheduling delay <= 2s)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "For a given request, TTFT measures the latency of generating the first output token from the moment a request arrives in the system.",
+      "locator": "\u00a72.4",
+      "notes": "includes queueing/scheduling delay (from arrival)"
+    },
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "TBT on the other hand measures the interval between the generation of consecutive output tokens of a request, and affects the overall perceived fluidity of the response.",
+      "locator": "\u00a72.4",
+      "notes": "token-level distribution; P99 over all decode tokens"
+    },
+    {
+      "term_as_written": "Capacity",
+      "canonical": "GOODPUT",
+      "definition_quote": "a throughput metric, Capacity, defined as the maximum request load (queries-per-second) a system can sustain while meeting certain latency targets.",
+      "locator": "\u00a72.4",
+      "notes": "max sustainable QPS under P99-TBT SLO (and sustainability: median scheduling delay <= 2 s); not SLO-attainment-fraction-based"
+    },
+    {
+      "term_as_written": "generation stall",
+      "canonical": "OTHER:generation_stall",
+      "definition_quote": "prefill-prioritizing schedulers lead to an undesirable phenomenon that we refer to as generation stalls",
+      "locator": "\u00a71/\u00a73.2",
+      "notes": "ongoing decodes paused by a long prefill; shows up as TBT spikes of several seconds"
+    }
+  ],
+  "slo_spec": "P99 TBT SLO = 5x (strict) or 25x (relaxed) the decode-iteration time (prefill len 4k, batch 32, no prefill interference), following Patel et al.; Table 3 absolute values: Mistral-7B 0.1/0.5 s, Yi-34B 0.2/1 s, LLaMA2-70B 1/5 s, Falcon-180B 1/5 s (strict/relaxed). Sustainability: median scheduling delay <= 2 s.",
+  "load_regime": "Poisson arrival request-rate sweep to find max capacity; datasets openchat_sharegpt4 and arxiv_summarization",
+  "tradeoff_acknowledged": "explicitly a throughput-latency tradeoff: prefill-prioritizing (vLLM/Orca) gets throughput at cost of high TBT tail; decode-prioritizing (FasterTransformer) low TBT but low throughput; smaller token budget reduces TBT but increases chunking overhead",
+  "eval_type": "real-system",
+  "hardware": "A100 80GB (1x, 2x, 8x with TP/PP; A100 only)",
+  "models": "Mistral-7B, Yi-34B, LLaMA2-70B, Falcon-180B",
+  "workloads": "openchat_sharegpt4, arxiv_summarization (outliers removed >8192 / >16384 tokens)",
+  "confidence": "high",
+  "extractor_notes": "Metrics paragraph: 'We focus on the median value for the TTFT ... and on the 99th percentile (P99) for TBT'. The SLO is only on TBT; TTFT is reported but not constrained. Capacity is a max-QPS-under-SLO number (goodput-like) rather than a goodput fraction. Token budget is derived from the TBT SLO (Algorithm 3).",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TBT @ P99",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "The request arrival times are generated using Poisson distribution (\u00a75.1); capacity = maximum request load (queries-per-second) a system can sustain while meeting certain latency targets (\u00a72.4)",
+  "repass_log": [
+    "GOODPUT: evidence_kind design (Capacity defined as the stated goal measure; token budget chosen to maximize capacity under SLO)",
+    "TBT constraint: design (P99 SLO); stat_basis explicit",
+    "TBT objective: stat n/a->P99 explicit (paper's focus statistic for TBT); duplicate of constraint kept as objective of minimising latency impact",
+    "pipeline_bubbles: abstract-result quote replaced by design statement (\u00a71)",
+    "load_class online-arrivals",
+    "tail_audit correction null: none applied",
+    "orchestrator R2: TBT objective stat P99 -> n/a (design quote has no percentile; P99 is the SLO constraint)"
+  ]
+}

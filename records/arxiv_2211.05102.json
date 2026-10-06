@@ -1,0 +1,123 @@
+{
+ "key": "arxiv_2211.05102",
+ "title": "Efficiently Scaling Transformer Inference",
+ "first_author": "Pope",
+ "year": 2022,
+ "venue": "MLSys'23 (arXiv v1)",
+ "url": "https://arxiv.org/abs/2211.05102",
+ "cluster": "D5",
+ "technique": "Analytical model to choose 1D/2D weight-stationary and weight-gathered partitioning for TPU v4 slices, multiquery attention sharding by batch, int8 weights, low-level comm/compute overlap",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2211.05102.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "to achieve a new Pareto frontier on the latency and model FLOPS utilization (MFU) tradeoffs on 500B+ parameter models",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "a new Pareto frontier on the latency and model FLOPS utilization (MFU) tradeoffs ... a 76% MFU during large-batch-size processing of input tokens",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "offline inference for scoring or distillation, emphasize high throughput and low cost per token at any latency",
+   "locator": "§1 (Cost in chip-milliseconds per token, Fig 1)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Second, we apply memory optimizations and take full advantage of PaLM's multiquery attention to reduce unnecessary tensor overheads and maximize the batch size that fits on a given number of chips, enabling higher throughput.",
+   "locator": "§1 (txt line 105-110)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "we achieve a low-batch-size latency of 29ms per token during generation (using int8 weight quantization) and a 76% MFU during large-batch-size processing of input tokens, while supporting a long 2048-token context length on the PaLM 540B parameter model.",
+  "metrics": [
+   "TOKEN_LAT",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "Fig 1 left, Tables 2-3 (decode latency per generated token)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 1 right (prefill latency per forward pass), Tables 2-3 total inference time (e.g. 1.9 s chatbot)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "mean",
+   "where": "MFU in Tables 2-3, Figs"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "Fig 1: chip-milliseconds per token"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "prefill/decode tokens/s implied via MFU"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "latency (prefill / decode)",
+   "canonical": "E2E",
+   "definition_quote": "The latency is the total time for an inference and can be broken down into the time to process the input tokens present at the start of the inference (which we call \"prefill\") and the time to autoregressively generate output tokens (which we term \"decode\"). The decode latency can also be measured \"per step\", i.e. divided by the number of tokens in each sequence.",
+   "locator": "§2",
+   "notes": "Batch-level latency of a statically batched inference; no queueing. Per-step decode latency = TPOT-like"
+  },
+  {
+   "term_as_written": "throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "The throughput of prefill or decode is the number of tokens processed or generated per second.",
+   "locator": "§2",
+   "notes": "Separate prefill and decode throughput"
+  },
+  {
+   "term_as_written": "MFU",
+   "canonical": "UTIL",
+   "definition_quote": "The model FLOPS utilization (MFU) is the ratio of the observed throughput to the theoretical maximum throughput if the benchmarked hardware setup were operating at peak FLOPS with no memory or communication overhead.",
+   "locator": "§2",
+   "notes": "Defined relative to peak FLOPs; also used as cost proxy (chip-seconds per token)"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch size and chip-count sweep tracing the Pareto frontier; context length 2048; no arrival process",
+ "tradeoff_acknowledged": "Explicit latency vs cost/MFU trade-off: 'Lower latency can often be achieved by using more chips, but this can also result in worse MFU, resulting in a higher total cost (in terms of chip-seconds or dollars) per token.'",
+ "eval_type": "both",
+ "hardware": "TPU v4 slices (up to 256 chips)",
+ "models": "PaLM 8B/62B/540B; compared against FasterTransformer Megatron 530B",
+ "workloads": "fixed 2048 context; 64 generated tokens; no request traces",
+ "confidence": "high",
+ "extractor_notes": "Not a serving system: static-batch offline analysis of latency/cost Pareto. The paper's multi-objective framing (latency vs MFU/cost-per-token at chosen batch size) is the key metric statement. 'Latency target' is a design parameter, not a formal SLO.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"Left: latency per token for generating 64 tokens, assuming the context has already been processed. Right: time to process 2048 input tokens\" (Fig 1 caption); fixed batch B and chip count C sweep, analytical model validated on TPU v4, no arrivals",
+ "repass_log": [
+  "TOKEN_LAT: design (abstract goal of Pareto frontier of latency vs MFU), stat_basis unspecified, stat mean->n/a",
+  "UTIL, COST: design (abstract Pareto goal; §1 offline application target 'low cost per token at any latency')",
+  "MEMORY: abstract result quote replaced with §1 design statement (maximize batch size that fits)",
+  "load_class offline-batch"
+ ]
+}

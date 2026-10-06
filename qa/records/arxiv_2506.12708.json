@@ -1,0 +1,118 @@
+{
+ "key": "arxiv_2506.12708",
+ "title": "Serving Large Language Models on Huawei CloudMatrix384",
+ "first_author": "Pengfei Zuo",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2506.12708",
+ "cluster": "D5",
+ "technique": "CloudMatrix-Infer: PD+caching disaggregated peer-to-peer serving, EP320 large-scale expert parallelism, microbatch pipelining, INT8 on Ascend supernode",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2506.12708.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "CloudMatrix-Infer delivers a prefill throughput of 6,688 tokens/s per NPU, and a decode throughput of 1,943 tokens/s per NPU (at <50 ms TPOT).",
+   "locator": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "These results correspond to compute efficiencies of 4.45 tokens/s/TFLOPS for prefill and 1.29 tokens/s/TFLOPS for decode, both exceeding published results",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "We assess absolute decode throughput (tokens/s) targeting a time-per-output-token (TPOT) SLO of below 50 ms",
+   "locator": "\u00a75.2 (Table 3, Table 4)"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Minimizing TPOT latency for MoE models requires fine-grained expert parallelism, with each expert placed on a dedicated NPU die.",
+   "locator": "\u00a74.2"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "CloudMatrix-Infer achieves state-of-the-art efficiency without sacrificing accuracy.",
+   "locator": "abstract; \u00a75.3"
+  }
+ ],
+ "headline_claim": {
+  "text": "CloudMatrix-Infer delivers a prefill throughput of 6,688 tokens/s per NPU, and a decode throughput of 1,943 tokens/s per NPU (at <50 ms TPOT). ... sustaining a decode throughput of 538 tokens/s per NPU even under the stricter sub-15 ms TPOT constraint.",
+  "metrics": [
+   "THR_TOK",
+   "TPOT",
+   "UTIL"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Tables 2-4 (per NPU, prefill and decode separately)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "tokens/s per TFLOPS, Tables 2-3"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "Tables 3-4 (achieved TPOT at chosen batch)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "Fig 23b (context caching ablation)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "\u00a75.3 16 benchmarks"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "time-per-output-token (TPOT) consistently below 50 ms",
+   "locator": "\u00a71 / \u00a75.2",
+   "notes": "Never formally defined; used as an SLO threshold met by tuning decode batch size; single value per config, no percentile stated"
+  },
+  {
+   "term_as_written": "decode throughput (tokens/s per NPU)",
+   "canonical": "THR_TOK",
+   "definition_quote": "the system sustains 1,943 tokens/s per NPU for a 4K KV cache Length while maintaining a time-per-output-token (TPOT) consistently below 50 ms",
+   "locator": "\u00a71",
+   "notes": "per-accelerator decode-phase tokens/s at fixed batch (96) and KV length; prefill throughput = input tokens/s per NPU at 16K-token batch"
+  },
+  {
+   "term_as_written": "tokens/s per TFLOPS",
+   "canonical": "UTIL",
+   "definition_quote": "throughput normalized by the accelerator's computer power (tokens/s per TFLOPS) as an indicator of compute efficiency",
+   "locator": "\u00a75.2",
+   "notes": "hardware-normalized efficiency"
+  }
+ ],
+ "slo_spec": "decode TPOT SLO of 50/30/15 ms, met by shrinking batch size (128/24/8 per NPU); no attainment percentage",
+ "load_regime": "fixed batch size per NPU, fixed prompt/KV lengths (offline microbenchmarks mirroring baseline setups)",
+ "tradeoff_acknowledged": "throughput falls from 1,943 to 538 tokens/s/NPU as TPOT SLO tightens 50->15 ms (batch 96->8)",
+ "eval_type": "real-system",
+ "hardware": "Huawei CloudMatrix384 (384 Ascend 910 NPUs, 192 Kunpeng CPUs)",
+ "models": "DeepSeek-R1 671B INT8",
+ "workloads": "synthetic fixed prompt/KV lengths (1K-4K), batch sweeps",
+ "confidence": "high",
+ "extractor_notes": "Throughput-at-TPOT-bound framing; prefill reports use TTFT only in caching ablation. Perfect-EPLB prefill number (6688) is the headline vs default 5655."
+}

@@ -1,0 +1,21 @@
+{
+"key":"arxiv_2512.03416","title":"TokenScale: Timely and Accurate Autoscaling for Disaggregated LLM Serving with Token Velocity","first_author":"Ruiqi Lai","year":2025,"venue":"arXiv preprint","url":"https://arxiv.org/abs/2512.03416","cluster":"D2",
+"technique":"autoscaling for PD-disaggregated serving driven by a Token Velocity metric + Convertible Decoders that absorb prefill bursts","layer":"cluster-routing/placement","read_level":"full","fulltext_path":"fulltext/arxiv_2512.03416.txt",
+"optimized_metrics":[
+{"metric":"SLO_ATT","stat":"attainment","role":"objective","evidence":"TokenScale improves SLO attainment from 50-88% to 80-96% and reduces costs by 4-14% over state-of-the-art systems","locator":"abstract"},
+{"metric":"COST","stat":"n/a","role":"objective","evidence":"reduces costs by 4-14% over state-of-the-art systems","locator":"abstract; Fig 9 (number of GPUs)"},
+{"metric":"TTFT","stat":"attainment","role":"constraint","evidence":"applying rapid scaling for prefillers to meet TTFT SLOs while precisely managing decoders to sustain TPOT SLOs","locator":"§I"},
+{"metric":"TPOT","stat":"attainment","role":"constraint","evidence":"applying rapid scaling for prefillers to meet TTFT SLOs while precisely managing decoders to sustain TPOT SLOs","locator":"§I"}
+],
+"headline_claim":{"text":"TokenScale improves SLO attainment from 50-88% to 80-96% and reduces costs by 4-14% over state-of-the-art systems, including DistServe, BlitzScale, and AIBrix.","metrics":["SLO_ATT","COST"],"locator":"abstract"},
+"reported_metrics":[{"metric":"SLO_ATT","stat":"attainment","where":"Fig 9, end-to-end results"},{"metric":"COST","stat":"n/a","where":"Fig 9 (avg GPUs used)"},{"metric":"UTIL","stat":"mean","where":"utilization figs §VI"},{"metric":"TTFT","stat":"n/a","where":"burst timelines"}],
+"metric_definitions":[
+{"term_as_written":"Token Velocity","canonical":"OTHER:token_velocity","definition_quote":"This metric represents the maximum number of tokens that the instance can release in a second with the current allocated resource, for identifying the resource bottleneck of the system.","locator":"§III-B","notes":"autoscaling signal, not a performance metric; separate prefill/network/decode velocities"},
+{"term_as_written":"TTFT / TPOT","canonical":"TTFT","definition_quote":"Time-to-First-Token (TTFT) and Time-Per-Output-Token (TPOT) characterized by the execution of the prefill and decode phases. The latter two evaluate the system's interactivity and the fluency of output generation, respectively.","locator":"§II-A","notes":"no formal definition of queueing inclusion"},
+{"term_as_written":"SLO attainment","canonical":"SLO_ATT","definition_quote":"The TPOT SLO is fixed at 100 ms across all cases.","locator":"§V SLOs","notes":"attainment computation (joint TTFT and TPOT?) not explicitly defined"}],
+"slo_spec":"TTFT by input length: 250 ms (<256 tokens), 400 ms (<1024), 2000 ms (up to 8192); TPOT fixed 100 ms; following prior work and MLPerf",
+"load_regime":"trace replay (Azure Conv/Code, BurstGPT, mixed), rescaled to ~22 RPS average; bursty traffic",
+"tradeoff_acknowledged":"SLO attainment decreases slightly when fewer GPUs are used (Fig 9 sensitivity)",
+"eval_type":"real-system","hardware":"NVIDIA A100 and H100 GPU clusters, NVLink, RDMA","models":"Llama and Qwen of various sizes and TP degrees","workloads":"Azure production traces, BurstGPT",
+"confidence":"high","extractor_notes":"Objective is joint: SLO attainment up and GPU cost down; TTFT/TPOT SLOs are the thresholds that define attainment. Could alternatively be read with SLO_ATT as sole objective and COST as the efficiency target."
+}

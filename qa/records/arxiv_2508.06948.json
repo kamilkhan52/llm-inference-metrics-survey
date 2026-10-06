@@ -1,0 +1,90 @@
+{
+ "key": "arxiv_2508.06948",
+ "title": "Kairos: Low-latency Multi-Agent Serving with Shared LLMs and Excessive Loads in the Public Cloud",
+ "first_author": "Jinyuan Chen",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2508.06948",
+ "cluster": "D6",
+ "technique": "workflow orchestrator + workflow-aware priority scheduler (remaining-latency ordering) + memory-aware time-slot dispatcher over shared vLLM instances",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2508.06948.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Kairos, a multi-agent orchestration system that optimizes end-to-end latency for multi-agent applications.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P90",
+   "role": "objective",
+   "evidence": "To reduce end-to-end tail latency, Kairos prioritizes requests that have already experienced longer delays in prior stages.",
+   "locator": "\u00a75.2"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "The scheduler decides the serving priority of the requests based on their latency characteristics to reduce the overall queuing.",
+   "locator": "abstract"
+  },
+  {
+   "metric": "PREEMPT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "The dispatcher dispatches the requests to different LLM instances based on their memory demands to avoid GPU overloading.",
+   "locator": "abstract; \u00a71 (preemption/recompute avoided)"
+  }
+ ],
+ "headline_claim": {
+  "text": "Kairos reduces end-to-end latency by 17.8% to 28.4% compared to state-of-the-art works.",
+  "metrics": [
+   "PROGRAM_JCT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "\u00a77 program-level token latency, average"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P90",
+   "where": "\u00a77 P90/P95/P99 reductions"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P99",
+   "where": "\u00a77.2"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "mean",
+   "where": "queueing time ratio load definition"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "program-level token latency (\"latency\")",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "This metric is defined as the end-to-end response time divided by the number of tokens generated, with lower values indicating better performance.",
+   "locator": "\u00a77.1",
+   "notes": "actually a length-normalized per-program latency (s/token over the whole multi-agent workflow); average and tail (P90/P95/P99) reported"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "controlled load levels via average queueing-time ratio (0%-90% of e2e time) and request-rate sweep; inter-arrival distribution simulated from real trace",
+ "tradeoff_acknowledged": null,
+ "eval_type": "real-system",
+ "hardware": "4x NVIDIA A40 GPUs",
+ "models": "Llama3-8B, Llama2-13B",
+ "workloads": "three multi-agent apps: QA, report generation, code generation (GSM8K/MMLU/MathQA, HumanEval etc.)",
+ "confidence": "high",
+ "extractor_notes": "Metric is length-normalized program latency; I coded as PROGRAM_JCT (could also be NORM_LAT). Mean is primary; tail is explicit design motivation (intra-agent priority)."
+}

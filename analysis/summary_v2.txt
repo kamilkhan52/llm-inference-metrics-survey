@@ -1,0 +1,112 @@
+
+## FULL core optimizers (n=137): family as OBJECTIVE / CONSTRAINT
+  throughput           obj  57 ( 42%)  con   2 (  1%)  either  59
+  first-token          obj  19 ( 14%)  con  20 ( 15%)  either  38
+  quality              obj   3 (  2%)  con  36 ( 26%)  either  39
+  memory               obj  24 ( 18%)  con  11 (  8%)  either  34
+  token-pace           obj   8 (  6%)  con  26 ( 19%)  either  33
+  request-latency      obj  19 ( 14%)  con  10 (  7%)  either  28
+  single-seq-speed     obj  25 ( 18%)  con   2 (  1%)  either  27
+  slo-goodput          obj  24 ( 18%)  con   3 (  2%)  either  26
+  hw-efficiency        obj  24 ( 18%)  con   1 (  1%)  either  25
+  cost-energy          obj  19 ( 14%)  con   1 (  1%)  either  20
+  mechanism/other      obj  15 ( 11%)  con   1 (  1%)  either  16
+  program-latency      obj  10 (  7%)  con   1 (  1%)  either  11
+  fairness             obj   2 (  1%)  con   3 (  2%)  either   5
+  cache-proxy          obj   5 (  4%)  con   0 (  0%)  either   5
+  user-perceived       obj   2 (  1%)  con   0 (  0%)  either   2
+  system-op-latency    obj   2 (  1%)  con   0 (  0%)  either   2
+
+## FULL excl flagged (n=134): family as OBJECTIVE / CONSTRAINT
+  throughput           obj  57 ( 43%)  con   2 (  1%)  either  59
+  first-token          obj  19 ( 14%)  con  20 ( 15%)  either  38
+  quality              obj   3 (  2%)  con  35 ( 26%)  either  38
+  token-pace           obj   8 (  6%)  con  26 ( 19%)  either  33
+  memory               obj  23 ( 17%)  con  11 (  8%)  either  33
+  request-latency      obj  19 ( 14%)  con  10 (  7%)  either  28
+  single-seq-speed     obj  25 ( 19%)  con   2 (  1%)  either  27
+  slo-goodput          obj  23 ( 17%)  con   3 (  2%)  either  25
+  hw-efficiency        obj  22 ( 16%)  con   1 (  1%)  either  23
+  cost-energy          obj  19 ( 14%)  con   1 (  1%)  either  20
+  mechanism/other      obj  15 ( 11%)  con   1 (  1%)  either  16
+  program-latency      obj  10 (  7%)  con   1 (  1%)  either  11
+  fairness             obj   2 (  1%)  con   3 (  2%)  either   5
+  cache-proxy          obj   5 (  4%)  con   0 (  0%)  either   5
+  user-perceived       obj   2 (  1%)  con   0 (  0%)  either   2
+  system-op-latency    obj   2 (  1%)  con   0 (  0%)  either   2
+
+## ABSTRACT (n=55): family as OBJECTIVE / CONSTRAINT
+  throughput           obj  24 ( 44%)  con   0 (  0%)  either  24
+  request-latency      obj  19 ( 35%)  con   2 (  4%)  either  21
+  single-seq-speed     obj  10 ( 18%)  con   1 (  2%)  either  11
+  slo-goodput          obj   6 ( 11%)  con   3 (  5%)  either   9
+  quality              obj   0 (  0%)  con   8 ( 15%)  either   8
+  cost-energy          obj   5 (  9%)  con   2 (  4%)  either   7
+  hw-efficiency        obj   7 ( 13%)  con   0 (  0%)  either   7
+  memory               obj   6 ( 11%)  con   0 (  0%)  either   6
+  first-token          obj   3 (  5%)  con   1 (  2%)  either   4
+  token-pace           obj   2 (  4%)  con   2 (  4%)  either   4
+  mechanism/other      obj   2 (  4%)  con   1 (  2%)  either   2
+  program-latency      obj   1 (  2%)  con   0 (  0%)  either   1
+
+## FULL: layer x objective family
+layer                               first-t token-p request program single- through slo-goo user-pe cost-en  memory quality hw-effi    n
+request-scheduling                        1       2       6       0       0      14       9       1       1       1       0       6   23
+agent/compound-serving                    1       0       4      10       0       4       3       0       3       2       2       2   16
+parallelism/offloading/hardware-map       1       0       0       0       6       7       0       0       2       4       0       7   13
+speculative/decoding-algorithm            0       0       1       0       9       5       2       0       0       1       0       0   13
+cluster-routing/placement                 4       1       4       0       0       4       3       0       4       0       0       2   13
+kernels/attention                         0       1       0       0       1       1       0       0       0       1       0       6   8
+prefix/context-caching                    4       0       1       0       0       3       0       0       1       1       0       0   8
+PD-disaggregation                         2       1       1       0       0       4       4       0       1       0       0       0   8
+quantization/sparsity/model-compres       0       0       0       0       3       2       0       0       0       4       0       0   7
+KV-compression                            1       0       0       0       4       2       0       0       0       5       1       0   7
+KV-memory                                 1       0       0       0       0       4       0       0       0       3       0       0   5
+long-context                              3       2       0       0       1       4       1       0       0       1       0       0   5
+energy/cost                               0       0       1       0       0       0       0       0       4       0       0       0   4
+MoE-serving                               1       1       0       0       1       2       0       0       2       0       0       1   4
+LoRA/multi-model                          0       0       1       0       0       1       2       1       1       1       0       0   3
+
+## FULL: objective family share by year bucket
+  <=2023   n= 34 first-token=6%, request-latency=12%, program-latency=3%, single-seq-speed=35%, throughput=38%, slo-goodput=6%, user-perceived=3%, cost-energy=12%, memory=41%, quality=6%, hw-efficiency=21%, cache-proxy=3%, mechanism/other=9% | SLO-framed (goodput/attainment objective or latency constraint)=6 (18%)
+  2024     n= 57 first-token=12%, token-pace=9%, request-latency=14%, program-latency=5%, single-seq-speed=16%, throughput=44%, slo-goodput=14%, user-perceived=2%, cost-energy=14%, memory=12%, fairness=2%, hw-efficiency=18%, cache-proxy=4%, system-op-latency=4%, mechanism/other=18% | SLO-framed (goodput/attainment objective or latency constraint)=16 (28%)
+  2025-26  n= 46 first-token=22%, token-pace=7%, request-latency=15%, program-latency=13%, single-seq-speed=9%, throughput=41%, slo-goodput=30%, cost-energy=15%, memory=7%, quality=2%, fairness=2%, hw-efficiency=15%, cache-proxy=4%, mechanism/other=4% | SLO-framed (goodput/attainment objective or latency constraint)=21 (46%)
+
+## FULL: latency statistic — papers whose latency OBJECTIVE uses each stat
+[('n/a', 42), ('mean', 30), ('attainment', 2), ('median', 1), ('P99', 1), ('P95', 1)]
+papers with any latency objective: 69/137
+papers with TAIL latency objective: 2; tail latency constraint: 10; either: 12
+   arxiv_2311.18677 (2023, PD-disaggregation): obj [] con ['E2E@P99', 'TBT@P99', 'TTFT@P99']
+   arxiv_2403.02310 (2024, request-scheduling): obj [] con ['TBT@P99']
+   arxiv_2404.07947 (2024, request-scheduling): obj [] con ['E2E@P99']
+   arxiv_2407.00047 (2024, request-scheduling): obj [] con ['TTFT@P99']
+   arxiv_2407.00079 (2024, PD-disaggregation): obj [] con ['TBT@P90', 'TTFT@P90']
+   arxiv_2408.00741 (2024, energy/cost): obj [] con ['TBT@P99', 'TTFT@P99']
+   arxiv_2410.01228 (2024, request-scheduling): obj [] con ['TBT@P99', 'TTFT@P99']
+   arxiv_2501.14808 (2025, request-scheduling): obj [] con ['TBT@P99', 'TTFT@P99']
+   arxiv_2502.13965 (2025, agent/compound-serving): obj ['PROGRAM_JCT@P99'] con []
+   arxiv_2504.07494 (2025, request-scheduling): obj [] con ['TBT@P99']
+   arxiv_2508.16449 (2025, energy/cost): obj [] con ['TBT@P95']
+   arxiv_2602.11688 (2026, cluster-routing/placement): obj ['TTFT@P95'] con []
+
+## FULL: eval_type
+[('real-system', 113), ('both', 19), ('simulation', 5)]
+
+## FULL: # objective families per paper
+[(1, 49), (2, 62), (3, 19), (4, 7)]
+
+## FULL: audited tail role (qa/TAIL_AUDIT.md; unaudited = no tail entry and <8 percentile mentions in text)
+[('unaudited', 97), ('T-REP', 26), ('T-SLO', 9), ('T-OBJ', 4), ('NONE', 1)]
+  T-OBJ: arxiv_2407.00023 (2024, cluster-routing/placement); arxiv_2502.13965 (2025, agent/compound-serving); arxiv_2507.17769 (2025, request-scheduling); arxiv_2508.06948 (2025, agent/compound-serving)
+  T-SLO: arxiv_2311.18677 (2023, PD-disaggregation); arxiv_2403.02310 (2024, request-scheduling); arxiv_2407.00047 (2024, request-scheduling); arxiv_2407.00079 (2024, PD-disaggregation); arxiv_2408.00741 (2024, energy/cost); arxiv_2410.01228 (2024, request-scheduling); arxiv_2501.14808 (2025, request-scheduling); arxiv_2504.07494 (2025, request-scheduling); arxiv_2508.16449 (2025, energy/cost)
+
+## Abstract-guess (discovery) vs full-text objective family overlap: 124/133
+    ('arxiv_2312.07104', ['request-latency', 'throughput'], ['cache-proxy', 'memory'])
+    ('arxiv_2401.14351', ['first-token', 'request-latency'], ['system-op-latency'])
+    ('arxiv_2406.14066', ['single-seq-speed', 'slo-goodput'], ['throughput'])
+    ('arxiv_2406.19707', ['quality', 'single-seq-speed', 'throughput'], ['mechanism/other'])
+    ('arxiv_2410.18038', ['throughput', 'token-pace'], ['hw-efficiency'])
+    ('arxiv_2501.01005', ['single-seq-speed', 'token-pace'], ['hw-efficiency'])
+    ('arxiv_2502.05370', ['memory', 'single-seq-speed'], ['cache-proxy', 'first-token', 'token-pace'])
+    ('arxiv_2505.11329', ['request-latency', 'throughput'], ['single-seq-speed'])
+    ('arxiv_2603.16104', ['program-latency', 'request-latency'], ['mechanism/other'])

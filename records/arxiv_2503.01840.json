@@ -1,0 +1,114 @@
+{
+  "key": "arxiv_2503.01840",
+  "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+  "first_author": "Yuhui Li",
+  "year": 2025,
+  "venue": "arXiv preprint (cs.CL v3)",
+  "url": "https://arxiv.org/abs/2503.01840",
+  "cluster": "D4",
+  "technique": "Speculative decoding draft model that predicts tokens directly with multi-layer feature fusion and training-time test; drafting tree from EAGLE-2",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2503.01840.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Similarly, we aim to improve the acceptance rate and acceleration ratio of EAGLE by increasing its training data.",
+      "locator": "\u00a71",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Similarly, we aim to improve the acceptance rate and acceleration ratio of EAGLE by increasing its training data.",
+      "locator": "\u00a71",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "EAGLE-3 does not modify the target model's weights and uses strict speculative sampling acceptance conditions, ensuring no loss in performance. Therefore, we do not evaluate generation quality.",
+      "locator": "\u00a74 Metrics",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "EAGLE-3 achieves a speedup ratio up to 6.5x, with about 1.4x improvement over EAGLE-2. In the SGLang framework, EAGLE-3 achieves a 1.38x throughput improvement at a batch size of 64.",
+    "metrics": [
+      "TOKEN_LAT",
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Table 1, Fig 2 (speedup ratio vs vanilla autoregressive, batch size 1 HF-style runs)"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Table 1, Fig 1 (tau), Fig 7 (n-alpha acceptance rate)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Table 3 (SGLang, bs 2-64), Table 4 (bs=1 tokens/s on H100), Table 5 (vLLM, bs 2-56); headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Speedup Ratio",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Speedup Ratio: The actual test speedup ratio relative to vanilla autoregressive decoding.",
+      "locator": "\u00a74 Metrics",
+      "notes": "Wall-clock speedup of single-sequence decoding; not a latency distribution."
+    },
+    {
+      "term_as_written": "Average Acceptance Length \u03c4",
+      "canonical": "ACCEPT",
+      "definition_quote": "Average Acceptance Length \u03c4: The average number of tokens generated per drafting-verification cycle, which corresponds to the number of tokens accepted from the draft.",
+      "locator": "\u00a74 Metrics",
+      "notes": ""
+    },
+    {
+      "term_as_written": "Acceptance Rate n-\u03b1",
+      "canonical": "ACCEPT",
+      "definition_quote": "Acceptance Rate n-\u03b1: The proportion of draft tokens accepted, which directly reflects the draft model's approximation to the target model.",
+      "locator": "\u00a74 Metrics",
+      "notes": "n = number of self-predicted inputs fed to the draft."
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "Throughput at batch size = 1 on H100 ... 158.34 tokens/s (SGLang w/o speculative)",
+      "locator": "Table 4",
+      "notes": "Throughput never formally defined; tokens/s in SGLang/vLLM benchmark tables, input/output token accounting unstated."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "Speedup: batch size 1 (greedy T=0 and T=1) on 5 tasks; throughput: fixed-batch-size sweep (SGLang bs 2-64 on H100, vLLM bs 2-56 on A100) on MT-Bench; no request-rate sweep",
+  "tradeoff_acknowledged": "Speculative sampling gains shrink with batch size: in vLLM EAGLE shows max throughput gain at bs 24 and degrades throughput beyond; EAGLE-3 still +38% at bs 64 in SGLang (gain declines from batch 1 to 64).",
+  "eval_type": "real-system",
+  "hardware": "Main speedup tables: not confirmed (RTX 3090 mentioned for a table); SGLang throughput on H100 (Table 3-4), vLLM throughput on A100 (Table 5)",
+  "models": "Vicuna-13B, LLaMA-Instruct 3.1 8B, LLaMA-Instruct 3.3 70B, DeepSeek-R1-Distill-LLaMA 8B",
+  "workloads": "MT-bench, HumanEval, GSM8K, Alpaca, CNN/DailyMail",
+  "confidence": "high",
+  "extractor_notes": "Lossless method: QUALITY recorded as constraint because paper says generation quality is not evaluated owing to strict acceptance. Speed is measured at batch size 1 for headline speedup (up to 6.5x), and the 1.38x throughput headline holds at bs 64 in SGLang; speedup at larger batch is much lower. Throughput tables were run by the SGLang team (as stated). Fixed batch, not load regime.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Headline speedup at batch size 1 (\"1.4x latency speedup over EAGLE-2 at batch size 1\", \u00a71) plus fixed-batch-size throughput sweeps (\"1.38x throughput improvement at a batch size of 64\", abstract); no request arrivals. = single-sequence + offline-batch",
+  "repass_log": [
+    "TOKEN_LAT: result -> design (\u00a71 'we aim to improve the acceptance rate and acceleration ratio'); stat n/a",
+    "ACCEPT: metric-definition quote replaced with \u00a71 design quote",
+    "THR_TOK: result-only abstract/Table 3 claim, no design statement; demoted to reported_metrics",
+    "QUALITY: design",
+    "load_class mixed (single-sequence + offline-batch)",
+    "orchestrator (architect flag): load_class mixed -> offline-batch; components are batch-1 and fixed-batch/concurrency runs, no arrival process"
+  ]
+}

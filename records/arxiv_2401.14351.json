@@ -1,0 +1,108 @@
+{
+  "key": "arxiv_2401.14351",
+  "title": "ServerlessLLM: Low-Latency Serverless Inference for Large Language Models",
+  "first_author": "Yao Fu",
+  "year": 2024,
+  "venue": "OSDI'24 (arXiv)",
+  "url": "https://arxiv.org/abs/2401.14351",
+  "cluster": "D2",
+  "technique": "Loading-optimized checkpoint format + multi-tier (SSD/DRAM/GPU) loading, token-based live migration of inference, and startup-time-optimized (locality-aware) model scheduling",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.14351.txt",
+  "optimized_metrics": [
+    {
+      "metric": "OTHER:model_startup_latency",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "ServerlessLLM is designed to minimize the model startup latency.",
+      "locator": "§3 (txt line ~257)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "OTHER:model_startup_latency",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "startup-time-optimized model scheduling, which assesses the locality statuses of checkpoints on each server and schedules the model onto servers that minimize the time to start the inference",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "ServerlessLLM dramatically outperforms state-of-the-art serverless systems, reducing latency by 10 - 200X across various LLM inference workloads.",
+    "metrics": [
+      "OTHER:model_startup_latency"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "OTHER:model_startup_latency",
+      "stat": "mean",
+      "where": "Figs 8-11 (mean/ P99 / P95 latency vs RPS, models, datasets)"
+    },
+    {
+      "metric": "OTHER:model_startup_latency",
+      "stat": "P99",
+      "where": "§7.3-7.4 (P99 latency vs Shepherd*/Serverless)"
+    },
+    {
+      "metric": "OTHER:model_startup_latency",
+      "stat": "P95",
+      "where": "§7.3 (1.43x/1.5x higher P95 latency of baselines)"
+    },
+    {
+      "metric": "OTHER:loading_throughput",
+      "stat": "n/a",
+      "where": "Fig 6-7 checkpoint loading GB/s per storage medium"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "§7.4: fraction of requests served within 300 s timeout (89% vs 26%)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "headline only (re-pass)"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "motivation only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "first-token latency / per-token latency",
+      "canonical": "TTFT",
+      "definition_quote": "Their performance is thus measured by both first-token latency (i.e., the time to return the first token) and per-token latency (i.e., the average time to generate a token).",
+      "locator": "§2.1",
+      "notes": "background definition only; evaluation does not report per-token latency"
+    },
+    {
+      "term_as_written": "model startup latency",
+      "canonical": "OTHER:model_startup_latency",
+      "definition_quote": "For all experiments (unless we indicate otherwise), we report the model startup latency, a critical metric for serverless inference scenarios. When migration or preemption is enabled, this latency is added with pause latency, accounting for the impacts of delays.",
+      "locator": "§7 Evaluation intro",
+      "notes": "time to get a model loaded and ready (incl. queueing for GPU, download/load), plus pause latency from migration/preemption; excludes decoding time. This is the headline latency metric"
+    }
+  ],
+  "slo_spec": "No SLO targets; requests have a 300 s timeout (fraction completed reported)",
+  "load_regime": "request-rate sweep (RPS 0.2-1.4) on traces modeled on Azure serverless trace (Gamma-distributed bursty), GSM8K and ShareGPT datasets",
+  "tradeoff_acknowledged": "Live migration/preemption adds pause latency to the migrated inference (counted in latency); Shepherd* preemption causes longer latency; at high RPS (1.4) ServerlessLLM latency also grows due to GPU resource contention",
+  "eval_type": "real-system",
+  "hardware": "8x NVIDIA A5000 server (NVMe/SATA SSD RAID) and 4-server GPU cluster with 10 Gbps network",
+  "models": "OPT-2.7B..66B, LLaMA-2 7B/13B/70B, Falcon",
+  "workloads": "GSM8K, ShareGPT, Azure serverless trace for arrivals",
+  "confidence": "high",
+  "extractor_notes": "Not a token-level serving paper: optimizes cold-start/model startup latency, not TTFT/TBT/throughput of a warm model. Headline 'latency' = model startup latency (plus pause latency). Mapped to OTHER:model_startup_latency; TTFT entry in optimized_metrics is a loose alias because the paper elsewhere calls it first-token latency in its Ray Serve/KServe comparison (§7.5).",
+  "load_class": "online-arrivals",
+  "load_class_quote": "request-rate sweep (RPS 0.2-1.4) on Gamma-distributed bursty traces modeled on the Azure serverless trace (§7)",
+  "repass_log": [
+    "TTFT entry demoted: abstract 'reducing latency by 10-200X' result headline, no design statement (the design target is OTHER:model_startup_latency; first-token latency only appears in motivation)",
+    "UTIL entry demoted (where: motivation only): quote is serverless motivation ('To reduce GPU consumption...'), not a design statement of this method",
+    "two OTHER:model_startup_latency entries kept as design (§3 'designed to minimize the model startup latency'; startup-time-optimized scheduling)",
+    "load_class online-arrivals"
+  ]
+}

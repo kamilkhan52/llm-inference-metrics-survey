@@ -1,0 +1,137 @@
+{
+  "key": "arxiv_2508.16449",
+  "title": "GreenLLM: SLO-Aware Dynamic Frequency Scaling for Energy-Efficient LLM Serving",
+  "first_author": "Qunyou Liu",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2508.16449",
+  "cluster": "D2",
+  "technique": "phase-specific GPU DVFS: length-based prompt queues, queueing-aware prefill frequency optimization, dual-loop decode controller tracking TPS and P95 TBT",
+  "layer": "energy/cost",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2508.16449.txt",
+  "optimized_metrics": [
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We introduce GreenLLM, a service-level objectives (SLO) aware serving framework that minimizes GPU energy by explicitly separating prefill and decode control.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "SLOs target TTFT < 400ms for Short/Medium prompts, < 2s for Long, and P95 TBT <= 100ms during decode",
+      "locator": "§4 (experimental setup)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "SLOs target TTFT < 400ms for Short/Medium prompts, < 2s for Long"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P95",
+      "role": "constraint",
+      "evidence": "track the target TBT (100 ms P95) and conserve energy by reducing the frequency whenever possible",
+      "locator": "§3.3.2",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "track the target TBT (100 ms P95)"
+    }
+  ],
+  "headline_claim": {
+    "text": "GreenLLM achieves up to 34% reduction in total energy consumption compared to the default DVFS baseline in Alibaba/Azure trace replays, with no loss of throughput and only less than 3.5% SLO violations increase",
+    "metrics": [
+      "ENERGY",
+      "SLO_ATT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "ENERGY",
+      "stat": "n/a",
+      "where": "Figs 10-12, Tables 3-4 (normalized to defaultNV)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P90",
+      "where": "Fig 10, Fig 12a"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P90",
+      "where": "Fig 11, Fig 12b"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P99",
+      "where": "decode microbenchmark (p99 TBT 83.2 vs 84.6 ms)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Tables 3-4 pass rates TTFT%, TBT%"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "TPS sweeps"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "the service often has a target time between tokens (TBT) to keep the output responsive",
+      "locator": "§2.1",
+      "notes": "not formally defined; used as sliding-window P95 over recent tokens, recomputed every 20 ms"
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "∼ O(n^2) in prompt length; it largely determines TTFT.",
+      "locator": "§2.1",
+      "notes": "TTFT never formally defined; slack analysis says SLO violations 'due to queueing delays rather than processing time' so queueing is included; per-length-class SLO"
+    },
+    {
+      "term_as_written": "energy per token",
+      "canonical": "ENERGY",
+      "definition_quote": "maintains P95 TBT below 100 ms and minimizes energy per token (i.e., power/TPS)",
+      "locator": "§3.3.1",
+      "notes": "decode objective; prefill objective is total energy within the SLO window including idle energy P_idle[D - busy(f)]"
+    },
+    {
+      "term_as_written": "pass rates (TTFT%, TBT%)",
+      "canonical": "SLO_ATT",
+      "definition_quote": "We collect the pass rates (TTFT%, TBT%), together with energy",
+      "locator": "§4.3",
+      "notes": "fraction meeting each SLO separately"
+    }
+  ],
+  "slo_spec": "TTFT < 400 ms for short/medium prompts, < 2 s for long prompts; TBT P95 <= 100 ms (decode); taken from Azure targets [34]. Margin-sensitivity sweep scales SLOs by 0.85x-2.0x.",
+  "load_regime": "trace replay (Alibaba chat, Azure code/conversation, rate scaled to single-node capacity) and TPS/QPS sweeps",
+  "tradeoff_acknowledged": "energy vs SLO compliance: <3.5% SLO violation increase; at 10 QPS pass rates drop to TTFT 88.2%; looser SLO margins save energy but raise P90 TTFT/TBT",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA DGX-A100 node (8x A100-SXM4 40GB), NVIDIA Dynamo",
+  "models": "Qwen3-14B (dense), Qwen3-30B-MoE",
+  "workloads": "Alibaba chat trace, Azure code and conversation traces, microbenchmarks",
+  "confidence": "high",
+  "extractor_notes": "Energy is the objective; latency SLOs are constraints (TTFT per-request, decode at P95 TBT). Tail statistic differs by use: control loop uses P95 TBT, reporting uses P90 (microbenchmarks) and P99 TBT. Headline 'no loss of throughput'. Energy scope = GPU energy only.",
+  "tail_role": "T-SLO",
+  "tail_audit": {
+    "class": "T-SLO",
+    "metrics": "TBT @ P95 (<= 100 ms) controller target; TTFT thresholds",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "We replay the Alibaba trace at {1, 3, 5, 8, 10} QPS for at least 30 minutes per run (§4); Azure traces downsampled preserving inter-arrival structure",
+  "repass_log": [
+    "ENERGY: abstract design sentence ('framework that minimizes GPU energy') -> design",
+    "TTFT/TBT constraints: design; stat_basis explicit (TTFT thresholds; TBT P95 <= 100 ms)",
+    "tail_audit has no correction",
+    "added load_class online-arrivals"
+  ]
+}

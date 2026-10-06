@@ -1,0 +1,142 @@
+{
+  "key": "mlsys2025_sola",
+  "title": "SOLA: Optimizing SLO Attainment for Large Language Model Serving with State-Aware Scheduling",
+  "first_author": "Ke Hong",
+  "year": 2025,
+  "venue": "MLSys 2025",
+  "url": "https://proceedings.mlsys.org/paper_files/paper/2025/file/bc82dbfbfa43232be85b8d9838f49c3e-Paper-Conference.pdf",
+  "cluster": "D1",
+  "technique": "iteration-level state-aware scheduling: per-iteration constrained optimisation over request order and per-iteration workload, driven by per-request and system-wide TTFT/TPOT-to-SLO ratios, on vLLM",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/mlsys2025_sola.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "we propose a fine-grained scheduling framework to maximize the SLO attainment for LLM serving.",
+      "locator": "§1 (Introduction), txt line ~240 of raw text / abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "The goal of scheduling in LLM serving is to maximize the request processing rate of the system under TTFT and TPOT constraints.",
+      "locator": "§2.2 / §1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the agreement between service providers and users determines SLOs (e.g., TTFT ≤ 0.5s, TPOT ≤ 0.1s) as the latency constraints"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "The goal of scheduling in LLM serving is to maximize the request processing rate of the system under TTFT and TPOT constraints.",
+      "locator": "§2.2 / §1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the agreement between service providers and users determines SLOs (e.g., TTFT ≤ 0.5s, TPOT ≤ 0.1s) as the latency constraints; TPOT measures the average latency during the decode phase"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "The goal of scheduling in LLM serving is to maximize the request processing rate of the system under TTFT and TPOT constraints.",
+      "locator": "§1 / §2.2",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Given SLO constraints, the evaluation shows that SOLA enhances the SLO attainment from 45.5% to 99.4%, and serves 1.04-1.27x more requests than the state-of-the-art systems on average.",
+    "metrics": [
+      "SLO_ATT",
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 7 (vs request rate, tight/loose SLO)"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "normalized goodput at 90% and 99% attainment (Fig 8/9, §6.5 SLO sensitivity)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "where": "Fig 1 TTFT-TPOT scatter distributions"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "n/a",
+      "where": "Fig 1 TTFT-TPOT scatter distributions"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "For each request, TTFT measures the latency of waiting and the prefill phase, while TPOT measures the average latency during the decode phase.",
+      "locator": "§4.2 Trade-Off Analysis",
+      "notes": "TTFT includes waiting (queueing) time"
+    },
+    {
+      "term_as_written": "TPOT",
+      "canonical": "TPOT",
+      "definition_quote": "Considering that TPOT measures the average latency per output token (except for the first token)",
+      "locator": "§4.4",
+      "notes": "average over decode tokens excluding first"
+    },
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "attainment (i.e., the percentage of requests within the SLOs)",
+      "locator": "Fig 1 caption",
+      "notes": "per-request: must satisfy both TTFT and TPOT SLOs (box in TTFT-TPOT plane)"
+    },
+    {
+      "term_as_written": "real-time SLO attainment (system latency statistic)",
+      "canonical": "SLO_ATT",
+      "definition_quote": "we define p_i^{TTFT/TPOT} = max_r(t_{i,r}^{TTFT/TPOT})/T^{TTFT/TPOT}. The real-time attainment of TTFT/TPOT SLO is 100% if p_i^{TTFT/TPOT} <= 1.",
+      "locator": "§4.2 / state monitor",
+      "notes": "internal scheduler state uses MAX over running requests of latency/SLO ratio, not a percentile"
+    },
+    {
+      "term_as_written": "goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "compare the goodput (i.e., the maximum input request rate) under 90% and 99% SLO attainment.",
+      "locator": "§6.1 Metric",
+      "notes": "goodput = max request rate (req/s) sustaining 90% or 99% attainment; not SLO-meeting tokens/s"
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "TTFT and TPOT measure the request-level latency perceived by users, while throughput and goodput measure the system-level performance.",
+      "locator": "§2.2",
+      "notes": "throughput not further defined"
+    }
+  ],
+  "slo_spec": "SLO = multiple of single-request latency: 10x (tight) / 15x (loose) for 7B-14B models; 5x / 10x for 70B-72B (batch size shrinks with larger models). Specific numbers in Table 3 (e.g. 0.8/0.2s, 1.2/0.3s TTFT/TPOT). Goodput at 90% and 99% attainment.",
+  "load_regime": "request-rate sweep (Poisson-style input request rate), ShareGPT and LongBench sampled",
+  "tradeoff_acknowledged": "Core framing: trade-off between TTFT and TPOT (prefill-first helps TTFT, hurts TPOT; decode-first reverse) and among requests; no loss of a third metric claimed.",
+  "eval_type": "real-system",
+  "hardware": "8x A100 80GB SXM4",
+  "models": "Llama3-8B, Qwen1.5-14B, Llama3-70B, Vicuna-7B, Qwen1.5-72B",
+  "workloads": "ShareGPT, LongBench",
+  "confidence": "high",
+  "extractor_notes": "Optimizes attainment of joint TTFT+TPOT SLO (mean-style TPOT per request; no tail percentile of latency). Goodput here is request-rate at 90/99% attainment. PDF read from MLSys proceedings; layout text two-column so line refs are to raw pdftotext.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "generate request arrival times using Poisson ... increasing input request rates and compare the goodput (i.e., the maximum input request rate) under 90% and 99% SLO attainment (§6.1)",
+  "repass_log": [
+    "SLO_ATT: evidence_kind design (stated aim)",
+    "TTFT/TPOT: design (SLO constraint); stat attainment explicit (per-request threshold SLOs)",
+    "GOODPUT: result-type quote replaced by design goal statement (maximize request rate under TTFT/TPOT constraints)",
+    "load_class online-arrivals"
+  ]
+}

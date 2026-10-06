@@ -1,0 +1,16 @@
+{
+"key":"arxiv_2502.14866","title":"LServe: Efficient Long-sequence LLM Serving with Unified Sparse Attention","first_author":"Shang Yang","year":2025,"venue":"MLSys'25 (arXiv v2)","url":"https://arxiv.org/abs/2502.14866","cluster":"D3",
+"technique":"unified block-sparse attention: static streaming heads + dynamic hierarchical KV page selection with reusable selector, plus KV quantization","layer":"kernels/attention","read_level":"full","fulltext_path":"fulltext/arxiv_2502.14866.txt",
+"optimized_metrics":[
+{"metric":"TTFT","stat":"mean","role":"objective","evidence":"For the prefilling stage, we use time-to-first-token (TTFT) as a key metric","locator":"§4.1 Metrics"},
+{"metric":"TOKEN_LAT","stat":"mean","role":"objective","evidence":"while for the decoding stage, we emphasize minimizing the per-token generation latency","locator":"§4.1 Metrics"},
+{"metric":"THR_TOK","stat":"n/a","role":"objective","evidence":"Our primary focus is on serving throughput.","locator":"§4.1 Metrics"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"LServe accelerates LLM prefilling by up to 2.9x and decoding by 1.3-2.1x over vLLM, maintaining long-context accuracy","locator":"abstract"}
+],
+"headline_claim":{"text":"On average, LServe accelerates LLM prefilling by up to 2.9x and decoding by 1.3-2.1x over vLLM, maintaining long-context accuracy.","metrics":["TTFT","TOKEN_LAT","QUALITY"],"locator":"abstract"},
+"reported_metrics":[{"metric":"TTFT","stat":"mean","where":"Fig 11 prefilling latency"},{"metric":"TOKEN_LAT","stat":"mean","where":"Fig 10 decoding speed / per-step latency"},{"metric":"QUALITY","stat":"n/a","where":"Tables 2-4, Fig 9 (LongBench, NIAH, RULER, AIME, MATH500)"}],
+"metric_definitions":[
+{"term_as_written":"Metrics","canonical":"THR_TOK","definition_quote":"Our primary focus is on serving throughput. For the prefilling stage, we use time-to-first-token (TTFT) as a key metric, while for the decoding stage, we emphasize minimizing the per-token generation latency.","locator":"§4.1","notes":"throughput stated as primary focus but plotted as relative speed normalized to LServe (Fig 10); no formal throughput units or percentiles; TTFT here is single-request prefill latency (no queueing)"}],
+"slo_spec":null,"load_regime":"input-length sweep (32K-256K), single request / fixed batch; no arrival process","tradeoff_acknowledged":"LServe-8192 only up to 6% slower than dense in some long-context tasks; small accuracy deviations","eval_type":"real-system","hardware":"NVIDIA A100 and L40S GPUs","models":"Llama-3-8B (and 1M-context), Llama-2-7B, Minitron-4B","workloads":"LongBench, NIAH, RULER, AIME2024, MATH500; synthetic length sweeps",
+"confidence":"medium","extractor_notes":"Paper says primary focus is serving throughput, but the evaluated quantities are prefill latency (TTFT) and decode per-step latency/speedup; effectively kernel-level latency. Genuinely ambiguous whether throughput or latency is the objective."
+}

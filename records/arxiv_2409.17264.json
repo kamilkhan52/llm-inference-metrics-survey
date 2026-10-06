@@ -1,0 +1,138 @@
+{
+ "key": "arxiv_2409.17264",
+ "title": "No Request Left Behind: Tackling Heterogeneity in Long-Context LLM Inference with Medha",
+ "first_author": "Agrawal",
+ "year": 2025,
+ "venue": "arXiv preprint (v5, Nov 2025)",
+ "url": "https://arxiv.org/abs/2409.17264",
+ "cluster": "D5",
+ "technique": "preemptive fine-grained scheduling (LARS), adaptive chunking, stream pipeline parallel, KV-cache parallelism",
+ "layer": "long-context",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2409.17264.txt",
+ "optimized_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "The scheduler must assign each request to time slots on available GPUs to maximize goodput - the fraction of requests meeting their deadlines",
+   "locator": "§4.1 (LARS)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "This budget, derived from decode requests' TPOT SLOs, ensures prefill operations cannot delay latency-sensitive decode tokens.",
+   "locator": "§4.3",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "The batch packer constructs batches that maximize throughput while respecting a strict iteration time budget",
+   "locator": "§4.3",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "Under a heterogeneous workload, Medha improves throughput by 5.7x while reducing median and 99th-percentile latency by 30x and 174x, respectively, compared to state-of-the-art non-preemptive systems.",
+  "metrics": [
+   "THR_REQ",
+   "TTFT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "P50",
+   "where": "Fig 1, 9, 11, 12"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P90",
+   "where": "Fig 1, 9, 11"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "P50",
+   "where": "Fig 10, 12"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "P90",
+   "where": "Fig 10, 12"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P95",
+   "where": "Fig 7"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "App B.4 MFU / MBU"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P99",
+   "where": "headline/evaluation (demoted by tail audit)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "This phase is compute-bound, with performance measured by Time-to-First-Token (TTFT).",
+   "locator": "§2.1",
+   "notes": "Prefill latency; in the convoy experiments clearly includes queueing behind long requests."
+  },
+  {
+   "term_as_written": "TPOT/TBT",
+   "canonical": "TPOT",
+   "definition_quote": "Its performance is measured by Time-Per-Output-Token (TPOT) or Time-Between-Tokens (TBT) [4].",
+   "locator": "§2.1",
+   "notes": "TPOT and TBT used as synonyms, no formula."
+  },
+  {
+   "term_as_written": "goodput",
+   "canonical": "GOODPUT",
+   "definition_quote": "maximize goodput - the fraction of requests meeting their deadlines",
+   "locator": "§4.1",
+   "notes": "Defined as a fraction of requests, not a rate."
+  },
+  {
+   "term_as_written": "capacity",
+   "canonical": "THR_REQ",
+   "definition_quote": "Our capacity evaluation focuses on two key metrics: TTFT and TPOT, as these directly impact user experience in interactive scenarios.",
+   "locator": "§6.2",
+   "notes": "'Capacity' = QPS sustainable at acceptable TTFT/TPOT; no numeric threshold stated in text read."
+  }
+ ],
+ "slo_spec": "Per-request deadlines (relative slack LARS); TPOT SLO sets per-iteration time budget t_target (example 20 ms); decode of ~250 ms/iter called an order of magnitude above typical production SLOs",
+ "load_regime": "QPS sweep 0.25-1.75 with 0% / 1% / 5% long (128K-2M) requests",
+ "tradeoff_acknowledged": "Explicit throughput-latency trade-off of chunking (large chunks -> throughput, small chunks -> decode latency) and TTFT-vs-TPOT trade-off of KVP; Medha 3D has slightly lower peak throughput than 2D.",
+ "eval_type": "real-system",
+ "hardware": "16x A100 80GB (2 servers); up to 128 H100",
+ "models": "Llama-3 8B, Llama-3 70B",
+ "workloads": "ShareGPT4 + 5% long requests; coding-issue traces with 393K-839K prefill",
+ "confidence": "medium",
+ "extractor_notes": "Headline '99th-percentile latency 174x' is TTFT P99 in Fig 1/abstract. Throughput numbers (5.7x) appear to be sustainable load/capacity rather than tokens/s; unit not stated explicitly. SLO threshold numbers not found in the sections read. | TAIL AUDIT 2026-10-06: TTFT tail stat -> n/a (metric targeted, percentile only reported)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "TTFT P99/P50 (headline, 174x), TPOT P90; design targets deadline goodput + TPOT budget",
+  "correction": "Demote TTFT P99 'objective' to headline. Keep GOODPUT attainment objective (deadline-based), TPOT constraint (per-iteration budget, no percentile).",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "\"load from 0.25 to 1.75 queries per second (QPS)\" with mixes of 0%/1%/5% long requests (§6.1; Fig 9-12)",
+ "repass_log": [
+  "TTFT: abstract 'median and 99th-percentile latency by 30x and 174x' is result-only; tail_audit says demote TTFT P99 objective to headline -> moved to reported_metrics (already present)",
+  "GOODPUT (deadline attainment), THR_REQ (batch packer), TPOT constraint (per-iteration budget from TPOT SLOs): design; TPOT stat_basis unspecified (no statistic stated), stat -> n/a",
+  "load_class online-arrivals"
+ ]
+}

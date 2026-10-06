@@ -1,0 +1,94 @@
+{
+ "key": "arxiv_2603.13358",
+ "title": "Not All Prefills Are Equal: PPD Disaggregation for Multi-turn LLM Serving",
+ "first_author": "Li",
+ "year": 2026,
+ "venue": "arXiv preprint (v2, May 2026)",
+ "url": "https://arxiv.org/abs/2603.13358",
+ "cluster": "D2",
+ "technique": "Prefill-Prefill-capable-Decode (PPD): per-request routing of Turn 2+ append-prefill to the decode node (using cached KV) vs the prefill node, chosen by sign of S = w_ttft·ΔTTFT − w_tpot·ΔTPOT from an offline lookup table",
+ "layer": "PD-disaggregation",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2603.13358.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we score the benefit of local processing (x=1) over the PD path (x=0) for workload ψ as ... where ∆ttft is the relative TTFT improvement",
+   "locator": "§3 Eq. (1)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "∆tpot the relative TPOT degradation when ψ is processed locally rather than through P.",
+   "locator": "§3 Eq. (1)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "We measure Turn 1 TTFT, Turn 2 TTFT, average TPOT, throughput (tokens/sec), and success rate."
+  }
+ ],
+ "headline_claim": {
+  "text": "PPD reduces Turn 2+ time-to-first-token (TTFT) by ∼68% while maintaining competitive time-per-output-token (TPOT), effectively alleviating KV transfer congestion under high load.",
+  "metrics": [
+   "TTFT",
+   "TPOT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Table 2, Fig 1 TPS; paper: 'Throughput is a system-level emergent metric and is not optimized per-request'"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P99",
+   "where": "Fig 1, Fig 9 (P99 TTFT vs TPS Pareto frontiers); not in the routing objective"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Fig 4 average query latency vs QPS (15-25% reduction), Fig 5"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "success rate = share of requests completing without timeout (>=95%), 30 s timeout"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "success rate",
+   "canonical": "SLO_ATT",
+   "definition_quote": "success rate (defined as ≥95% of requests completing without timeout)",
+   "locator": "§6.1",
+   "notes": "Service degradation = success rate <95%; 30 s timeout. Not a latency SLO."
+  },
+  {
+   "term_as_written": "Turn 2+ TTFT / TPOT",
+   "canonical": "TTFT",
+   "definition_quote": "We measure Turn 1 TTFT, Turn 2 TTFT, average TPOT, throughput (tokens/sec), and success rate.",
+   "locator": "§4.2",
+   "notes": "TTFT and TPOT never formally defined (TTFT only introduced as 'time-to-first-token'); throughput in tokens/sec, input/output counting unspecified. TTFT reported per turn; statistic for TTFT not stated (appears mean) except P99 in Fig 1."
+  }
+ ],
+ "slo_spec": "No numeric SLO; operator weights (w_ttft, w_tpot) act as the SLO knob; paper says PPD 'does not enforce end-to-end SLO bounds' and suggests higher-level controllers drive w from observed P99.",
+ "load_regime": "Poisson conversation arrivals at target QPS (0.5-20), 10 s fixed-duration test points; ShareGPT and WildChat multi-turn; synthetic sweeps",
+ "tradeoff_acknowledged": "TTFT vs TPOT: full AP-to-D (x=1) gives 94-96% Turn 2+ TTFT reduction with 7-12% TPOT degradation; no static x wins all objectives (92.2% of workload-QPS combos differ between TTFT and TPOT winners).",
+ "eval_type": "real-system",
+ "hardware": "4x NVIDIA H100 80GB node (network slowdown emulated for multi-node)",
+ "models": "Llama-3.1-8B (primary); Qwen2.5-14B, Qwen3-30B-A3B",
+ "workloads": "ShareGPT, WildChat multi-turn; synthetic prefill-/decode-heavy mixes",
+ "confidence": "high",
+ "extractor_notes": "TAIL IN OBJECTIVE: no. The routing score uses relative TTFT/TPOT improvement from offline measurements at x=0 and x=1; P99 TTFT appears only in the Pareto plots (Fig 1, 9) and as a proposed input to an external controller. Statistic of the TTFT in the score is not stated. 'Weights' are an operator trade-off knob (TTFT vs TPOT) rather than an SLO threshold.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "conversations arriving according to a Poisson process at the target QPS (e.g., QPS=4 generates ∼40 two-turn conversations).",
+ "repass_log": [
+  "new record"
+ ]
+}

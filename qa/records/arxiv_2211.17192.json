@@ -1,0 +1,17 @@
+{
+"key":"arxiv_2211.17192","title":"Fast Inference from Transformers via Speculative Decoding","first_author":"Yaniv Leviathan","year":2022,"venue":"ICML'23 (arXiv v2)","url":"https://arxiv.org/abs/2211.17192","cluster":"D4",
+"technique":"speculative decoding: draft with a small model, verify gamma tokens in parallel with the target model using speculative sampling (exact output distribution)","layer":"speculative/decoding-algorithm","read_level":"full","fulltext_path":"fulltext/arxiv_2211.17192.txt",
+"optimized_metrics":[
+{"metric":"TOKEN_LAT","stat":"mean","role":"objective","evidence":"we can make exact decoding from the large models faster ... show a 2X-3X acceleration compared to the standard T5X implementation, with identical outputs","locator":"abstract; §1 (out-of-the-box latency improvement of 2X-3X)"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"an algorithm to sample from autoregressive models faster without any changes to the outputs ... without changing the distribution","locator":"abstract"},
+{"metric":"OTHER:arithmetic_ops","stat":"n/a","role":"constraint","evidence":"the total number of arithmetic operations might be higher ... assume that we have enough compute resources to support the increased concurrency","locator":"§3.4"}
+],
+"headline_claim":{"text":"We demonstrate it on T5-XXL and show a 2X-3X acceleration compared to the standard T5X implementation, with identical outputs.","metrics":["TOKEN_LAT","QUALITY"],"locator":"abstract"},
+"reported_metrics":[{"metric":"TOKEN_LAT","stat":"mean","where":"Table 2 walltime speedup"},{"metric":"ACCEPT","stat":"mean","where":"Table 3 empirical alpha"},{"metric":"OTHER:arithmetic_ops","stat":"n/a","where":"Table 2 / Fig 4 operation-count increase"}],
+"metric_definitions":[
+{"term_as_written":"walltime improvement","canonical":"TOKEN_LAT","definition_quote":"The expected improvement factor in total walltime by Algorithm 1 is (1-alpha^(gamma+1))/((1-alpha)(gamma c+1)).","locator":"Theorem 3.8","notes":"speedup ratio of decode wall time vs standard decoding at batch size 1"},
+{"term_as_written":"acceptance rate alpha","canonical":"ACCEPT","definition_quote":"denote alpha = E(beta)","locator":"§3.2","notes":"alpha = 1 - E(D_LK(p,q)); expected tokens per target run = (1-alpha^(gamma+1))/(1-alpha)"},
+{"term_as_written":"cost coefficient c","canonical":"OTHER:cost_coefficient","definition_quote":"Let c, the cost coefficient, be the ratio between the time for a single run of Mq and the time for a single run of Mp.","locator":"Definition 3.7","notes":""}],
+"slo_spec":null,"load_regime":"batch=1 single-request decoding","tradeoff_acknowledged":"increases total arithmetic operations (e.g. several times more ops) in exchange for fewer serial runs","eval_type":"real-system","hardware":"single TPU-v4, batch size 1","models":"T5-XXL target with T5-small/base/large approximations; GPT-like on lm1b; LaMDA 137B (alpha measurement)","workloads":"WMT EnDe translation, CNN/DM summarization, lm1b",
+"confidence":"high","extractor_notes":"Pure single-stream latency (decode speedup); no serving load, no throughput or percentiles. Speedup is wall-clock relative to standard T5X decoding."
+}

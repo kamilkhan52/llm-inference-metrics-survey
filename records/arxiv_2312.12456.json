@@ -1,0 +1,112 @@
+{
+ "key": "arxiv_2312.12456",
+ "title": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU",
+ "first_author": "Song",
+ "year": 2023,
+ "venue": "SOSP'24 (arXiv v2)",
+ "url": "https://arxiv.org/abs/2312.12456",
+ "cluster": "D5",
+ "technique": "Exploit power-law neuron activation: hot neurons preloaded on GPU, cold on CPU; adaptive activation predictors, neuron-aware sparse operators, ILP neuron placement",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2312.12456.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "In contrast to data-center deployments, which prioritize high throughput, local deployments focus on low latency in processing small batches.",
+   "locator": "§1",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "exploiting the high locality ... hot-activated neurons are preloaded onto the GPU for fast access, while cold-activated neurons are computed on the CPU, thus significantly reducing GPU memory demands and CPU-GPU data transfers",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "[sparsity methods that induce sparsity] usually incur accuracy losses and wall-clock model acceleration challenges [34]. In contrast, PowerInfer uses natural sparse activations to maintain performance and efficiency.",
+   "locator": "§9 related work (txt line 1110-1113)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "PowerInfer significantly outperforms llama.cpp by up to 11.69× while retaining model accuracy across various LLMs (including OPT-175B) on a single NVIDIA RTX 4090 GPU. For the OPT-30B model, PowerInfer achieves performance comparable to that of a high-end server-grade A100 GPU, reaching 82% of its token generation rate on a single consumer-grade RTX 4090 GPU.",
+  "metrics": [
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "mean",
+   "where": "Fig 10-12: end-to-end generation speed (tokens/s) and speedup over llama.cpp, batch size 1"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "where": "Table 4: end-to-end latency with 1.5K input/256 output"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P95",
+   "where": "§8 text: P95 inter-token latency only ~10% above average"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Fig 18/Table accuracy on benchmarks (PIQA, Winogrande etc.)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "batching experiment: avg 6.08x improvement at larger batch"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "GPU load share of neuron computation (20% to 70%)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "generation speed (tokens/s)",
+   "canonical": "TOKEN_LAT",
+   "definition_quote": "we sample prompts from Alpaca and ChatGPT datasets, ranging from 8 to 128 tokens and measure the generation speed.",
+   "locator": "§8.2",
+   "notes": "Defined only informally as end-to-end token generation speed (tokens/s) for a single sequence at batch size 1; includes prefill implicitly; never formally defined, no TTFT/TPOT split"
+  },
+  {
+   "term_as_written": "inter-token generation latency",
+   "canonical": "TBT",
+   "definition_quote": "PowerInfer exhibits a highly consistent inter-token generation latency across different tasks, with only a 10% difference between the P95 latency and the average.",
+   "locator": "§8 (neuron placement discussion)",
+   "notes": "Only tail statistic reported; used to show consistency, not optimized"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch=1 single-request local inference (plus a batch-size sweep)",
+ "tradeoff_acknowledged": "Larger batch sizes reduce sparsity benefits so speedup shrinks (still avg 6.08x improvement at batch sizes tested); long input prompt with short output shows smaller gains (prefill dominated).",
+ "eval_type": "real-system",
+ "hardware": "PC-High: RTX 4090 24GB; PC-Low: RTX 2080Ti; A100 for comparison",
+ "models": "OPT-7B..175B, LLaMA2 7B-70B, Falcon-40B, Qwen1.5",
+ "workloads": "Alpaca and ChatGPT-prompts datasets, 8-128 token prompts, batch 1",
+ "confidence": "medium",
+ "extractor_notes": "Design targets decode speed (token generation rate) at batch size 1 on consumer hardware; framed as 'serving' in the title but no request arrivals or SLO. 'Latency' used loosely; headline metric is tokens/s generation speed, which maps to TOKEN_LAT (batch=1 decoding speed). Locators for §8 come from non-layout text extraction; page numbers not recorded.",
+ "load_class": "single-sequence",
+ "load_class_quote": "\"We first compare the end-to-end inference performance of PowerInfer, llama.cpp and SpecInfer with a batch size of one, the typical setting for local deployments [7].\" (§8.2)",
+ "repass_log": [
+  "TOKEN_LAT: design (§1 local deployments focus on low latency in small batches), stat_basis unspecified (paper reports tokens/s generation speed), stat mean->n/a",
+  "MEMORY: design (abstract describes the mechanism that reduces GPU memory demand)",
+  "QUALITY: abstract result quote replaced with §9 design stance",
+  "load_class single-sequence"
+ ]
+}

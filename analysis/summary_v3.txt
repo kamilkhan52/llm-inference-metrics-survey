@@ -1,0 +1,101 @@
+# summary_v3 — 137 full-text optimizer records
+
+## evidence_kind of optimized_metrics entries
+[('design', 402), ('result-only', 1)]
+papers with >=1 design-evidenced objective: 136
+
+## load_class
+[('online-arrivals', 63), ('offline-batch', 32), ('single-sequence', 25), ('mixed', 14), ('analytical-or-simulated-only', 3)]
+
+## family shares (objective / constraint), all full-text optimizers
+  throughput           obj 57/137 = 42% [95% CI 34–50]    con 2/137 = 1% [95% CI 0–5]
+  first-token          obj 19/137 = 14% [95% CI 9–21]     con 20/137 = 15% [95% CI 10–21]
+  quality              obj 3/137 = 2% [95% CI 1–6]        con 36/137 = 26% [95% CI 20–34]
+  memory               obj 24/137 = 18% [95% CI 12–25]    con 11/137 = 8% [95% CI 5–14]
+  token-pace           obj 8/137 = 6% [95% CI 3–11]       con 26/137 = 19% [95% CI 13–26]
+  request-latency      obj 19/137 = 14% [95% CI 9–21]     con 10/137 = 7% [95% CI 4–13]
+  slo-goodput          obj 24/137 = 18% [95% CI 12–25]    con 3/137 = 2% [95% CI 1–6]
+  single-seq-speed     obj 25/137 = 18% [95% CI 13–26]    con 2/137 = 1% [95% CI 0–5]
+  hw-efficiency        obj 24/137 = 18% [95% CI 12–25]    con 1/137 = 1% [95% CI 0–4]
+  cost-energy          obj 19/137 = 14% [95% CI 9–21]     con 1/137 = 1% [95% CI 0–4]
+  mechanism/other      obj 15/137 = 11% [95% CI 7–17]     con 1/137 = 1% [95% CI 0–4]
+  program-latency      obj 10/137 = 7% [95% CI 4–13]      con 1/137 = 1% [95% CI 0–4]
+  cache-proxy          obj 5/137 = 4% [95% CI 2–8]        con 0/137 = 0% [95% CI 0–3]
+  fairness             obj 2/137 = 1% [95% CI 0–5]        con 3/137 = 2% [95% CI 1–6]
+  system-op-latency    obj 2/137 = 1% [95% CI 0–5]        con 0/137 = 0% [95% CI 0–3]
+  user-perceived       obj 2/137 = 1% [95% CI 0–5]        con 0/137 = 0% [95% CI 0–3]
+
+## request-latency objective papers by load_class: [('online-arrivals', 17), ('offline-batch', 1), ('mixed', 1)]
+   batch_time recodes: ['arxiv_2211.10438', 'arxiv_2303.06865', 'arxiv_2306.14048', 'arxiv_2406.19707', 'arxiv_2603.16104', 'osdi2024_dlora']
+
+## tail tiers v2 — ALL full-text (n=137)
+  1a percentile minimized (strict)                                                                2/137 = 1% [95% CI 0–5]
+  1b tail named as design aim, no percentile objective (lenient)                                  3/137 = 2% [95% CI 1–6]
+  2a distributional over requests/tokens (percentile SLO, attainment, goodput, per-token deadlines) 32/137 = 23% [95% CI 17–31]
+  2b deterministic latency bound                                                                  4/137 = 3% [95% CI 1–7]
+  3 mean or unspecified                                                                           32/137 = 23% [95% CI 17–31]
+  5 no serving-latency target                                                                     64/137 = 47% [95% CI 39–55]
+
+## tail tiers v2 — online-arrivals or mixed (n=77)
+  1a percentile minimized (strict)                                                                2/77 = 3% [95% CI 1–9]
+  1b tail named as design aim, no percentile objective (lenient)                                  3/77 = 4% [95% CI 1–11]
+  2a distributional over requests/tokens (percentile SLO, attainment, goodput, per-token deadlines) 32/77 = 42% [95% CI 31–53]
+  3 mean or unspecified                                                                           25/77 = 32% [95% CI 23–44]
+  5 no serving-latency target                                                                     15/77 = 19% [95% CI 12–30]
+   tier3 papers with 'mean'/'average' (word match) in the design quote of a serving-latency entry: 5
+   tail_role (audit) counts: [('unaudited', 97), ('T-REP', 26), ('T-SLO', 9), ('T-OBJ', 4), ('NONE', 1)]
+
+## serving-latency OBJECTIVE entries: (stat, stat_basis)
+[(('n/a', 'unspecified'), 30), (('mean', 'explicit'), 26), (('attainment', 'explicit'), 3), (('P99', 'explicit'), 1), (('n/a', '(missing)'), 1), (('P95', 'explicit'), 1)]
+
+## trend — ALL full-text
+  2022-23: n= 34  SLO-framed 6/34 = 18% [95% CI 8–34]     goodput/attainment objective 2/34 = 6% [95% CI 2–19]
+  2024: n= 57  SLO-framed 16/57 = 28% [95% CI 18–41]   goodput/attainment objective 8/57 = 14% [95% CI 7–25]
+  2025-26: n= 46  SLO-framed 21/46 = 46% [95% CI 32–60]   goodput/attainment objective 14/46 = 30% [95% CI 19–45]
+
+## trend — online-arrivals or mixed load
+  2022-23: n=  8  SLO-framed 4/8 = 50% [95% CI 22–78]     goodput/attainment objective 2/8 = 25% [95% CI 7–59]
+  2024: n= 35  SLO-framed 15/35 = 43% [95% CI 28–59]   goodput/attainment objective 8/35 = 23% [95% CI 12–39]
+  2025-26: n= 34  SLO-framed 16/34 = 47% [95% CI 31–63]   goodput/attainment objective 14/34 = 41% [95% CI 26–58]
+
+## within online/mixed: trend tests (Cochran-Armitage, two-sided)
+  SLO-framed: [(4, 8), (15, 35), (16, 34)]  z=0.06 p=0.949
+  goodput/attainment objective: [(2, 8), (8, 35), (14, 34)]  z=1.46 p=0.144
+  knee/latency-target capacity EXCLUDING percentile-SLO capacity papers: [(4, 8), (5, 35), (2, 34)]  z=-2.83 p=0.005
+  knee/target capacity before 2025: 14/43; 2025-26: 2/34
+  knee/latency-target capacity: [(5, 8), (9, 35), (2, 34)] -> 62%, 26%, 6%  z=-3.59 p=0.000
+
+## capacity definitions by year (DEFINITIONS.md variant assignments; full-text optimizers only)
+  2022-23: n=34  knee-or-latency-target capacity (THR_REQ Q4+Q5) 5/34 = 15% [95% CI 6–30] | any goodput variant (GOODPUT GP*) 2/34 = 6% [95% CI 2–19] | either 6/34 = 18% [95% CI 8–34]
+  2024: n=57  knee-or-latency-target capacity (THR_REQ Q4+Q5) 9/57 = 16% [95% CI 9–27] | any goodput variant (GOODPUT GP*) 8/57 = 14% [95% CI 7–25] | either 14/57 = 25% [95% CI 15–37]
+  2025-26: n=46  knee-or-latency-target capacity (THR_REQ Q4+Q5) 2/46 = 4% [95% CI 1–15] | any goodput variant (GOODPUT GP*) 12/46 = 26% [95% CI 16–40] | either 14/46 = 30% [95% CI 19–45]
+
+## robustness: full + abstract records combined (abstract coding is lower confidence)
+  2022-23: n=39  SLO-framed 7/39 = 18% [95% CI 9–33]  goodput/attainment objective 2/39 = 5% [95% CI 1–17]
+  2024: n=73  SLO-framed 17/73 = 23% [95% CI 15–34]  goodput/attainment objective 9/73 = 12% [95% CI 7–22]
+  2025-26: n=80  SLO-framed 29/80 = 36% [95% CI 27–47]  goodput/attainment objective 19/80 = 24% [95% CI 16–34]
+
+## constraints by layer (families, count of papers)
+  request-scheduling                   n=23 token-pace 8, first-token 7, request-latency 3, quality 1, hw-efficiency 1, memory 1, fairness 1, program-latency 1, slo-goodput 1
+  agent/compound-serving               n=16 token-pace 2, quality 1, throughput 1, request-latency 1, first-token 1
+  parallelism/offloading/hardware-mapp n=13 memory 3, quality 3, request-latency 2, mechanism/other 1, token-pace 1
+  speculative/decoding-algorithm       n=13 quality 10, token-pace 2, request-latency 1
+  cluster-routing/placement            n=13 first-token 3, token-pace 2, slo-goodput 1, fairness 1, cost-energy 1, memory 1
+  kernels/attention                    n= 8 quality 2
+  prefix/context-caching               n= 8 quality 2, memory 1
+  PD-disaggregation                    n= 8 token-pace 5, first-token 5, request-latency 1, memory 1
+  quantization/sparsity/model-compress n= 7 quality 7, single-seq-speed 1, memory 1
+  KV-compression                       n= 7 quality 6, memory 1, first-token 1
+  KV-memory                            n= 5 request-latency 1, quality 1
+  long-context                         n= 5 slo-goodput 1, token-pace 1, quality 1, single-seq-speed 1
+  energy/cost                          n= 4 token-pace 2, first-token 2, throughput 1, request-latency 1
+  MoE-serving                          n= 4 memory 2, quality 2, token-pace 2
+  LoRA/multi-model                     n= 3 fairness 1, token-pace 1, first-token 1
+
+## TPS_USER anywhere in record (optimized/reported/definitions):
+   arxiv_2401.08671 request-scheduling DeepSpeed-FastGen: High-throughput Text Generation for LLMs 
+   arxiv_2502.04563 parallelism/offloading/hardware-mapping WaferLLM: Large Language Model Inference at Wafer Scale
+   arxiv_2507.07120 long-context Helix Parallelism: Rethinking Sharding Strategies for Intera
+   arxiv_2507.19427 MoE-serving Step-3 is Large yet Affordable: Model-system Co-design for C
+
+## abstract guess (discovery, same papers) vs full-text objectives: n=133; exact code-set match 16; mean Jaccard 0.43; papers with a latency constraint 37, of which the abstract guess names the constrained metric 13

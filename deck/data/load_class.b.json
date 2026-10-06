@@ -1,0 +1,698 @@
+{
+ "id": "load_class",
+ "rows": [
+  {
+   "row_id": "ALL|online-arrivals",
+   "scope": "ALL",
+   "load_class": "online-arrivals",
+   "k": 63,
+   "n_scope": 137
+  },
+  {
+   "row_id": "ALL|mixed",
+   "scope": "ALL",
+   "load_class": "mixed",
+   "k": 14,
+   "n_scope": 137
+  },
+  {
+   "row_id": "ALL|offline-batch",
+   "scope": "ALL",
+   "load_class": "offline-batch",
+   "k": 32,
+   "n_scope": 137
+  },
+  {
+   "row_id": "ALL|single-sequence",
+   "scope": "ALL",
+   "load_class": "single-sequence",
+   "k": 25,
+   "n_scope": 137
+  },
+  {
+   "row_id": "ALL|analytical-or-simulated-only",
+   "scope": "ALL",
+   "load_class": "analytical-or-simulated-only",
+   "k": 3,
+   "n_scope": 137
+  },
+  {
+   "row_id": "ALL|_never_online",
+   "scope": "ALL",
+   "load_class": "_never_online",
+   "k": 60,
+   "n_scope": 137,
+   "never_online_share": 43.7956204379562
+  },
+  {
+   "row_id": "KV-compression|online-arrivals",
+   "scope": "KV-compression",
+   "load_class": "online-arrivals",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "KV-compression|mixed",
+   "scope": "KV-compression",
+   "load_class": "mixed",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "KV-compression|offline-batch",
+   "scope": "KV-compression",
+   "load_class": "offline-batch",
+   "k": 3,
+   "n_scope": 7
+  },
+  {
+   "row_id": "KV-compression|single-sequence",
+   "scope": "KV-compression",
+   "load_class": "single-sequence",
+   "k": 4,
+   "n_scope": 7
+  },
+  {
+   "row_id": "KV-compression|analytical-or-simulated-only",
+   "scope": "KV-compression",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "KV-compression|_never_online",
+   "scope": "KV-compression",
+   "load_class": "_never_online",
+   "k": 7,
+   "n_scope": 7,
+   "never_online_share": 100.0
+  },
+  {
+   "row_id": "KV-memory|online-arrivals",
+   "scope": "KV-memory",
+   "load_class": "online-arrivals",
+   "k": 2,
+   "n_scope": 5
+  },
+  {
+   "row_id": "KV-memory|mixed",
+   "scope": "KV-memory",
+   "load_class": "mixed",
+   "k": 2,
+   "n_scope": 5
+  },
+  {
+   "row_id": "KV-memory|offline-batch",
+   "scope": "KV-memory",
+   "load_class": "offline-batch",
+   "k": 1,
+   "n_scope": 5
+  },
+  {
+   "row_id": "KV-memory|single-sequence",
+   "scope": "KV-memory",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 5
+  },
+  {
+   "row_id": "KV-memory|analytical-or-simulated-only",
+   "scope": "KV-memory",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 5
+  },
+  {
+   "row_id": "KV-memory|_never_online",
+   "scope": "KV-memory",
+   "load_class": "_never_online",
+   "k": 1,
+   "n_scope": 5,
+   "never_online_share": 20.0
+  },
+  {
+   "row_id": "LoRA/multi-model|online-arrivals",
+   "scope": "LoRA/multi-model",
+   "load_class": "online-arrivals",
+   "k": 3,
+   "n_scope": 3
+  },
+  {
+   "row_id": "LoRA/multi-model|mixed",
+   "scope": "LoRA/multi-model",
+   "load_class": "mixed",
+   "k": 0,
+   "n_scope": 3
+  },
+  {
+   "row_id": "LoRA/multi-model|offline-batch",
+   "scope": "LoRA/multi-model",
+   "load_class": "offline-batch",
+   "k": 0,
+   "n_scope": 3
+  },
+  {
+   "row_id": "LoRA/multi-model|single-sequence",
+   "scope": "LoRA/multi-model",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 3
+  },
+  {
+   "row_id": "LoRA/multi-model|analytical-or-simulated-only",
+   "scope": "LoRA/multi-model",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 3
+  },
+  {
+   "row_id": "LoRA/multi-model|_never_online",
+   "scope": "LoRA/multi-model",
+   "load_class": "_never_online",
+   "k": 0,
+   "n_scope": 3,
+   "never_online_share": 0.0
+  },
+  {
+   "row_id": "MoE-serving|online-arrivals",
+   "scope": "MoE-serving",
+   "load_class": "online-arrivals",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "MoE-serving|mixed",
+   "scope": "MoE-serving",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 4
+  },
+  {
+   "row_id": "MoE-serving|offline-batch",
+   "scope": "MoE-serving",
+   "load_class": "offline-batch",
+   "k": 2,
+   "n_scope": 4
+  },
+  {
+   "row_id": "MoE-serving|single-sequence",
+   "scope": "MoE-serving",
+   "load_class": "single-sequence",
+   "k": 1,
+   "n_scope": 4
+  },
+  {
+   "row_id": "MoE-serving|analytical-or-simulated-only",
+   "scope": "MoE-serving",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "MoE-serving|_never_online",
+   "scope": "MoE-serving",
+   "load_class": "_never_online",
+   "k": 3,
+   "n_scope": 4,
+   "never_online_share": 75.0
+  },
+  {
+   "row_id": "PD-disaggregation|online-arrivals",
+   "scope": "PD-disaggregation",
+   "load_class": "online-arrivals",
+   "k": 6,
+   "n_scope": 8
+  },
+  {
+   "row_id": "PD-disaggregation|mixed",
+   "scope": "PD-disaggregation",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 8
+  },
+  {
+   "row_id": "PD-disaggregation|offline-batch",
+   "scope": "PD-disaggregation",
+   "load_class": "offline-batch",
+   "k": 1,
+   "n_scope": 8
+  },
+  {
+   "row_id": "PD-disaggregation|single-sequence",
+   "scope": "PD-disaggregation",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 8
+  },
+  {
+   "row_id": "PD-disaggregation|analytical-or-simulated-only",
+   "scope": "PD-disaggregation",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 8
+  },
+  {
+   "row_id": "PD-disaggregation|_never_online",
+   "scope": "PD-disaggregation",
+   "load_class": "_never_online",
+   "k": 1,
+   "n_scope": 8,
+   "never_online_share": 12.5
+  },
+  {
+   "row_id": "agent/compound-serving|online-arrivals",
+   "scope": "agent/compound-serving",
+   "load_class": "online-arrivals",
+   "k": 9,
+   "n_scope": 16
+  },
+  {
+   "row_id": "agent/compound-serving|mixed",
+   "scope": "agent/compound-serving",
+   "load_class": "mixed",
+   "k": 2,
+   "n_scope": 16
+  },
+  {
+   "row_id": "agent/compound-serving|offline-batch",
+   "scope": "agent/compound-serving",
+   "load_class": "offline-batch",
+   "k": 2,
+   "n_scope": 16
+  },
+  {
+   "row_id": "agent/compound-serving|single-sequence",
+   "scope": "agent/compound-serving",
+   "load_class": "single-sequence",
+   "k": 2,
+   "n_scope": 16
+  },
+  {
+   "row_id": "agent/compound-serving|analytical-or-simulated-only",
+   "scope": "agent/compound-serving",
+   "load_class": "analytical-or-simulated-only",
+   "k": 1,
+   "n_scope": 16
+  },
+  {
+   "row_id": "agent/compound-serving|_never_online",
+   "scope": "agent/compound-serving",
+   "load_class": "_never_online",
+   "k": 5,
+   "n_scope": 16,
+   "never_online_share": 31.25
+  },
+  {
+   "row_id": "cluster-routing/placement|online-arrivals",
+   "scope": "cluster-routing/placement",
+   "load_class": "online-arrivals",
+   "k": 11,
+   "n_scope": 13
+  },
+  {
+   "row_id": "cluster-routing/placement|mixed",
+   "scope": "cluster-routing/placement",
+   "load_class": "mixed",
+   "k": 2,
+   "n_scope": 13
+  },
+  {
+   "row_id": "cluster-routing/placement|offline-batch",
+   "scope": "cluster-routing/placement",
+   "load_class": "offline-batch",
+   "k": 0,
+   "n_scope": 13
+  },
+  {
+   "row_id": "cluster-routing/placement|single-sequence",
+   "scope": "cluster-routing/placement",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 13
+  },
+  {
+   "row_id": "cluster-routing/placement|analytical-or-simulated-only",
+   "scope": "cluster-routing/placement",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 13
+  },
+  {
+   "row_id": "cluster-routing/placement|_never_online",
+   "scope": "cluster-routing/placement",
+   "load_class": "_never_online",
+   "k": 0,
+   "n_scope": 13,
+   "never_online_share": 0.0
+  },
+  {
+   "row_id": "energy/cost|online-arrivals",
+   "scope": "energy/cost",
+   "load_class": "online-arrivals",
+   "k": 4,
+   "n_scope": 4
+  },
+  {
+   "row_id": "energy/cost|mixed",
+   "scope": "energy/cost",
+   "load_class": "mixed",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "energy/cost|offline-batch",
+   "scope": "energy/cost",
+   "load_class": "offline-batch",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "energy/cost|single-sequence",
+   "scope": "energy/cost",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "energy/cost|analytical-or-simulated-only",
+   "scope": "energy/cost",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 4
+  },
+  {
+   "row_id": "energy/cost|_never_online",
+   "scope": "energy/cost",
+   "load_class": "_never_online",
+   "k": 0,
+   "n_scope": 4,
+   "never_online_share": 0.0
+  },
+  {
+   "row_id": "kernels/attention|online-arrivals",
+   "scope": "kernels/attention",
+   "load_class": "online-arrivals",
+   "k": 0,
+   "n_scope": 8
+  },
+  {
+   "row_id": "kernels/attention|mixed",
+   "scope": "kernels/attention",
+   "load_class": "mixed",
+   "k": 2,
+   "n_scope": 8
+  },
+  {
+   "row_id": "kernels/attention|offline-batch",
+   "scope": "kernels/attention",
+   "load_class": "offline-batch",
+   "k": 4,
+   "n_scope": 8
+  },
+  {
+   "row_id": "kernels/attention|single-sequence",
+   "scope": "kernels/attention",
+   "load_class": "single-sequence",
+   "k": 2,
+   "n_scope": 8
+  },
+  {
+   "row_id": "kernels/attention|analytical-or-simulated-only",
+   "scope": "kernels/attention",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 8
+  },
+  {
+   "row_id": "kernels/attention|_never_online",
+   "scope": "kernels/attention",
+   "load_class": "_never_online",
+   "k": 6,
+   "n_scope": 8,
+   "never_online_share": 75.0
+  },
+  {
+   "row_id": "long-context|online-arrivals",
+   "scope": "long-context",
+   "load_class": "online-arrivals",
+   "k": 2,
+   "n_scope": 5
+  },
+  {
+   "row_id": "long-context|mixed",
+   "scope": "long-context",
+   "load_class": "mixed",
+   "k": 0,
+   "n_scope": 5
+  },
+  {
+   "row_id": "long-context|offline-batch",
+   "scope": "long-context",
+   "load_class": "offline-batch",
+   "k": 1,
+   "n_scope": 5
+  },
+  {
+   "row_id": "long-context|single-sequence",
+   "scope": "long-context",
+   "load_class": "single-sequence",
+   "k": 1,
+   "n_scope": 5
+  },
+  {
+   "row_id": "long-context|analytical-or-simulated-only",
+   "scope": "long-context",
+   "load_class": "analytical-or-simulated-only",
+   "k": 1,
+   "n_scope": 5
+  },
+  {
+   "row_id": "long-context|_never_online",
+   "scope": "long-context",
+   "load_class": "_never_online",
+   "k": 3,
+   "n_scope": 5,
+   "never_online_share": 60.0
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|online-arrivals",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "online-arrivals",
+   "k": 1,
+   "n_scope": 13
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|mixed",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 13
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|offline-batch",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "offline-batch",
+   "k": 6,
+   "n_scope": 13
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|single-sequence",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "single-sequence",
+   "k": 4,
+   "n_scope": 13
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|analytical-or-simulated-only",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "analytical-or-simulated-only",
+   "k": 1,
+   "n_scope": 13
+  },
+  {
+   "row_id": "parallelism/offloading/hardware-mapping|_never_online",
+   "scope": "parallelism/offloading/hardware-mapping",
+   "load_class": "_never_online",
+   "k": 11,
+   "n_scope": 13,
+   "never_online_share": 84.61538461538461
+  },
+  {
+   "row_id": "prefix/context-caching|online-arrivals",
+   "scope": "prefix/context-caching",
+   "load_class": "online-arrivals",
+   "k": 5,
+   "n_scope": 8
+  },
+  {
+   "row_id": "prefix/context-caching|mixed",
+   "scope": "prefix/context-caching",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 8
+  },
+  {
+   "row_id": "prefix/context-caching|offline-batch",
+   "scope": "prefix/context-caching",
+   "load_class": "offline-batch",
+   "k": 1,
+   "n_scope": 8
+  },
+  {
+   "row_id": "prefix/context-caching|single-sequence",
+   "scope": "prefix/context-caching",
+   "load_class": "single-sequence",
+   "k": 1,
+   "n_scope": 8
+  },
+  {
+   "row_id": "prefix/context-caching|analytical-or-simulated-only",
+   "scope": "prefix/context-caching",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 8
+  },
+  {
+   "row_id": "prefix/context-caching|_never_online",
+   "scope": "prefix/context-caching",
+   "load_class": "_never_online",
+   "k": 2,
+   "n_scope": 8,
+   "never_online_share": 25.0
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|online-arrivals",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "online-arrivals",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|mixed",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "mixed",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|offline-batch",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "offline-batch",
+   "k": 4,
+   "n_scope": 7
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|single-sequence",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "single-sequence",
+   "k": 3,
+   "n_scope": 7
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|analytical-or-simulated-only",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 7
+  },
+  {
+   "row_id": "quantization/sparsity/model-compression|_never_online",
+   "scope": "quantization/sparsity/model-compression",
+   "load_class": "_never_online",
+   "k": 7,
+   "n_scope": 7,
+   "never_online_share": 100.0
+  },
+  {
+   "row_id": "request-scheduling|online-arrivals",
+   "scope": "request-scheduling",
+   "load_class": "online-arrivals",
+   "k": 18,
+   "n_scope": 23
+  },
+  {
+   "row_id": "request-scheduling|mixed",
+   "scope": "request-scheduling",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 23
+  },
+  {
+   "row_id": "request-scheduling|offline-batch",
+   "scope": "request-scheduling",
+   "load_class": "offline-batch",
+   "k": 4,
+   "n_scope": 23
+  },
+  {
+   "row_id": "request-scheduling|single-sequence",
+   "scope": "request-scheduling",
+   "load_class": "single-sequence",
+   "k": 0,
+   "n_scope": 23
+  },
+  {
+   "row_id": "request-scheduling|analytical-or-simulated-only",
+   "scope": "request-scheduling",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 23
+  },
+  {
+   "row_id": "request-scheduling|_never_online",
+   "scope": "request-scheduling",
+   "load_class": "_never_online",
+   "k": 4,
+   "n_scope": 23,
+   "never_online_share": 17.391304347826086
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|online-arrivals",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "online-arrivals",
+   "k": 2,
+   "n_scope": 13
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|mixed",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "mixed",
+   "k": 1,
+   "n_scope": 13
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|offline-batch",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "offline-batch",
+   "k": 3,
+   "n_scope": 13
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|single-sequence",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "single-sequence",
+   "k": 7,
+   "n_scope": 13
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|analytical-or-simulated-only",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "analytical-or-simulated-only",
+   "k": 0,
+   "n_scope": 13
+  },
+  {
+   "row_id": "speculative/decoding-algorithm|_never_online",
+   "scope": "speculative/decoding-algorithm",
+   "load_class": "_never_online",
+   "k": 10,
+   "n_scope": 13,
+   "never_online_share": 76.92307692307692
+  },
+  {
+   "row_id": "mixed_no_online|arxiv_2405.16444",
+   "quote": "Figure 12 compares the average quality and TTFT across the requests (no load); Figure 14: Average Request Rate per Second (request-rate sweep)",
+   "judgement": "unclear"
+  }
+ ]
+}

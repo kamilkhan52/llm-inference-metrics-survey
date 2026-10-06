@@ -1,0 +1,96 @@
+{
+  "key": "arxiv_2411.11217",
+  "title": "MoE-Lightning: High-Throughput MoE Inference on Memory-constrained GPUs",
+  "first_author": "Shiyi Cao",
+  "year": 2024,
+  "venue": "arXiv preprint (ASPLOS'25)",
+  "url": "https://arxiv.org/abs/2411.11217",
+  "cluster": "D4",
+  "technique": "CPU-GPU-I/O pipelined schedule (CGOPipe) with paged weights plus Hierarchical Roofline Model (HRM) to pick batch/micro-batch/offload policy for offline MoE batch inference",
+  "layer": "parallelism/offloading/hardware-mapping",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2411.11217.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "In this paper, we study how to achieve high-throughput MoE inference with limited GPU memory. We are focusing on off-line, batch-processing workloads such as model evaluation [29], synthetic data generation [14], data wrangling [33], ... where higher inference throughput translates into lower total completion time.",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "we search for the optimal policy P that minimizes per-layer latency T(M, H, W, P) for the pipeline schedule in §4.1, without violating the CPU and GPU memory constraints",
+      "locator": "§4.2",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "CGOPipe, a pipeline scheduling strategy that efficiently schedules various I/O events and overlaps CPU and GPU computation with I/O events ... significantly enhancing throughput and I/O efficiency",
+      "locator": "§1 contributions",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "MoE-Lightning can achieve up to 10.3× higher throughput than state-of-the-art offloading-enabled LLM inference systems for Mixtral 8x7B on a single T4 GPU (16GB).",
+    "metrics": [
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Figs 6-8, Tables 4-5 (tokens/s)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 1, CPU memory vs throughput"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "where": "I/O utilization analysis"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "generation throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "We measure the generation throughput for each workload, which is calculated as the number of tokens generated divided by total generation time (i.e., prefill time + decode time).",
+      "locator": "§5 Metrics",
+      "notes": "Generated (output) tokens over prefill+decode wall time; prompt tokens not counted."
+    },
+    {
+      "term_as_written": "Batch Size N",
+      "canonical": "MEMORY",
+      "definition_quote": "Batch size is the total number of tokens processed by one pass of the whole model.",
+      "locator": "Def. 3.2",
+      "notes": "Batch size is tokens per pass, split into micro-batches μ."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "Offline batch processing: large fixed request batches (thousands of requests), batch/micro-batch size searched by HRM; generation length sweep 32-256 on MTBench; no latency SLO",
+  "tradeoff_acknowledged": "Paper states it targets offline batch workloads where higher throughput translates into lower total completion time; per-request latency is not optimized or reported.",
+  "eval_type": "real-system",
+  "hardware": "1xT4 16GB, 1xL4 24GB, 2xT4, 4xT4 (24-32 core CPUs, 192-416 GB RAM)",
+  "models": "Mixtral 8x7B, Mixtral 8x22B, DBRX",
+  "workloads": "MTBench, synthetic reasoning, summarization (HELM); with and without request padding",
+  "confidence": "high",
+  "extractor_notes": "Throughput-only offline paper; no latency metric, no accuracy evaluation (offloading is numerically lossless; no QUALITY constraint stated). Speed is at the throughput-maximizing batch policy, not a latency-sensitive load. Headline 10.3x is without padding; 3.5x with padding. Baselines include FlexGen, DeepSpeed-Zero.",
+  "load_class": "offline-batch",
+  "load_class_quote": "We are focusing on off-line, batch-processing workloads such as model evaluation [29], synthetic data generation [14], ... (§1)",
+  "repass_log": [
+    "THR_TOK: abstract result replaced with §1 design statement",
+    "MEMORY: result quote ('2-3x less CPU memory') replaced with §4.2 memory-constraint design text; role objective -> constraint",
+    "UTIL: design (CGOPipe contribution statement)",
+    "load_class offline-batch"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2406.04785",
+ "title": "Enabling Efficient Batch Serving for LMaaS via Generation Length Prediction",
+ "first_author": "Cheng",
+ "year": 2024,
+ "venue": "IEEE conf 2024 (per S2; verify)",
+ "url": "https://arxiv.org/abs/2406.04785",
+ "cluster": "D1",
+ "technique": "generation-length prediction, similar-length batching with adaptive batch size, HRRN scheduling",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Magnus can achieve high request throughput by batching requests of similar generation lengths",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "reduce request response time",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Magnus improves request throughput by up to 234\\% and reduces response time by up to 89.7\\%",
+  "metrics": [
+   "E2E",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Response time assumed = end-to-end request latency (not defined in abstract)."
+}

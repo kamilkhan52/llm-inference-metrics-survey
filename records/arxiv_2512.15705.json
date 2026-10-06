@@ -1,0 +1,144 @@
+{
+  "key": "arxiv_2512.15705",
+  "title": "Dynamic Rebatching for Efficient Early-Exit Inference with DREX",
+  "first_author": "Xuting Liu",
+  "year": 2025,
+  "venue": "arXiv preprint (cs.DC)",
+  "url": "https://arxiv.org/abs/2512.15705",
+  "cluster": "D4",
+  "technique": "Early-exit LLM serving: dynamic rebatching at each exit ramp with copy-free buffer, profitability-aware adaptive rebatching threshold, SLA-aware scheduler, state-copying for skipped-layer KV",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2512.15705.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "We further introduce two novel mechanisms to ensure throughput gain and SLA compliance despite the remaining overheads",
+      "locator": "§4 DREX Overview",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "DREX completely eliminates involuntary exits, providing a key guarantee for preserving the output quality intended by the EE mechanism.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "E2E",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "SLA-aware forced flushing (§5.3): if requests' SLA deadlines approach without the system accumulating a sufficient number of requests ... ; Incorporating age and SLA: To prevent starvation and improve SLA adherence, we consider the expected completion time and SLA of the requests",
+      "locator": "§4; §5.3",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "if requests' SLA deadlines approach"
+    }
+  ],
+  "headline_claim": {
+    "text": "DREX improves throughput by 2-12% compared to baseline approaches while maintaining output quality. Crucially, DREX completely eliminates involuntary exits",
+    "metrics": [
+      "THR_TOK",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Figs 8,10, Tables 5"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "P95",
+      "where": "Fig 8 P95 confidence score; Fig 10 BERT score"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 12 avg and P95 RCT"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 4, §7.4 KV cache size / memory copies"
+    },
+    {
+      "metric": "OTHER:involuntary_exit_stay",
+      "stat": "mean",
+      "where": "Table 1, Fig 9, Table 5"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "Throughput: Total number of output tokens generated per second.",
+      "locator": "Table 4",
+      "notes": "Output tokens only; single node, not per GPU."
+    },
+    {
+      "term_as_written": "RCT",
+      "canonical": "E2E",
+      "definition_quote": "RCT: Time between when a request is scheduled to when it is complete.",
+      "locator": "Table 4",
+      "notes": "Measured from scheduling, so excludes queueing before scheduling."
+    },
+    {
+      "term_as_written": "Confidence score",
+      "canonical": "QUALITY",
+      "definition_quote": "Confidence score: Softmax confidence scores of the EE tokens, indicating the model's certainty and output quality.",
+      "locator": "Table 4",
+      "notes": "Proxy quality metric; P95 of this score used (lower tail)."
+    },
+    {
+      "term_as_written": "BERT Score",
+      "canonical": "QUALITY",
+      "definition_quote": "BERT Score [50]: Measures the semantic similarity between the generated summary and the reference summary. A higher score indicates better quality.",
+      "locator": "Table 4",
+      "notes": ""
+    },
+    {
+      "term_as_written": "Involuntary Exit",
+      "canonical": "OTHER:involuntary_exit_stay",
+      "definition_quote": "Involuntary Exit: Percentage of tokens that were forced to exit, despite not meeting their individual confidence threshold.",
+      "locator": "Table 4",
+      "notes": ""
+    },
+    {
+      "term_as_written": "Involuntary Stay",
+      "canonical": "OTHER:involuntary_exit_stay",
+      "definition_quote": "Involuntary Stay: Percentage of tokens that were forced to continue, despite meeting their individual confidence threshold to exit.",
+      "locator": "Table 4",
+      "notes": ""
+    }
+  ],
+  "slo_spec": "SLA expressed as request completion time (RCT) requirement converted to iterations; scheduler uses r_SLA minus expected remaining; 'SLA pressure' parameter 0-1 sweep",
+  "load_regime": "Offline batch evaluation at fixed batch sizes (e.g., 1, 8 and others) on CNN/DM summarization; SLA-pressure sweep for RCT; no open-loop arrival-rate sweep",
+  "tradeoff_acknowledged": "With no SLA pressure, throughput +11.4% over Consensus but avg RCT 1.4x and tail RCT 3x worse; SLA-aware scheduling raises avg RCT by up to 58.4% relative trade for throughput. Greedy policy gets highest throughput at 96% worse P95 confidence.",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA GPUs incl. H200 node (141GB) for 70B",
+  "models": "Llama-EE-13B, Llama-EE-70B, Qwen-EE-14B (Apparate EE ramps)",
+  "workloads": "CNN/DailyMail summarization (articles <2048 tokens)",
+  "confidence": "high",
+  "extractor_notes": "QUALITY recorded as constraint (zero involuntary exits is a guarantee), but quality is measured by proxy (softmax confidence and BERTScore), not task accuracy. Throughput gain is modest and measured offline at fixed batch size. Early-exit is not speculative decoding; layer value assigned for closest fit.",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "request completion time (RCT) average and P95 (reported); SLA is per-request deadline",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "offline-batch",
+  "load_class_quote": "Rebatching improves throughput by as much as 12% compared to non-EE ... batch size of 8, and the lower portion a batch size of 4 (Fig 8/10 captions); fixed batch sizes on CNN/DM, no arrival process",
+  "repass_log": [
+    "THR_TOK: abstract result quote replaced with §4 design statement (mechanisms to ensure throughput gain and SLA compliance)",
+    "E2E (RCT) constraint: evidence replaced with §4/§5.3 per-request SLA-deadline design text; stat attainment (deadline), explicit",
+    "QUALITY: design",
+    "load_class offline-batch (RCT is per-request completion within fixed batches, not arrival-driven)"
+  ]
+}

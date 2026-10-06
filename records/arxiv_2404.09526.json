@@ -1,0 +1,161 @@
+{
+  "key": "arxiv_2404.09526",
+  "title": "LoongServe: Efficiently Serving Long-Context Large Language Models with Elastic Sequence Parallelism",
+  "first_author": "Wu",
+  "year": 2024,
+  "venue": "SOSP'24",
+  "url": "https://arxiv.org/abs/2404.09526",
+  "cluster": "D3",
+  "technique": "Elastic sequence parallelism: per-iteration adjustment of degree of parallelism across elastic instances, KV migration/scale-up/scale-down without copying, and a 4-step global scheduler (request selection, instance allocation, batching DP, KV placement)",
+  "layer": "long-context",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.09526.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We focus on the serving throughput. ... To compare different systems, we set a latency service level objective (SLO) and compare the maximum throughput under this SLO.",
+      "locator": "§7.1 Metrics",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "we set a latency service level objective (SLO) and compare the maximum throughput under this SLO. Similar to prior work [28, 32, 54], we set SLO to 25x of the inference latency.",
+      "locator": "§7.1 Metrics",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "The optimization goal is to minimize the input latency of R_p on E_p.",
+      "locator": "§5.3 Batching (txt line ~555)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "normalized input latency, i.e., the mean of prefill phase time divided by the input lengths (§7.1 Metrics)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "The performance cost, i.e., the impact of preemption on the output token latency, is formulated as follows: Cost = sum T(R_p U R'_p,i, E_p U G_p,i) / r.output_len",
+      "locator": "§5.2 Eq.1 (txt line ~532)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "normalized output latency, i.e., the mean of decoding phase time divided by the output lengths (§7.1 Metrics)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "The GPU memory of LoongServe elastic instances also forms a unified distributed key-value cache pool, which can be flexibly used to store key-value tensors of requests at the granularity of a token across elastic instances to reduce GPU memory fragmentation (§4).",
+      "locator": "§3 Overview (txt line ~306-309)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "LoongServe improves the throughput by up to 3.85x compared to chunked prefill and 5.81x compared to prefill-decoding disaggregation.",
+    "metrics": [
+      "THR_TOK"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "mean",
+      "where": "Fig 10/11 normalized per-token latency vs request rate"
+    },
+    {
+      "metric": "OTHER:norm_input_latency",
+      "stat": "mean",
+      "where": "Fig 10/11 normalized input latency (prefill time / input length)"
+    },
+    {
+      "metric": "OTHER:norm_output_latency",
+      "stat": "mean",
+      "where": "Fig 10/11 normalized output latency (decode time / output length)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "§7.2 total throughput and input throughput at SLO"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "P90",
+      "where": "Fig 12 P90 goodput ablation across Zipf sequence-length distributions"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 12/ablation SLO attainment curves"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "normalized per-token latency",
+      "canonical": "NORM_LAT",
+      "definition_quote": "we measure the normalized per-token latency, i.e., the mean of requests' end-to-end latency divided by their sequence lengths",
+      "locator": "§7.1 Metrics",
+      "notes": "Divided by total sequence length (input+output), not output length as in vLLM/Orca."
+    },
+    {
+      "term_as_written": "normalized input latency",
+      "canonical": "OTHER:norm_input_latency",
+      "definition_quote": "normalized input latency, i.e., the mean of prefill phase time divided by the input lengths",
+      "locator": "§7.1 Metrics",
+      "notes": "Prefill-phase time per input token; a TTFT proxy normalized by prompt length."
+    },
+    {
+      "term_as_written": "normalized output latency",
+      "canonical": "OTHER:norm_output_latency",
+      "definition_quote": "the normalized output latency, i.e., the mean of decoding phase time divided by the output lengths",
+      "locator": "§7.1 Metrics",
+      "notes": "Decode-phase time per output token (TPOT-like, but includes any decode queueing/preemption)."
+    },
+    {
+      "term_as_written": "P90 goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "P90 goodput (throughput of requests under the SLO) [61]",
+      "locator": "§7.4 Ablation",
+      "notes": "Following DistServe; request-rate at which 90% attainment is met."
+    },
+    {
+      "term_as_written": "SLO",
+      "canonical": "SLO_ATT",
+      "definition_quote": "we set a latency service level objective (SLO) and compare the maximum throughput under this SLO. Similar to prior work [28, 32, 54], we set SLO to 25x of the inference latency.",
+      "locator": "§7.1 Metrics",
+      "notes": "'inference latency' undefined here (presumably single-request unloaded latency); SLO is a multiple (25x), applied to normalized latency."
+    },
+    {
+      "term_as_written": "total throughput / input throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "LoongServe improves the total throughput and input throughput by up to 3.85x and 3.37x.",
+      "locator": "§7.2",
+      "notes": "Total = input+output tokens presumably; input throughput = prompt tokens/s; neither defined formally."
+    }
+  ],
+  "slo_spec": "SLO set to 25x the inference latency (following vLLM-style prior work); compare maximum throughput under the SLO; P90 goodput in ablation",
+  "load_regime": "request-rate sweep on four real-world long-context datasets (ShareGPT, LEval, LV-Eval, Mixed) plus Zipf length distributions",
+  "tradeoff_acknowledged": null,
+  "eval_type": "real-system",
+  "hardware": "servers with 8x NVIDIA A800 80GB, NVLink, 4x200Gbps InfiniBand (up to 2 nodes)",
+  "models": "LWM-1M-Text (Llama-2-7B), Llama-2 13B variants",
+  "workloads": "ShareGPT, LEval, LV-Eval, Mixed; sequence lengths up to ~500K tokens",
+  "confidence": "high",
+  "extractor_notes": "Headline 'throughput' is max request-rate-derived throughput at SLO (25x), i.e. SLO-conditioned, effectively goodput-like but not named so in the headline. Internal scheduler minimizes prefill (input) latency per token and weighs decode (output token) latency cost of preemption. Normalization divides by total sequence length unlike vLLM. 'inference latency' baseline for the 25x SLO is not defined. Model size list not fully verified.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "the arrival pattern of requests is generated by a Poisson process (§7.1 Workloads; request-rate sweeps)",
+  "repass_log": [
+    "TTFT: evidence/locator replaced with design statement (was: 'The optimization goal is to minimize the input latency of R_...')",
+    "TTFT: design statement is about summed input latency; stat basis from the evaluation metric definition (normalized input latency, mean)",
+    "TTFT: stat_basis explicit (mean)",
+    "TPOT: stat_basis explicit (mean)",
+    "MEMORY: evidence/locator replaced with design statement (was: '(3) improves GPU memory efficiency by reducing key-value cac...')",
+    "load_class = online-arrivals"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2502.05111",
+ "title": "Flexible and Efficient Grammar-Constrained Decoding",
+ "first_author": "Kanghee Park",
+ "year": 2025,
+ "venue": "ICML'25",
+ "url": "https://arxiv.org/abs/2502.05111",
+ "cluster": "D6",
+ "technique": "new grammar-constrained decoding algorithm with faster preprocessing",
+ "layer": "other",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:GCD_preprocessing_time",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "offers 17.71x faster offline preprocessing than existing approaches",
+   "locator": "abstract"
+  },
+  {
+   "metric": "OTHER:online_mask_computation_time",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "preserving state-of-the-art efficiency in online mask computation",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "We present a new GCD algorithm together with an implementation that offers 17.71x faster offline preprocessing than existing approaches while preserving state-of-the-art efficiency in online mask computation",
+  "metrics": [
+   "OTHER:GCD_preprocessing_time",
+   "OTHER:online_mask_computation_time"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:GCD_preprocessing_time",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "OTHER:online_mask_computation_time",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Offline preprocessing time is not an inference-serving metric per se."
+}

@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2504.09285",
+ "title": "DynaServe: Unified and Elastic Execution for Dynamic Disaggregated LLM Serving",
+ "first_author": "Ruan",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2504.09285",
+ "cluster": "D2",
+ "technique": "micro-request abstraction splitting requests across two instances + two-level SLO-aware scheduling",
+ "layer": "PD-disaggregation",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "maximizing goodput under SLO constraints",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TBT",
+   "stat": "P99",
+   "role": "constraint",
+   "evidence": "strict latency SLOs (e.g., 100 ms P99 time-between-tokens)",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "DynaServe boosts the overall serving capacity from 1.15$\\times$ to 3.07$\\times$, improves goodput by up to 1.91$\\times$ and 1.61$\\times$",
+  "metrics": [
+   "GOODPUT",
+   "TBT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TBT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. "
+}

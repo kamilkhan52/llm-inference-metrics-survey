@@ -1,0 +1,120 @@
+{
+ "key": "arxiv_2507.07120",
+ "title": "Helix Parallelism: Rethinking Sharding Strategies for Interactive Multi-Million-Token LLM Decoding",
+ "first_author": "Bhatia",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2507.07120",
+ "cluster": "D5",
+ "technique": "hybrid KV-parallel attention + TP/EP FFN on the same GPUs with batch-wise communication overlap (HOP-B)",
+ "layer": "long-context",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2507.07120.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TPS_USER",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we characterize the full Pareto frontier between throughput per gpu (tokens/sec/gpu) vs. interactivity (tokens/sec/user)",
+   "locator": "§3",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "real-time autoregressive decoding under tight Token-to-Token Latency (TTL) constraints",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "For any given TTL constraint, we report the configuration that maximizes system throughput, forming a unified Pareto curve.",
+   "locator": "§3.1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:batch_scalability",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "batch scalability, the maximum number of concurrent user requests that can be sustained under a fixed TTL budget",
+   "locator": "§3",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "Helix reduces TTL by up to 1.5x at fixed batch sizes and supports up to 32x larger batches under the same latency budget for DeepSeek-R1, pushing forward the throughput-latency Pareto",
+  "metrics": [
+   "TOKEN_LAT",
+   "TPS_USER",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TPS_USER",
+   "stat": "n/a",
+   "where": "Fig 5-7 x-axis"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 5-7 y-axis (tokens/s/GPU)"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "Fig 3 TTL saving"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "Tokens/s/User (interactivity)",
+   "canonical": "TPS_USER",
+   "definition_quote": "user interactivity is measured as reciprocal of decoding TTL (token-to-token latency), representing the rate at which new tokens are generated for a single user.",
+   "locator": "§3",
+   "notes": "Per-user rate = 1/TTL, from a simulator, decode-only."
+  },
+  {
+   "term_as_written": "Tokens/s/GPU",
+   "canonical": "THR_TOK",
+   "definition_quote": "Throughput per GPU is quantified as the total number of tokens generated per second per GPU, reflecting system-wide efficiency.",
+   "locator": "§3",
+   "notes": "Output tokens only; per GPU."
+  },
+  {
+   "term_as_written": "batch scalability",
+   "canonical": "OTHER:batch_scalability",
+   "definition_quote": "the maximum number of concurrent user requests that can be sustained under a fixed TTL budget",
+   "locator": "§3",
+   "notes": "Used interchangeably with 32x higher Tokens/s/GPU in §3.2."
+  },
+  {
+   "term_as_written": "TTL",
+   "canonical": "TOKEN_LAT",
+   "definition_quote": "real-time autoregressive decoding under tight Token-to-Token Latency (TTL) constraints",
+   "locator": "abstract",
+   "notes": "Per-step decode latency of one token for each user; never formally defined beyond reciprocal of interactivity."
+  }
+ ],
+ "slo_spec": "latency budget is a TTL sweep (Pareto), no fixed SLO",
+ "load_regime": "decode-only simulation sweeping 100,000+ configurations over TP/EP/PP/KVP and batch size at 1M context",
+ "tradeoff_acknowledged": "Pareto trade-off throughput/GPU vs tokens/s/user: higher batch raises throughput but lowers per-user rate; Helix shifts frontier outward.",
+ "eval_type": "simulation",
+ "hardware": "GB200 NVL72, FP4, 1-64 GPUs (in-house simulator)",
+ "models": "DeepSeek-R1 (MLA, MoE), Llama-405B",
+ "workloads": "1M-token context decode, no request trace",
+ "confidence": "high",
+ "extractor_notes": "Most explicit tokens/s/user vs tokens/s/GPU Pareto framing in the batch. Interactivity is a decode-only per-step quantity; no queueing, prefill, or percentiles. Cites Medha for vanilla KVP.",
+ "load_class": "analytical-or-simulated-only",
+ "load_class_quote": "\"we opt to leverage an in-house high-fidelity simulator modeling the latest GB200 hardware\" (§3, txt line 280); decode-only, \"we simulate decode-time\" behaviour at 1M context",
+ "repass_log": [
+  "TPS_USER, TOKEN_LAT, THR_TOK, batch_scalability: all design (Pareto objective/TTL constraint statements); no percentile stated, stat_basis unspecified for TPS_USER and TOKEN_LAT",
+  "load_class analytical-or-simulated-only"
+ ]
+}

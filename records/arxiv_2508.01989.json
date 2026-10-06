@@ -1,0 +1,132 @@
+{
+ "key": "arxiv_2508.01989",
+ "title": "Prefill-Decode Aggregation or Disaggregation? Unifying Both for Goodput-Optimized LLM Serving (TaiChi)",
+ "first_author": "Chao Wang",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2508.01989",
+ "cluster": "D2",
+ "technique": "unified PD aggregation/disaggregation with P-heavy and D-heavy instances; sliders for instance ratio and chunk sizes; latency shifting via flowing decode scheduling and length-aware prefill scheduling",
+ "layer": "PD-disaggregation",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2508.01989.txt",
+ "optimized_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "To support balanced TTFT and TPOT SLOs and maximize goodput, TaiChi introduces hybrid-mode inference",
+   "locator": "§3 (design, flowing decode)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "TaiChi maximizes the number of SLO-satisfied requests",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "Goodput denotes the maximum request rate that can be sustained while meeting SLO targets; SLO bounds on TTFT and TPOT",
+   "locator": "§2.1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Following prior work [36], we evaluate all methods based on the maximum achievable goodput under the 90% SLO attainment rate; Latency SLOs specify bounds on TTFT and TPOT"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "Latency service-level objectives (SLOs) quantify user-perceived performance by specifying bounds on time-to-first-token (TTFT) and time-per-output-token (TPOT)",
+   "locator": "§2.1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Following prior work [36], we evaluate all methods based on the maximum achievable goodput under the 90% SLO attainment rate; Latency SLOs specify bounds on TTFT and TPOT"
+  }
+ ],
+ "headline_claim": {
+  "text": "TaiChi improves goodput by up to 77% compared to state-of-the-art systems under balanced TTFT and TPOT SLOs",
+  "metrics": [
+   "GOODPUT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "where": "Figs 15,16 (max request rate at 90% attainment)"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Table 2, Figs 15-16, breakdown §4.4"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P90",
+   "where": "Fig 17"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "P90",
+   "where": "Fig 18 / Fig 17b"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "Fig 2 distributions"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "TTFT measures the latency from request arrival to the first token, primarily determined by prefill time",
+   "locator": "§2.1",
+   "notes": "from arrival, so includes queueing; paper also shows queuing dominates TTFT in PD disaggregation (Fig 7)"
+  },
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "TPOT reflects the average per-token latency during decode",
+   "locator": "§2.1",
+   "notes": ""
+  },
+  {
+   "term_as_written": "Goodput",
+   "canonical": "GOODPUT",
+   "definition_quote": "Goodput denotes the maximum request rate that can be sustained while meeting SLO targets [36].",
+   "locator": "§2.1",
+   "notes": "request-rate based (req/s), DistServe-style; both TTFT and TPOT must be met per request"
+  },
+  {
+   "term_as_written": "maximum achievable goodput under the 90% SLO attainment rate",
+   "canonical": "GOODPUT",
+   "definition_quote": "Following prior work [36], we evaluate all methods based on the maximum achievable goodput under the 90% SLO attainment rate",
+   "locator": "§4.1 Metrics",
+   "notes": "attainment target 90%"
+  }
+ ],
+ "slo_spec": "Two balanced SLO configs per workload (Table 3, TTFT,TPOT): ShareGPT (3s,110ms) and (4s,70ms); Arxiv summarization (4s,70ms) and (6s,50ms) (cell-to-SLO1/SLO2 mapping read from garbled table extraction). Qwen2.5-32B TPOT relaxed by 10 ms. Motivation experiments: relaxed TTFT 16s/tight TPOT 60ms; tight TTFT 5s/relaxed TPOT 250ms; balanced TTFT 6s/TPOT 100ms. Goodput at 90% attainment.",
+ "load_regime": "request-rate (QPS) sweep, Poisson arrivals",
+ "tradeoff_acknowledged": "TTFT-vs-TPOT tradeoff between PD aggregation and disaggregation; latency shifting deliberately degrades TTFT/TPOT of requests that already meet SLOs to protect at-risk ones",
+ "eval_type": "both",
+ "hardware": "8x A100-80GB NVLink (real); 4-node 8-GPU A100 DGX cluster simulated with Vidur for motivation",
+ "models": "Qwen2.5-14B, Qwen2.5-32B (real); Llama-2-70B TP4 (motivation, Vidur)",
+ "workloads": "ShareGPT (chatbot, <=2048 tokens), ArXiv Summarization (<=16384)",
+ "confidence": "high",
+ "extractor_notes": "Uses Vidur for the motivation study. Goodput is a rate at 90% attainment of the joint TTFT+TPOT SLO; latency reductions (TTFT 13.2x, TPOT 1.69x) reported at P90 at TaiChi's max goodput. Explicit 'latency shifting' = intentionally trading away per-request slack.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "we simulate request arrivals using a Poisson process with varying rates, as in prior work [3, 36]",
+ "repass_log": [
+  "GOODPUT: abstract/headline replaced with design statement 'To support balanced TTFT and TPOT SLOs and maximize goodput, TaiChi introduces hybrid-mode inference'",
+  "SLO_ATT: abstract sentence describes the scheduling goal -> design",
+  "TTFT/TPOT constraints: design; stat_basis explicit (90% attainment of TTFT/TPOT bounds)",
+  "added load_class online-arrivals"
+ ]
+}

@@ -1,0 +1,107 @@
+{
+  "key": "arxiv_2501.12162",
+  "title": "AdaServe: SLO-Customized LLM Serving with Fine-Grained Speculative Decoding",
+  "first_author": "Zikun Li",
+  "year": 2025,
+  "venue": "arXiv preprint (v2, May 2025)",
+  "url": "https://arxiv.org/abs/2501.12162",
+  "cluster": "D4",
+  "technique": "SLO-customized speculative decoding: per-request draft token trees chosen by a speculate-select-verify pipeline under a hardware token budget so each request meets its own TPOT SLO",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2501.12162.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "within the context of multi-SLO serving, the primary objectives are SLO attainment.",
+      "locator": "§1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "the goal of multi-SLO serving is twofold: (1) to meet the various TPOT SLO requirements of different requests in the batch and (2) to maximize the number of tokens accepted by the LLM during verification.",
+      "locator": "§3 Problem Formulation; §7.1 Metrics",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "a request is considered to fulfill its SLO if its average per-token latency is no greater than the specified TPOT SLO threshold"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "this phase aims to maximize overall system throughput.",
+      "locator": "§5 (token selection, third phase)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "AdaServe reduces SLO violations by up to 4.3× and improves goodput by up to 1.9× compared to the best performing baselines",
+    "metrics": [
+      "SLO_ATT",
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Figs 8,10,11,14"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "mean",
+      "where": "Figs 9,10,11; headline only (re-pass)"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "mean accepted tokens per verification step (ablation)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "SLO attainment",
+      "canonical": "SLO_ATT",
+      "definition_quote": "SLO attainment is the percentage of requests in a workload that meet their SLO. Specifically, a request is considered to fulfill its SLO if its average per-token latency is no greater than the specified TPOT SLO threshold.",
+      "locator": "§6.1 Metrics",
+      "notes": "Attainment uses per-request MEAN per-token latency, not a tail percentile within the request."
+    },
+    {
+      "term_as_written": "Goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "Goodput is measured as the number of tokens generated per second for requests that successfully attain their SLO.",
+      "locator": "§6.1 Metrics",
+      "notes": "SLO-meeting output tokens/s (not requests/s)."
+    },
+    {
+      "term_as_written": "TPOT SLO (constraint form)",
+      "canonical": "TPOT",
+      "definition_quote": "l_i + t_spec <= t_i^TPOT * (o_i + acc(T_i)), where l_i denotes the current latency of request r_i starting from the first decoding step, o_i the number of tokens decoded",
+      "locator": "§3 Eq. 2",
+      "notes": "Latency counted from first decoding step; prefill/TTFT excluded."
+    }
+  ],
+  "slo_spec": "Three categories with TPOT SLOs set relative to a near-zero-load baseline latency: coding 1.2x baseline (aligned with MLPerf 40 ms/token for Llama 70B), chatbot 50 ms/token, summarization 150 ms/token; also SLO-scale sweep and urgent-request proportion sweep",
+  "load_regime": "Request-rate (RPS) sweep using rescaled real-world trace timestamps, plus sweeps of urgent-request share and SLO scale; synthetic trace",
+  "tradeoff_acknowledged": "Strict per-request latency favors small batches (lower throughput); AdaServe adjusts speculation depth/width, using shallower trees under heavy load; vLLM-Priority meets tight SLOs only at throughput/other-category cost.",
+  "eval_type": "real-system",
+  "hardware": "4x A100 80GB NVLink node, AMD EPYC 7763",
+  "models": "Llama3 and Qwen2.5 families (e.g. 70B/32B targets, 1B/0.5B drafts)",
+  "workloads": "HumanEval (coding), Alpaca (chatbot), CNN/DailyMail (summarization); mixed multi-SLO traces",
+  "confidence": "high",
+  "extractor_notes": "Only TPOT SLOs are used; TTFT is not an SLO. Method is lossless (verification) but quality not framed as constraint. Built on FlexFlow Serve; baselines vLLM v0.8.4, Sarathi-Serve, vLLM-Spec(n).",
+  "load_class": "online-arrivals",
+  "load_class_quote": "AdaServe's SLO attainment under increasing request arrival rates (§7.2, Fig 8; rescaled real-world trace timestamps)",
+  "repass_log": [
+    "GOODPUT: result-only (abstract/§7 metric definition), no design statement; demoted to reported_metrics",
+    "SLO_ATT: result quote replaced with §1 design statement ('primary objectives are SLO attainment')",
+    "THR_TOK: abstract quote replaced with §5 'aims to maximize overall system throughput'",
+    "TPOT constraint: design; stat set to attainment with explicit threshold-attainment quote (per-request average per-token latency vs TPOT SLO)",
+    "load_class online-arrivals"
+  ]
+}

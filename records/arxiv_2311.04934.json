@@ -1,0 +1,89 @@
+{
+ "key": "arxiv_2311.04934",
+ "title": "Prompt Cache: Modular Attention Reuse for Low-Latency Inference",
+ "first_author": "Gim",
+ "year": 2024,
+ "venue": "MLSys'24",
+ "url": "https://arxiv.org/abs/2311.04934",
+ "cluster": "D3",
+ "technique": "precompute and store attention states of schema-defined prompt modules (PML), reuse them position-correctly across prompts (approximate: attention limited to each module)",
+ "layer": "prefix/context-caching",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2311.04934.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "precompute and store the attention states of frequently revisited prompt segments in memory, and reuse them when these segments appear in the prompt to reduce latency",
+   "locator": "abstract (design statement; §1 'reduces time-to-first-token (TTFT) latency from 1.5x to 10x' is result)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "all while maintaining output accuracy and without the need for model parameter modifications.",
+   "locator": "abstract; §5.3 LongBench accuracy",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "The improvements range from 8x for GPU-based inference to 60x for CPU-based inference, all while maintaining output accuracy",
+  "metrics": [
+   "TTFT",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 3 (GPU), Fig 4 (CPU), Fig 7"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Table 1 LongBench scores (Llama2, MPT, Falcon)"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "Table 2 / §5.5 per-token memory overhead of cached modules (e.g. 1K-token module = ~180 MB Falcon 1B, ~2.5 GB Llama 70B)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT latency",
+   "canonical": "TTFT",
+   "definition_quote": "We use TTFT latency for comparison, which measures the time to generate the first token, as Prompt Cache and KV Cache have the same decoding latency after the first token.",
+   "locator": "§5 intro",
+   "notes": "Single-prompt latency, no queueing; the paper says decode latency is unchanged so only TTFT is reported."
+  },
+  {
+   "term_as_written": "TTFT (in method)",
+   "canonical": "TTFT",
+   "definition_quote": "In essence, Prompt Cache diminishes the latency involved in producing the first token, or time-to-first-token (TTFT).",
+   "locator": "§3.4",
+   "notes": "Contrast: GPU speedup range quoted as 1.5x-10x in intro vs 8x in abstract (abstract rounds across hardware/memory placement)."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "batch=1 single prompt, per dataset (LongBench 4K-10K context), CPU and GPU",
+ "tradeoff_acknowledged": "Memory overhead of storing precomputed attention states (e.g. 2.5 GB per 1K-token module on Llama 70B -> CPU memory only); host-to-device copy latency when modules live in CPU memory (GPU speedup 5-10x vs up to 10x); possible accuracy change since attention is limited per module.",
+ "eval_type": "real-system",
+ "hardware": "RTX 4090, A40, A100; Intel i9-13900K and AMD Ryzen 9 7950X CPUs",
+ "models": "Llama2, CodeLlama, MPT, Falcon",
+ "workloads": "LongBench (8 datasets for latency, 21 for accuracy), plus recommendation/personalization examples",
+ "confidence": "high",
+ "extractor_notes": "Purely TTFT (per-prompt, no load); throughput mentioned only as an implicit benefit (§3.4). Quality metric is LongBench task score. Abstract speedup '8x GPU' vs intro '1.5x to 10x'.",
+ "load_class": "single-sequence",
+ "load_class_quote": "Figure 4. CPU latency measurements: time-to-first-token (TTFT) (per-prompt LongBench evaluation; no request-rate or batch-size load stated)",
+ "repass_log": [
+  "TTFT: abstract result replaced by abstract design sentence (reuse cached attention states to reduce latency); stat mean -> n/a (stat_basis unspecified)",
+  "QUALITY constraint: design ('while maintaining output accuracy' is the design constraint)",
+  "added load_class single-sequence (per-prompt latency, no load; quote is a figure caption, no explicit batch-size statement found)"
+ ]
+}

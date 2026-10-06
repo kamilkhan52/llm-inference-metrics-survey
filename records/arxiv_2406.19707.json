@@ -1,0 +1,101 @@
+{
+  "key": "arxiv_2406.19707",
+  "title": "InfiniGen: Efficient Generative Inference of Large Language Models with Dynamic KV Cache Management",
+  "first_author": "Lee",
+  "year": 2024,
+  "venue": "OSDI'24",
+  "url": "https://arxiv.org/abs/2406.19707",
+  "cluster": "D3",
+  "technique": "KV cache pool in CPU memory; speculates critical tokens for layer i from layer i-1 inputs (skewed partial query/key) and prefetches only those KV entries to GPU, with a CPU-pool victim policy",
+  "layer": "KV-memory",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2406.19707.txt",
+  "optimized_metrics": [
+    {
+      "metric": "OTHER:batch_time",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "transferring hundreds of gigabytes of the KV cache to the GPU for attention computation significantly increases the overall execution time of Transformer blocks due to the limited PCIe bandwidth. ... This necessitates intelligent KV cache management to mitigate the performance overhead while preserving its benefits.",
+      "locator": "§2.3 (txt line 246-260)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "InfiniGen effectively reduces the loading latency (i.e., data transfer from CPU to GPU) while maintaining an output quality similar to that of the original model with a full KV cache.",
+      "locator": "§4.3 (txt line 579)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "InfiniGen improves the overall performance of a modern offloading-based system by up to 3.00x compared to prior KV cache management methods while offering substantially better model accuracy.",
+    "metrics": [
+      "OTHER:batch_time",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "OTHER:batch_time",
+      "stat": "mean",
+      "where": "Fig 14 (inference latency incl. prefill+decode, batch 20), Fig 15 (batch sizes), Fig 16 (speedup over FlexGen), Fig 17"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "where": "Fig 11 (lm-eval-harness accuracy), Fig 12 (perplexity per 256-token chunk), Fig 13, Fig 19"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "§6.1 throughput (tokens/s) 12.22 to 14.02 as batch 4 to 20"
+    },
+    {
+      "metric": "OTHER:kv_load_volume",
+      "stat": "n/a",
+      "where": "relative KV cache size loaded per layer"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "inference latency",
+      "canonical": "E2E",
+      "definition_quote": "Figure 14 shows the inference latency including the prefill and decoding stages. We use the OPT-13B model with 1920 input tokens, 128 output tokens, and a batch size of 20.",
+      "locator": "§6.1 (txt line 791)",
+      "notes": "Latency of a whole fixed-size offline batch (prefill + decode); not per-request, no queueing, no percentile. Used as 'overall performance' (speedup) in the abstract."
+    },
+    {
+      "term_as_written": "relative KV cache size",
+      "canonical": "MEMORY",
+      "definition_quote": "The relative KV cache size indicates the size of the KV cache involved in the attention computation compared to the full-cache baseline (e.g., a 10% relative KV cache size means that 10% of the full KV cache size is",
+      "locator": "§5.2 (txt line ~726)",
+      "notes": "Measures KV loaded/used per attention step, not resident memory (full pool stays in CPU)."
+    },
+    {
+      "term_as_written": "inference latency",
+      "canonical": "OTHER:batch_time",
+      "definition_quote": "Inference latency on OPT-13B with a sequence length of 2048 (1920 input and 128 output tokens) and a batch size of 20.",
+      "locator": "Fig 14 caption",
+      "notes": "wall-clock latency of one fixed offline batch; not per-request latency under arrivals"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline fixed batch (1920 input / 128 output tokens, batch 4-20), sequence length and model size sweeps",
+  "tradeoff_acknowledged": "Alpha / partial-weight-ratio knobs trade accuracy vs inference latency (Fig 17, §6.1).",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA RTX A6000 48GB, Xeon Gold 6136, PCIe 3.0 x16",
+  "models": "OPT-6.7B/13B/30B, Llama-2-7B/13B (incl. 32K variant)",
+  "workloads": "lm-evaluation-harness (COPA, OpenBookQA, WinoGrande, PIQA, RTE), WikiText-2, PTB, PG-19; no request trace",
+  "confidence": "high",
+  "extractor_notes": "'Overall performance' in abstract is measured as batch inference latency speedup (offline). No SLO, no TTFT/TPOT, no tail. Throughput appears only in passing in §6.1.",
+  "load_class": "offline-batch",
+  "load_class_quote": "Figure 14: Inference latency on OPT-13B with a sequence length of 2048 (1920 input and 128 output tokens) and a batch size of 20. (§6.1)",
+  "repass_log": [
+    "E2E: evidence/locator replaced with design statement (was: 'InfiniGen improves the overall performance of a modern offlo...')",
+    "E2E: recoded to OTHER:batch_time (recoded E2E -> OTHER:batch_time: fixed offline batch (1920 in / 128 out tokens, batch 4-20), whole-batch inference latency, no arrivals)",
+    "reported E2E -> OTHER:batch_time",
+    "load_class = offline-batch"
+  ]
+}

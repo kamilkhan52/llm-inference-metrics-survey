@@ -1,0 +1,107 @@
+{
+ "key": "arxiv_2506.14851",
+ "title": "Efficient Serving of LLM Applications with Probabilistic Demand Modeling",
+ "first_author": "Yifei Liu",
+ "year": 2025,
+ "venue": "arXiv preprint (system named Hermes)",
+ "url": "https://arxiv.org/abs/2506.14851",
+ "cluster": "D6",
+ "technique": "Probabilistic Demand Graph (PDGraph) of application resource demand; Gittins-policy scheduling order and backend (KV/LoRA/docker) prewarming",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2506.14851.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Hermes applies the Gittins policy to determine the scheduling order that can minimize the average application completion time.",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "metric is the average application completion time (ACT)"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "if the expected deadline is provided—maximize the goodput (number of applications that complete before the deadline)",
+   "locator": "§2 (txt line 491-557); Hermes-DDL variant §3.3",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "reducing the average completion time by over 70% and the P95 completion time by over 80%",
+  "metrics": [
+   "PROGRAM_JCT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Fig 9a, 10a (average ACT vs workload intensity), Fig 12-14"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "Fig 9b, 10b"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Fig 11 Deadline Satisfaction Ratio"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "headline/evaluation (demoted by tail audit)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "application completion time (ACT)",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "users primarily focus on the application completion time—that is, the time when the high-quality output (like the valid code) is finally returned [51]. Therefore, the efficiency objective shall be set at the application level, i.e., minimize the average application completion time (ACT)",
+   "locator": "§2 (txt line 487-491)",
+   "notes": "Application = DAG/loop of LLM calls plus non-LLM tasks (docker code execution, retrieval); ACT measured per application from submission to final return, including queueing in the global queue."
+  },
+  {
+   "term_as_written": "goodput (deadline-based)",
+   "canonical": "GOODPUT",
+   "definition_quote": "maximize the goodput (number of applications that complete before the deadline)",
+   "locator": "§2 (txt line 491-557)",
+   "notes": "Goodput counted in applications, not tokens."
+  },
+  {
+   "term_as_written": "Deadline Satisfaction Ratio (DSR)",
+   "canonical": "SLO_ATT",
+   "definition_quote": "Deadline Satisfaction Ratio (DSR, meaning the ratio of applications that can complete before the specified deadline)",
+   "locator": "§5.2 (txt line 1486)",
+   "notes": "Deadlines = original execution time scaled by 1.2x (tight), 1.5x (modest), 2x (loose)."
+  }
+ ],
+ "slo_spec": "Deadlines assigned per application by scaling original execution time by random factors 1.2x (tight), 1.5x (modest), 2x (loose), following prior studies; metric is DSR.",
+ "load_regime": "application submission window sweep (10/15/30 min = 3x/2x/1x workload intensity); 300 apps for LLaMA2-7B, 3000 for LLaMA3-70B",
+ "tradeoff_acknowledged": "Prewarming trades resource wastage for latency reduction (Fig 14 avg latency change vs resource consumption); naive SRPT fails under demand uncertainty.",
+ "eval_type": "real-system",
+ "hardware": "single-GPU server with 1x A100-PCIe-40GB; multi-GPU server with 8 NVIDIA GPUs",
+ "models": "LLaMA2-7B, LLaMA3-70B (on vLLM 0.4.3)",
+ "workloads": "benchmark suite of LLM applications of small/medium/large duration (e.g. KBQAV, CG, PE, DM, MRS)",
+ "confidence": "high",
+ "extractor_notes": "Program-level only: ACT (mean, P95) and DSR; no TTFT/TPOT/token throughput. Mean ACT is the scheduling target (Gittins minimizes expected completion time); P95 appears as evaluation. Quality not part of the objective (though ACT is defined up to 'high-quality output'). | TAIL AUDIT 2026-10-06: demoted PROGRAM_JCT@P95 (non-tail entry kept)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "application completion time mean (target); P95 ACT (reported)",
+  "correction": "Demote PROGRAM_JCT P95 'objective' to reported (record already says so in evidence note, but role is objective). Gittins minimizes mean.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "The average ACT with varying application arrival intensities. [Fig 7: application submission window sweep 10/15/30 min, bursty real-trace arrivals]",
+ "repass_log": [
+  "PROGRAM_JCT: abstract design statement (Gittins minimizes average ACT) kept; stat explicit; tail_audit correction already applied (P95 only reported)",
+  "SLO_ATT: already design quote (Hermes-DDL maximize goodput before deadline)"
+ ]
+}

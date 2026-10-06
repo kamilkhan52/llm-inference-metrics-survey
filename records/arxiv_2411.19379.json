@@ -1,0 +1,124 @@
+{
+  "key": "arxiv_2411.19379",
+  "title": "Marconi: Prefix Caching for the Era of Hybrid LLMs",
+  "first_author": "Pan",
+  "year": 2024,
+  "venue": "MLSys 2025",
+  "url": "https://arxiv.org/abs/2411.19379",
+  "cluster": "D3",
+  "technique": "Prefix cache for Hybrid (Attention+SSM) LLMs: radix tree, speculative-insertion admission that admits only SSM states with high reuse likelihood, and FLOP-aware eviction (utility = recency + FLOP savings per byte)",
+  "layer": "prefix/context-caching",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2411.19379.txt",
+  "optimized_metrics": [
+    {
+      "metric": "OTHER:token_hit_rate",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Its primary goal is maximizing the cache utilization to reduce redundant computation and minimize TTFT latency.",
+      "locator": "§4 (txt line ~296-297)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Its primary goal is maximizing the cache utilization to reduce redundant computation and minimize TTFT latency.",
+      "locator": "§4 (txt line ~296-297)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "assess potential cache entries based not only on recency, but also on ... (2) the compute savings that hits deliver relative to memory footprints.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Marconi achieves up to 34.4x higher token hit rates (71.1% or 617 ms lower TTFT) compared to state-of-the-art prefix caching systems.",
+    "metrics": [
+      "OTHER:token_hit_rate",
+      "TTFT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "OTHER:token_hit_rate",
+      "stat": "P50",
+      "where": "Fig 7 (boxplots with P5/P95 whiskers), Fig 8, Fig 10a"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P95",
+      "where": "Fig 9 (P95 TTFT relative to no prefix caching), Fig 10b (P5, P50, P95)"
+    },
+    {
+      "metric": "OTHER:flop_efficiency",
+      "stat": "n/a",
+      "where": "Fig 5, §4.3 Eq 1"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P95",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "token hit rate",
+      "canonical": "OTHER:token_hit_rate",
+      "definition_quote": "We define token hit rate as the ratio of the number of tokens that skipped prefill over the total number of input tokens.",
+      "locator": "§5.1 Metrics",
+      "notes": "Token-weighted per request (distribution over requests shown with P5/P95 whiskers), not request-level hit/miss."
+    },
+    {
+      "term_as_written": "flop efficiency",
+      "canonical": "OTHER:flop_efficiency",
+      "definition_quote": "flop efficiency = Total FLOPs across layers / Memory consumption of all states",
+      "locator": "§4.3 Eq. 1",
+      "notes": "New metric: compute saved by reusing a prefix cache entry per byte of cache memory; drives eviction."
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "We also evaluate different percentiles (P5, P50, and P95) of time to first token (TTFT, ms). FLOP saved is a reasonable proxy for compute and latency savings because prefill is easily compute-bottlenecked.",
+      "locator": "§5.1 Metrics",
+      "notes": "TTFT is evaluated at P5/P50/P95; whether queueing is included is not stated (trace replay on vLLM-based implementation)."
+    },
+    {
+      "term_as_written": "TTFT / tail TPT / prefill throughput",
+      "canonical": "TTFT",
+      "definition_quote": "Prefix caching mitigates this by caching and reusing the model's internal states that represent the common prefixes (Fig. 2), achieving a lower time to first token (TTFT) latency, lower tail time per token (TPT) latency, and higher prefill throughput (measured in tokens/s).",
+      "locator": "§2.2",
+      "notes": "Motivation only; TPT and prefill throughput never measured."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "trace replay (LMSys, ShareGPT, SWE-Bench) with varying request arrival patterns, cache sizes, and hybrid model architectures",
+  "tradeoff_acknowledged": "Judicious admission reduces coverage; FLOP-aware eviction trades hit rate of shorter sequences for longer ones: P5 TTFT is 6.3% worse than SGLang+ (2.1 ms absolute) while P50/P95 TTFT improve by 13.4%/22.0%.",
+  "eval_type": "real-system",
+  "hardware": "AWS instance with eight A100-40GB GPUs, 96 Xeon vCPUs (vLLM implementation on four A100-40GB)",
+  "models": "7B Hybrid models (Mamba-Attention, ratio 1:6 etc.), Jamba-like configs",
+  "workloads": "LMSys, ShareGPT, SWE-Bench traces",
+  "confidence": "high",
+  "extractor_notes": "Optimizes a cache-efficiency proxy (token hit rate / FLOPs saved) rather than latency directly; TTFT is the downstream reported tail metric (P95). Model names/sizes not fully captured. No quality metric as prefix reuse is exact. | TAIL AUDIT 2026-10-06: TTFT tail stat -> n/a (metric targeted, percentile only reported)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT P95 (reported, token-hit-rate translated to latency)",
+    "correction": "Demote TTFT P95 'objective' to reported/headline. Objective is token hit rate / FLOP savings.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "workloads with different datasets, request arrival patterns, ... (§5; trace replay with inter-request arrival times)",
+  "repass_log": [
+    "OTHER:token_hit_rate: evidence/locator replaced with design statement (was: 'The main metric we evaluate is token hit rate (%), which rep...')",
+    "TTFT: evidence/locator replaced with design statement (was: 'The win in token hit rate translates to latency savings of 3...')",
+    "TTFT: tail-audit asked to demote the P95 TTFT 'objective'; kept only as an unspecified-statistic TTFT design goal because §4 states the goal; P95 TTFT stays in reported_metrics",
+    "load_class = online-arrivals"
+  ]
+}

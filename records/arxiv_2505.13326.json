@@ -1,0 +1,147 @@
+{
+ "key": "arxiv_2505.13326",
+ "title": "Thinking Short and Right Over Thinking Long: Serving LLM Reasoning Efficiently and Accurately",
+ "first_author": "Yuhang Wang",
+ "year": 2025,
+ "venue": "arXiv preprint (under review)",
+ "url": "https://arxiv.org/abs/2505.13326",
+ "cluster": "D6",
+ "technique": "SART: redundant branch sampling with early stopping plus two-phase dynamic pruning of low-reward branches (PRM), integrated with continuous batching",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2505.13326.txt",
+ "optimized_metrics": [
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we prioritize right-thinking branches and release the resources consumed by the others on the fly, so that we can reduce the queuing latency effectively",
+   "locator": "§1 (txt line 115-117)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "managing the LLM reasoning processes to be short and right for efficiency and accuracy.",
+   "locator": "§1 (txt line 120)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "SART not only improves the accuracy of LLM reasoning but also enhances the serving efficiency, outperforming existing methods by up to 28.2× and on average 15.7× in terms of efficiency when achieving the same level of accuracy.",
+  "metrics": [
+   "E2E",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "P50",
+   "where": "Fig 5, Fig 7"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P90",
+   "where": "Fig 7"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P97",
+   "where": "Fig 5, Fig 7 (P97 variation)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P99",
+   "where": "Fig 7"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "mean",
+   "where": "Fig 6 queuing-time distribution"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "Fig 5-7 accuracy"
+  },
+  {
+   "metric": "OTHER:inference_latency_excl_queue",
+   "stat": "P97",
+   "where": "Fig 7"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P97",
+   "where": "headline/evaluation (demoted by tail audit)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P97",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency of a request",
+   "canonical": "E2E",
+   "definition_quote": "the end-to-end latency of a request includes queuing latency (the time spent waiting for batch availability) and inference latency (the time for prefilling and decoding).",
+   "locator": "§2 (txt line 137-139)",
+   "notes": "Request = one reasoning question with N sampled branches; E2E latency is to the final ensembled response, so request-level here means per user question, not per single LLM sample. Not a PROGRAM_JCT in the multi-call sense."
+  },
+  {
+   "term_as_written": "P97 latency",
+   "canonical": "E2E",
+   "definition_quote": "P97 latency corresponds to the maximum latency within which 97% of the requests are served.",
+   "locator": "§5.1",
+   "notes": "Unusual tail percentile (P97) as primary efficiency metric."
+  },
+  {
+   "term_as_written": "inference latency (E2E latency excluding queuing delay)",
+   "canonical": "OTHER:inference_latency_excl_queue",
+   "definition_quote": "end-to-end (E2E) latency and inference latency (i.e., E2E latency excluding queuing delay)",
+   "locator": "Fig 7 caption",
+   "notes": "Prefill+decode time only."
+  },
+  {
+   "term_as_written": "accuracy",
+   "canonical": "QUALITY",
+   "definition_quote": "we measure each method’s effectiveness by calculating the accuracy (i.e., the ratio of correctly answered requests)",
+   "locator": "§5.1",
+   "notes": "Accuracy of the ensembled final answer; part of the joint objective."
+  },
+  {
+   "term_as_written": "efficiency (x-fold improvement at same accuracy)",
+   "canonical": "E2E",
+   "definition_quote": "outperforming existing methods by up to 28.2× and on average 15.7× in terms of efficiency when achieving the same level of accuracy",
+   "locator": "abstract",
+   "notes": "Efficiency = latency (percentile) at matched accuracy; not defined as a separate scalar."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "request-rate sweep at two arrival rates (1 and 4 req/s), sweep of branch count N",
+ "tradeoff_acknowledged": "Larger N lowers inference latency but raises queuing delay and E2E latency; N in {4,8} has higher average (P50) and P90 latency than N in {1,2} but much lower P97/P99. SART accuracy slightly lower than Self-Consistency in several cases.",
+ "eval_type": "real-system",
+ "hardware": "8x H100 80GB, NVLink",
+ "models": "DeepSeek-R1-Distill-Qwen-14B, DeepSeek-R1-Distill-Llama-70B",
+ "workloads": "GPQA and GAOKAO, arrival 1 and 4 req/s",
+ "confidence": "high",
+ "extractor_notes": "Reasoning-serving: accuracy IS part of the objective (latency at matched accuracy; accuracy-vs-latency plots), and it is a two-sided claim (improve both). No TTFT/TPOT/throughput. Percentile latency is the headline efficiency metric. | TAIL AUDIT 2026-10-06: E2E tail stat -> n/a (metric targeted, percentile only reported)",
+ "tail_role": "T-REP",
+ "tail_audit": {
+  "class": "T-REP",
+  "metrics": "E2E percentile latencies P50/P90/P97/P99 (primary efficiency metric, reported)",
+  "correction": "Demote E2E P97 'objective' to reported (it is the evaluation metric). Design aims: shorter reasoning branches, less queueing, same accuracy. Note: tail is the headline eval metric, and SART lowers P97/P99 as N grows, but no tail term in design.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "we experiment with two different request arrival rates [§5: req/s=1 and 4]",
+ "repass_log": [
+  "E2E P97: tail_audit correction applied (evaluation metric, no design quote); moved to reported_metrics",
+  "QUEUE: design quote kept (reduce queuing latency); statistic not stated -> n/a",
+  "QUALITY: headline result replaced by §1 design statement"
+ ]
+}

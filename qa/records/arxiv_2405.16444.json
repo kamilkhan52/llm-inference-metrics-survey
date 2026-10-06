@@ -1,0 +1,18 @@
+{
+"key":"arxiv_2405.16444","title":"CacheBlend: Fast Large Language Model Serving for RAG with Cached Knowledge Fusion","first_author":"Jiayi Yao","year":2025,"venue":"EuroSys'25","url":"https://arxiv.org/abs/2405.16444","cluster":"D3",
+"technique":"reuse precomputed non-prefix KV caches and selectively recompute a small subset of high-deviation tokens, pipelined with KV loading","layer":"prefix/context-caching","read_level":"full","fulltext_path":"fulltext/arxiv_2405.16444.txt",
+"optimized_metrics":[
+{"metric":"TTFT","stat":"mean","role":"objective","evidence":"CacheBlend reduces time-to-first-token (TTFT) by 2.2-3.3x and increases the inference throughput by 2.8-5x from full KV recompute without compromising generation quality","locator":"abstract"},
+{"metric":"THR_REQ","stat":"n/a","role":"objective","evidence":"increases the inference throughput by 2.8-5x from full KV recompute","locator":"abstract; Fig 14"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"how to quickly combine their precomputed KV caches in order to achieve the same generation quality as the expensive full prefill","locator":"abstract; §4 Goal"}
+],
+"headline_claim":{"text":"CacheBlend reduces time-to-first-token (TTFT) by 2.2-3.3x and increases the inference throughput by 2.8-5x from full KV recompute without compromising generation quality.","metrics":["TTFT","THR_REQ","QUALITY"],"locator":"abstract"},
+"reported_metrics":[{"metric":"TTFT","stat":"mean","where":"Figs 12,14,15"},{"metric":"THR_REQ","stat":"n/a","where":"Fig 14 (x-axis request rate)"},{"metric":"QUALITY","stat":"n/a","where":"F1 / Rouge-L, Figs 12-13"}],
+"metric_definitions":[
+{"term_as_written":"TTFT","canonical":"TTFT","definition_quote":"Thus, the prefill delay determines the time to first token (TTFT).","locator":"§1","notes":"prefill-delay based; the paper uses an 'extra delay on TTFT' notion for loading/recompute pipelining; queueing appears in Fig 14 via request rate"},
+{"term_as_written":"F1-score","canonical":"QUALITY","definition_quote":"It measures the similarity between the model's output and the ground-truth answer of the question based on the number of overlapping words.","locator":"§7","notes":"Rouge-L used for summarization"},
+{"term_as_written":"throughput","canonical":"THR_REQ","definition_quote":"demonstrates that prefill can be a throughput bottleneck, by the IT department","locator":"§2","notes":"throughput unit not formally defined; plotted as average request rate per second vs TTFT (Fig 14)"}],
+"slo_spec":null,"load_regime":"request-rate sweep (Poisson-style average request rate vs TTFT, Fig 14); also batch size / chunk number sweeps",
+"tradeoff_acknowledged":"slightly lower quality (<=0.015 F1 loss) vs full recompute; slower than full KV reuse in TTFT","eval_type":"real-system","hardware":"RunPod 2x NVIDIA A40, 128GB RAM, NVMe SSD 4.8 GB/s","models":"Mistral-7B, Yi-34B, Llama-70B","workloads":"2WikiMQA, Musique, SAMSum, MultiNews",
+"confidence":"high","extractor_notes":"Throughput is stated in abstract but never formally defined; it is shown as sustainable request rate at a TTFT level."
+}

@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2604.25899",
+ "title": "Pythia: Exploiting Workflow Predictability for Efficient Agent-Native LLM Serving",
+ "first_author": "Shan Yu",
+ "year": 2026,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2604.25899",
+ "cluster": "D6",
+ "technique": "workflow-semantics-aware multi-agent serving (prefix caching, scheduling, scaling)",
+ "layer": "agent/compound-serving",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "substantially improving throughput and job completion time over state-of-the-art baselines",
+   "locator": "abstract"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "substantially improving throughput and job completion time over state-of-the-art baselines",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "a multi-agent serving system that captures workflow semantics through a simple interface at the serving layer, unlocking new optimization opportunities and substantially improving throughput and job completion time over state-of-the-art baselines",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. No numbers in abstract; \"job completion time\" assumed to be per-workflow completion time; throughput unit unspecified."
+}

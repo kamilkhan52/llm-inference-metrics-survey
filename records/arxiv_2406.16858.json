@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2406.16858",
+ "title": "EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees",
+ "first_author": "Yuhui Li",
+ "year": 2024,
+ "venue": "EMNLP 2024",
+ "url": "https://arxiv.org/abs/2406.16858",
+ "cluster": "D4",
+ "technique": "context-aware dynamic draft tree (builds on EAGLE)",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "EAGLE-2 achieving speedup ratios 3.05x-4.26x",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "ensures that the distribution of the generated text remains unchanged",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "EAGLE-2 achieving speedup ratios 3.05x-4.26x, which is 20%-40% faster than EAGLE-1",
+  "metrics": [
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "ACCEPT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Speedup ratio (wall-clock vs vanilla decoding) mapped to TOKEN_LAT."
+}

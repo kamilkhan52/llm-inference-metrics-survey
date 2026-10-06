@@ -1,0 +1,62 @@
+{
+ "key": "arxiv_2505.06371",
+ "title": "The ML.ENERGY Benchmark: Toward Automated Inference Energy Measurement and Optimization",
+ "first_author": "Chung",
+ "year": 2025,
+ "venue": "arXiv preprint (NeurIPS Datasets & Benchmarks style)",
+ "url": "https://arxiv.org/abs/2505.06371",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: inference energy benchmark; steady-state per-request (whole-generation) GPU energy accounting via Zeus, batch-size sweeps, and time-energy Pareto frontier that recommends the minimum-energy config under a latency constraint (e.g. average TPOT)",
+ "layer": "energy/cost",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2505.06371.txt",
+ "optimized_metrics": [
+  {"metric": "ENERGY", "stat": "mean", "role": "objective",
+   "evidence": "will automatically recommend (1) the energy-optimal configuration that meets the latency constraints, and (2) the expected amount of energy savings.",
+   "locator": "§2.4 Our approach"},
+  {"metric": "TPOT", "stat": "mean", "role": "constraint",
+   "evidence": "a chatbot provider can target an average TPOT of 100 ms (equivalent to 10 tokens per second or about 7.5 words per second), which is sufficient for most reading or listening speeds. This will land on the Pareto frontier at the point where average TPOT is 77 ms, reducing energy consumption per generation by 44%",
+   "locator": "§4.3"},
+  {"metric": "E2E", "stat": "mean", "role": "constraint",
+   "evidence": "for LLM text generation for coding, where code is likely only useful when it is fully generated, latency constraints would be specified in terms of the time to generate the whole snippet, similar to the case of image generation.",
+   "locator": "§3.3"}
+ ],
+ "headline_claim": {"text": "automated optimization recommendations can lead to significant (sometimes more than 40%) energy savings without changing what is being computed by the model.",
+  "metrics": ["ENERGY"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "ENERGY", "stat": "mean per generation (J)", "where": "Fig 3-4, Table 1, 4, 5"},
+  {"metric": "OTHER:avg_power_W", "stat": "mean", "where": "Fig 5"},
+  {"metric": "E2E", "stat": "mean generation latency", "where": "Fig 7"},
+  {"metric": "TPOT", "stat": "mean", "where": "§4.3 Pareto"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "per-request energy", "canonical": "ENERGY", "definition_quote": "Energy_request = (Energy_steady / Tokens_steady) × (1/N) Σ_i Tokens_request,i. In essence, we compute the average energy consumption per token during the steady state and multiply it by the average number of output tokens to derive the average per-request energy consumption.", "locator": "§3.2 Eq. 2", "notes": "GPU-only energy (software measured via Zeus); per-token energy from steady state x output tokens"},
+  {"term_as_written": "steady state", "canonical": "OTHER:steady_state_window", "definition_quote": "identify the steady state as the time period where the batch size is saturated at the server's maximum configured batch size. This steady state is designed to closely approximate the state of a serving system when it is well-utilized during long-term deployment.", "locator": "§3.2", "notes": "ramp-up/ramp-down excluded"},
+  {"term_as_written": "energy granularity", "canonical": "ENERGY", "definition_quote": "our approach is to mainly report energy consumption at the granularity of a single, whole generation response to a request (e.g., entire chat response, image, video). This is because any work less than the full response (e.g., per token) is not considered a complete request, and may ignore model- and task-specific characteristics.", "locator": "§2.3", "notes": "energy per generation, not per token"},
+  {"term_as_written": "Average power draw", "canonical": "ENERGY", "definition_quote": "Average power draw over the steady state can be calculated by dividing total energy consumption during the steady state by the duration of the steady state.", "locator": "§3.4 Metrics", "notes": "W"},
+  {"term_as_written": "Throughput per Watt", "canonical": "ENERGY", "definition_quote": "Work throughput, e.g., request or token generation throughput, divided by average power draw can describe how much service capacity can be extracted from the system given a power budget", "locator": "§3.4 Metrics", "notes": "derived, not computed by default"},
+  {"term_as_written": "Monetary cost / carbon", "canonical": "COST", "definition_quote": "The electricity cost of compute can be calculated by integrating over time the multiplication of energy consumption and the electricity price ... Operational carbon emissions (gCO2e) ... multiplying energy consumption by the carbon intensity (gCO2e/kWh)", "locator": "§3.4 Metrics", "notes": ""},
+  {"term_as_written": "time-energy Pareto frontier", "canonical": "ENERGY", "definition_quote": "the Pareto frontier of energy vs. time, which is a collection of configurations where there are no other configurations that lead to both lower energy and lower time.", "locator": "§3.3", "notes": "latency constraint then picks min-energy point"},
+  {"term_as_written": "TPOT (streaming latency)", "canonical": "TPOT", "definition_quote": "as long as the average time per output token is at least as fast as the users' reading or listening speed, user experience will not be affected", "locator": "§3.3", "notes": "TPOT used with average; no formula"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "ENERGY", "critique_quote": "The Hugging Face AI Energy Score leaderboard provides measurement data for broader AI tasks. However, it fixes the inference batch size to 1 for all models, failing to reflect how services are deployed in the real world and thus their energy consumption", "locator": "§6 Related work"},
+  {"target_metric": "ENERGY", "critique_quote": "Google disclosed the median energy consumption of their AI service. It provides a comprehensive scope of measurement, even including the energy consumption of idle machines provisioned for stable service operation. However, measurements and reports are based on internal Google systems ... limiting the generalizability and reproducibility", "locator": "§6"},
+  {"target_metric": "ENERGY", "critique_quote": "any work less than the full response (e.g., per token) is not considered a complete request, and may ignore model- and task-specific characteristics. For instance, ... different models exhibit different verbosity", "locator": "§2.3"}
+ ],
+ "recommended_practice": [
+  {"quote": "We focus on software-based GPU energy measurement ... GPUs are the dominant worker and energy consumer in a system running ML services, accounting for 50–70% of the total provisioned power in the datacenter", "locator": "§2.1"},
+  {"quote": "By sweeping the batch size configuration, the ML.ENERGY benchmark can capture varying levels of system utilization and collect various operation points with different time and energy consumption.", "locator": "§3.2"},
+  {"quote": "we adhere to the following principles: We adopt production-grade software and hardware (e.g., vLLM on NVIDIA H100 GPUs) and run them with generation request workloads that are representative of real-world use cases.", "locator": "§2.2"},
+  {"quote": "Latency constraints inherently depend on the user's or application's needs.", "locator": "§3.3"}
+ ],
+ "slo_spec": "User-specified latency constraint; example chatbot target average TPOT 100 ms (10 tokens/s); example generation latency target 5 s",
+ "load_regime": "submit full 3000-request dataset; max-batch-size sweep; steady-state window at saturated batch",
+ "tradeoff_acknowledged": "Energy vs latency (convex Pareto frontier: e.g. TPOT 77 ms point cuts energy per generation 44%; 5 s target cuts 21% vs min-latency config); longer outputs/reasoning raise energy; batch size amortizes energy but raises latency",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA A100 and H100 GPUs",
+ "models": "40 model architectures across 6 tasks (Llama 3.1, Mistral, Stable Diffusion, reasoning models, etc.)",
+ "workloads": "task-specific request datasets (chat, code, GPQA reasoning, image/video generation)",
+ "confidence": "high",
+ "extractor_notes": "Energy benchmark. Energy scope is GPU-only (software-based Zeus), whole-generation granularity; TPOT used as the latency constraint but not formally defined. Energy per token used internally but reported per generation."
+}

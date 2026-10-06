@@ -1,0 +1,101 @@
+{
+  "key": "arxiv_2312.17238",
+  "title": "Fast Inference of Mixture-of-Experts Language Models with Offloading",
+  "first_author": "Artyom Eliseev",
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2312.17238",
+  "cluster": "D4",
+  "technique": "MoE-specific expert offloading with LRU expert cache and speculative expert pre-loading from previous-layer hidden states, plus mixed HQQ quantization (2/3-bit experts, 4-bit shared)",
+  "layer": "MoE-serving",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2312.17238.txt",
+  "optimized_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "we focus on the task of generating tokens interactively, i.e. generate multiple tokens per second at batch size 1",
+      "locator": "§3 (txt line 161)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "we study the problem of running large MoE language models on consumer hardware with limited accelerator memory.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "Our objective for this section is to find the best trade off between size and performance for offloading with the target setups.",
+      "locator": "§4.2",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "develop a practical combination of mixed quantization and the proposed offloading algorithm to run this model interactively at 2-3 tokens per second depending on the hardware.",
+    "metrics": [
+      "TOKEN_LAT"
+    ],
+    "locator": "§1 contributions"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Table 2 inference speed tokens/s on A100, RTX 3080 Mobile, RTX 3060, T4"
+    },
+    {
+      "metric": "OTHER:cache_hit_rate",
+      "stat": "mean",
+      "where": "Fig 2 LRU cache hit ratio and speculative-loading recall"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Table 1 WikiText2/C4 perplexity, 5-shot MMLU"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Table 1 model size"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Inference speed",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "Table 2: Inference speed for Mixtral-8x7B in low-tier, measured in tokens per second.",
+      "locator": "Table 2",
+      "notes": "batch-1 generation speed (tokens/s of one sequence); not defined further"
+    },
+    {
+      "term_as_written": "cache hit ratio / recall",
+      "canonical": "OTHER:cache_hit_rate",
+      "definition_quote": "LRU cache hit ratio for different cache size k; speculative loading recall when preloading n experts",
+      "locator": "Fig 2 caption",
+      "notes": "fraction of needed experts already on GPU"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 interactive generation; no concurrency",
+  "tradeoff_acknowledged": "Lower-bit expert quantization reduces size/enables fit at some perplexity/MMLU cost; speculative expert loading may load wrong experts (recall<1) adding no benefit.",
+  "eval_type": "real-system",
+  "hardware": "Colab T4, RTX 3080 Mobile, RTX 3060, A100-80GB (reference)",
+  "models": "Mixtral-8x7B, Mixtral-8x7B-Instruct",
+  "workloads": "WikiText2, C4, MMLU for quality; Table 2 speed on generation of tokens (workload prompts not detailed)",
+  "confidence": "high",
+  "extractor_notes": "Speed metric stated only as tokens per second; prefill speed not reported. Consumer-hardware, single-user scenario; not a serving-throughput paper.",
+  "load_class": "single-sequence",
+  "load_class_quote": "we focus on the task of generating tokens interactively, i.e. generate multiple tokens per second at batch size 1 (§3)",
+  "repass_log": [
+    "TOKEN_LAT: already design (§3 stated goal); stat n/a (tokens/s, statistic unspecified)",
+    "MEMORY/QUALITY: design",
+    "load_class single-sequence"
+  ]
+}

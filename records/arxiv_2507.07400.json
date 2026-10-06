@@ -1,0 +1,76 @@
+{
+  "key": "arxiv_2507.07400",
+  "title": "KVFlow: Efficient Prefix Caching for Accelerating LLM-Based Multi-Agent Workflows",
+  "first_author": "Zaifeng Pan",
+  "year": 2025,
+  "venue": "arXiv preprint (under review)",
+  "url": "https://arxiv.org/abs/2507.07400",
+  "cluster": "D6",
+  "technique": "workflow-aware KV prefix-cache eviction (steps-to-execution from Agent Step Graph) plus overlapped CPU-to-GPU KV prefetching",
+  "layer": "agent/compound-serving",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2507.07400.txt",
+  "optimized_metrics": [
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Together, these optimizations significantly improve cache efficiency and reduce latency in executing agentic workflows.",
+      "locator": "\u00a71 (txt line 114-115)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "Latency is averaged over all runs"
+    }
+  ],
+  "headline_claim": {
+    "text": "Compared to SGLang with hierarchical radix cache, KVFlow achieves up to 1.83\u00d7 speedup for single workflows with large prompts, and up to 2.19\u00d7 speedup for scenarios with many concurrent workflows.",
+    "metrics": [
+      "PROGRAM_JCT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "mean",
+      "where": "Fig 5 (single 10-agent workflow, batch=1, speedup over SGLang), Fig 6 (concurrent workflows), Fig 8 (PEER workflows)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "headline only (re-pass)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "latency (single-workflow latency)",
+      "canonical": "PROGRAM_JCT",
+      "definition_quote": "We begin by evaluating the latency of executing a single agentic workflow under batch size = 1. This single-request latency reflects interactive usage scenarios where workflows are triggered individually by a user",
+      "locator": "\u00a74.1",
+      "notes": "Workflow-level latency = time to execute the 10 sequential agent LLM calls; averaged over ten runs. No formal TTFT/TPOT definition. Results are plotted as speedup (ratio of latency) over SGLang."
+    },
+    {
+      "term_as_written": "performance / speedup (concurrent workflows)",
+      "canonical": "PROGRAM_JCT",
+      "definition_quote": "Therefore, our evaluation focuses exclusively on system performance metrics like the latency.",
+      "locator": "\u00a74",
+      "notes": "In \u00a74.2 'performance' and 'speedup' are used without explicit definition (apparently latency/completion-time ratio); no throughput or percentile reported."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1 single workflow; fixed concurrency of 8-64 simultaneous independent workflows chosen so prefix caches still fit; PEER-style synthetic workflows",
+  "tradeoff_acknowledged": "If concurrency is too high, all memory is consumed by active requests and the method is out of scope; HiCache can fall to 0.57x of SGLang under high concurrency (baseline, not KVFlow).",
+  "eval_type": "real-system",
+  "hardware": "A10G 24GB (PCIe Gen1 2GB/s); H100 80GB (PCIe Gen5)",
+  "models": "Llama-3.1-8B, Qwen2.5-32B",
+  "workloads": "synthetic sequential 10-agent workflow with controlled fixed/dynamic/output lengths; PEER Financial QA 4-agent workflows",
+  "confidence": "high",
+  "extractor_notes": "Metric is mean workflow-level latency only; no tail, TTFT, TPOT or throughput. Evaluation explicitly says accuracy is unaffected so only latency is measured. Program-level (workflow) latency, not request-level.",
+  "load_class": "offline-batch",
+  "load_class_quote": "evaluating the latency of executing a single agentic workflow under batch size = 1 ... evaluate system performance under high concurrency by simultaneously launching multiple [\u00a74.1 single workflow bs=1; \u00a74.2 fixed concurrency of simultaneously launched workflows; no arrival process]",
+  "repass_log": [
+    "PROGRAM_JCT: \u00a71 design-summary quote kept as design; stat explicit (averaged over runs)",
+    "E2E: evaluation question, duplicate of PROGRAM_JCT; moved to reported_metrics",
+    "orchestrator (architect flag): load_class mixed -> offline-batch; components are batch-1 and fixed-batch/concurrency runs, no arrival process"
+  ]
+}

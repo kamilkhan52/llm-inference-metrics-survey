@@ -1,0 +1,64 @@
+{
+ "key": "arxiv_2401.18079",
+ "title": "KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization",
+ "first_author": "Hooper",
+ "year": 2024,
+ "venue": "NeurIPS'24",
+ "url": "https://arxiv.org/abs/2401.18079",
+ "cluster": "D3",
+ "technique": "KV cache quantization (per-channel/pre-RoPE keys, non-uniform, dense-and-sparse)",
+ "layer": "KV-compression",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "KV cache activations surface as the dominant contributor to memory consumption",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "we achieve<0.1 perplexity degradation with 3-bit quantization",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Our method enables serving LLaMA-7B with a context length of up to 1 million on a single A100-80GB GPU and up to 10 million on an 8-GPU system",
+  "metrics": [
+   "MEMORY",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Kernel speedup (~1.7x vs fp16 matvec) is also reported."
+}

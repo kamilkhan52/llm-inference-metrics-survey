@@ -1,0 +1,46 @@
+{
+ "key": "arxiv_2503.06433",
+ "title": "Seesaw: High-throughput LLM Inference via Model Re-sharding",
+ "first_author": "Qidong Su",
+ "year": 2025,
+ "venue": "MLSys 2025",
+ "url": "https://arxiv.org/abs/2503.06433",
+ "cluster": "D5",
+ "technique": "dynamic model re-sharding between prefill and decode, tiered KV buffering",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Seesaw achieves a throughput increase of up to 1.78x",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Seesaw achieves a throughput increase of up to 1.78x (1.36x on average) compared to vLLM",
+  "metrics": [
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. Throughput-oriented tasks; unit not stated."
+}

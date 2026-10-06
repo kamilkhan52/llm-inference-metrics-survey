@@ -1,0 +1,130 @@
+{
+ "key": "arxiv_2412.20993",
+ "title": "Efficiently Scaling LLM Reasoning with Certaindex",
+ "first_author": "Yichao Fu",
+ "year": 2024,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2412.20993",
+ "cluster": "D6",
+ "technique": "Certaindex (answer-stabilization certainty) drives early exit, dynamic token allocation and gang scheduling in Dynasor serving of reasoning programs (CoT, SC, MCTS, REBASE)",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2412.20993.txt",
+ "optimized_metrics": [
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Dynasor employs certaindex to adaptively allocate token budgets to reduce ... the compute cost",
+   "locator": "§1 (txt lines 101-102)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "P90",
+   "role": "objective",
+   "evidence": "the compute cost, and enables gang scheduling to increase request SLO attainment and throughput.",
+   "locator": "§1 (txt lines 101-102)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "mean",
+   "role": "constraint",
+   "evidence": "reclaiming wasted compute without sacrificing accuracy.",
+   "locator": "§3 (txt line 216)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "P90",
+   "role": "objective",
+   "evidence": "gang scheduling to increase request SLO attainment and throughput.",
+   "locator": "§1 (txt line 102)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "up to 50% compute savings and 3.3× higher throughput in real workloads with no accuracy drop",
+  "metrics": [
+   "COST",
+   "THR_REQ",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "where": "Fig 6-7 (tokens used vs accuracy)"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "P90",
+   "where": "Fig 8a,b (program rate / SLO scale vs deadline attainment)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "App. F ablation (mean latency of programs)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "equal across systems (memory-bound)"
+  },
+  {
+   "metric": "FAIRNESS",
+   "stat": "n/a",
+   "where": "Fig 20 finish-time fairness (latency / #tokens)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "P90 deadline attainment",
+   "canonical": "SLO_ATT",
+   "definition_quote": "System performance is evaluated by P90 deadline attainment, the percentage of queries completed within their deadlines.",
+   "locator": "App. (Metrics)",
+   "notes": "Per-program (query) deadline, not per-token; sustainable rate = highest arrival rate with >=90% attainment ('P90 deadline attainment')."
+  },
+  {
+   "term_as_written": "deadline (SLO)",
+   "canonical": "SLO_ATT",
+   "definition_quote": "Deadlines are calculated as the product of the SLO scale, the difficulty factor, and a base deadline, accounting for the additional time required for more challenging problems.",
+   "locator": "App. (Metrics)",
+   "notes": "Difficulty-aware: difficulty factor 1/2/3 for always-correct/variable/always-incorrect queries from >100 oracle trials; SLO scale swept (1.3-4.7x tighter)."
+  },
+  {
+   "term_as_written": "finish-time fairness",
+   "canonical": "FAIRNESS",
+   "definition_quote": "We apply finish-time fairness (§D.3.1) as the fairness metric and use latency / number of tokens as a proxy.",
+   "locator": "App. F.4",
+   "notes": "Program latency normalised by generated tokens (like Autellix's program token latency)."
+  },
+  {
+   "term_as_written": "token usage / compute",
+   "canonical": "COST",
+   "definition_quote": "we achieve ... cumulative tokens generated at a specific step (Table 3) as the proxy",
+   "locator": "§4.1",
+   "notes": "Compute cost proxied by tokens generated across all branches of a reasoning program; accuracy-matched."
+  }
+ ],
+ "slo_spec": "Deadline per reasoning program = SLO scale x difficulty factor x base deadline; attainment target P90; rate (programs/s) and SLO scale swept.",
+ "load_regime": "Poisson program arrivals (programs/s) online; offline batch for token savings",
+ "tradeoff_acknowledged": "Throughput in tokens/s is unchanged ('equal average throughput ... memory bound'); gains come from fewer tokens per program. Early exit risks dropping accuracy; paper keeps accuracy fixed.",
+ "eval_type": "real-system",
+ "hardware": "A100 80GB GPUs (Runpod)",
+ "models": "Llama3.1-8B-Instruct, DeepSeek-distilled Qwen2.5 models, Skywork-7B, Llama2-7B",
+ "workloads": "MATH-500, AIME24, AMC23, GSM8K with CoT, Self-Consistency, MCTS, REBASE",
+ "confidence": "high",
+ "extractor_notes": "Headline '3.3x higher throughput' is sustainable program arrival rate at P90 deadline attainment (program level), NOT tokens/s; paper states token throughput is equal across systems. Compute savings = fewer tokens at same accuracy. Gang scheduling is the PROGRAM_JCT lever; deadlines are per-program with difficulty-dependent scaling.",
+ "load_class": "mixed",
+ "load_class_quote": "Request arrivals follow ... a Poisson process with varying rates. [App F.3 online serving with Poisson arrivals; batch/offline tokens-to-accuracy workloads in Table 1 ('For offline workloads, we measure tokens-to-accuracy')]",
+ "repass_log": [
+  "COST: headline result replaced by §1 design statement",
+  "SLO_ATT: design quote kept (P90 deadline attainment, App. F.3)",
+  "QUALITY: headline result replaced by §3 design constraint (no accuracy sacrifice)",
+  "THR_REQ: headline result replaced by §1 design statement"
+ ]
+}

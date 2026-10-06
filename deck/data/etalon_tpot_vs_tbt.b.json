@@ -1,0 +1,225 @@
+{
+ "id": "etalon_tpot_vs_tbt",
+ "version": 1,
+ "slides": [],
+ "title": "Etalon: TPOT vs tail TBT vs fluidity-index",
+ "units": {
+  "throughput": "tokens/s",
+  "capacity": "QPS/s"
+ },
+ "conventions": "row_id = claim id: a_* (similar TPOT, different P99 TBT), b_* (capacity under SLO criteria, vLLM vs Sarathi-Serve), c_* (fluidity-index definition).",
+ "sources": {
+  "arxiv_2407.07000": {
+   "cite": "Agrawal et al., Etalon: Holistic Performance Evaluation Framework for LLM Inference Systems, arXiv:2407.07000v2 (30 Aug 2024)",
+   "path": "fulltext/arxiv_2407.07000.pdf",
+   "locator": "\u00a73.1 p.4-5, \u00a74.1 p.5-7, \u00a75.1 p.8, \u00a75.2 pp.8-9, Fig. 3, 5, 6",
+   "tag": "P"
+  }
+ },
+ "rows": [
+  {
+   "row_id": "a_vllm_vs_sarathi_text",
+   "systems": [
+    "vLLM",
+    "Sarathi-Serve"
+   ],
+   "model": "NOT STATED for Fig. 3 in text",
+   "hardware": "NOT STATED for Fig. 3",
+   "workload": "1000 requests (passive end-user observation)",
+   "vllm_p99_tbt_s": 1.0,
+   "tpot_relation": "comparable / at par",
+   "tail_tbt_throughput_ratio_sarathi_over_vllm": "3x (printed, \u00a75.2)",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a73.1 p.4-5",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Text-only: both appear similar by TPOT throughput; vLLM tail TBT of 1 second; Sarathi-Serve has much lower P99 (Fig. 3c caption); vLLM beats Sarathi-Serve between P80 and P98. \u00a75.2 text: tail-TBT-based throughput for vLLM is 3x worse than Sarathi while TPOT-based throughput is at par."
+  },
+  {
+   "row_id": "a_fig3b_vllm",
+   "system": "vLLM",
+   "tpot_throughput_tok_s": 17,
+   "tail_tbt_throughput_tok_s": 1.5,
+   "fluid_rate_tok_s": 3.5,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 3b, p.4",
+   "tag": "P",
+   "unc": "chart read +-1 tok/s",
+   "note": "Throughput (tok/s) = inverse of mean TPOT / inverse of P99 TBT / fluid rate. Linear y axis 0-30, gridlines every 5; bar tops estimated against gridlines."
+  },
+  {
+   "row_id": "a_fig3b_sarathi",
+   "system": "Sarathi-Serve",
+   "tpot_throughput_tok_s": 20,
+   "tail_tbt_throughput_tok_s": 5.5,
+   "fluid_rate_tok_s": 7,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 3b, p.4",
+   "tag": "P",
+   "unc": "chart read +-1 tok/s",
+   "note": "As above."
+  },
+  {
+   "row_id": "a_fig3b_ratio",
+   "tail_tbt_ratio": 3.7,
+   "tpot_ratio": 1.18,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 3b, p.4",
+   "tag": "D",
+   "unc": "D = chart read ratio; +-30%",
+   "note": "D: tail TBT throughput Sarathi/vLLM = 5.5/1.5 ~3.7 vs printed '3x' (chart-read imprecision); TPOT ratio 20/17 ~1.2 ('at par' in text). Arithmetic on chart reads."
+  },
+  {
+   "row_id": "a_groq_fig5a",
+   "systems": [
+    "Groq"
+   ],
+   "models": [
+    "LLaMA3-70B",
+    "Mixtral-8x7B"
+   ],
+   "tpot_throughput_tok_s": 600,
+   "tail_tbt_throughput_factor_lower": 4,
+   "workload": "256-8k prefill, max 256 output tokens, hourly for 24 h",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a75.1 p.8",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Groq highest throughput 600 tokens/s on TPOT, while tail TBT metric shows 4x lesser throughput (~150 tok/s implied, derived). Fig 5a values not chart-read."
+  },
+  {
+   "row_id": "b_slo_definition",
+   "model": "LLaMA3-8B",
+   "hardware": "1x H100",
+   "dataset": "Arxiv-Summarization (also a ShareGPT panel label exists in the figure PDF text layer, not visible)",
+   "tbt_slo_ms": 25,
+   "p_requests": 0.99,
+   "max_deadline_miss_rate": 0.1,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a75.2 p.8",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Fluidity SLO: 99% of requests with <10% deadline miss rate at 25 ms target TBT; TPOT and P99-TBT baselines use target latency of 25 ms. Etalon finds max QPS meeting the SLO."
+  },
+  {
+   "row_id": "b_capacity_vllm_fluidity",
+   "system": "vLLM",
+   "criterion": "fluidity-index",
+   "capacity_qps": 0.6,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9; text p.9",
+   "tag": "P",
+   "unc": "printed (text)",
+   "note": "Fluidity-index capacity printed in text as same for both systems at 0.6 QPS."
+  },
+  {
+   "row_id": "b_capacity_sarathi_fluidity",
+   "system": "Sarathi-Serve",
+   "criterion": "fluidity-index",
+   "capacity_qps": 0.6,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9; text p.9",
+   "tag": "P",
+   "unc": "printed (text); bar ~0.62",
+   "note": "Printed in text: same at 0.6 QPS (bar read ~0.62)."
+  },
+  {
+   "row_id": "b_capacity_vllm_tbt",
+   "system": "vLLM",
+   "criterion": "P99 TBT",
+   "capacity_qps": 0.65,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9",
+   "tag": "P",
+   "unc": "chart read +-0.03 QPS",
+   "note": "Visible panel is ArxivSumm (y axis 0-1.2 QPS/s). Linear axis, gridlines 0.2; read against gridlines."
+  },
+  {
+   "row_id": "b_capacity_vllm_tpot",
+   "system": "vLLM",
+   "criterion": "TPOT",
+   "capacity_qps": 0.66,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9",
+   "tag": "P",
+   "unc": "chart read +-0.03 QPS",
+   "note": "As above."
+  },
+  {
+   "row_id": "b_capacity_sarathi_tbt",
+   "system": "Sarathi-Serve",
+   "criterion": "P99 TBT",
+   "capacity_qps": 0.35,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9",
+   "tag": "P",
+   "unc": "chart read +-0.03 QPS",
+   "note": "As above. Text: Sarathi has 2x lower token throughput than vLLM by tail-TBT metric (0.65/0.35 ~1.9)."
+  },
+  {
+   "row_id": "b_capacity_sarathi_tpot",
+   "system": "Sarathi-Serve",
+   "criterion": "TPOT",
+   "capacity_qps": 1.17,
+   "src": "arxiv_2407.07000",
+   "loc": "Fig. 6a p.9",
+   "tag": "P",
+   "unc": "chart read +-0.03 QPS",
+   "note": "As above."
+  },
+  {
+   "row_id": "b_text_2x",
+   "claim_ratio": "2x lower",
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a75.2 p.8-9",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Printed: 'Sarathi has a 2x lower token throughput compared to vLLM as measured by tail TBT-based metric, in contrast to Figure 3.' Almost all mixed batches with prefill chunks violate the 25 ms threshold."
+  },
+  {
+   "row_id": "c_fluidity_definition",
+   "D_d_targets_ms": {
+    "strict_chat": 25,
+    "medium": 50,
+    "relaxed": 100
+   },
+   "scheduling_slack_value": "NOT FOUND (paper: 'small', empirically chosen)",
+   "fluidity_threshold": 0.9,
+   "request_percentile": 0.99,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74.1 p.5-6, Alg. 1",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Deadline of token i: D_i = D_p + i*D_d. D_p = target prefill latency as function of prompt length (profiling vLLM in isolation, 10 requests tunable, curve fit); Alg.1 line 2: D_p = predict_prefill_time(P) + SD (scheduling slack SD). Early tokens bank slack (slack += D - t); on a miss, misses = floor((t - slack - D)/D_d)+1, slack reset to 0 and later deadlines reset. fluidity-index = (total - missed)/total deadlines."
+  },
+  {
+   "row_id": "c_fluid_rate_def",
+   "fluidity_threshold": 0.9,
+   "request_percentile": 0.99,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a71 p.2, Fig. 3 caption p.4, \u00a75.1 p.8",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Fluid token generation rate = inverse of the minimum D_d such that 99% of requests have fluidity-index >= 0.9 (Fig. 3 caption writes '> 0.9')."
+  },
+  {
+   "row_id": "c_example_100ms",
+   "target_tbt_ms": 100,
+   "src": "arxiv_2407.07000",
+   "loc": "\u00a74 p.5",
+   "tag": "P",
+   "unc": "printed",
+   "note": "Worked example: target TBT 100 ms; system with 10 tokens at 10 ms and 11th at 150 ms has the same TBT miss rate as one with 10 tokens at 100 ms and 11th at 150 ms."
+  }
+ ],
+ "extraction": {
+  "agent_a_or_b": "B",
+  "method": "pdftotext for text; Figures 3 and 6 viewed as rendered PDF pages 4 and 9 (220 dpi); bar/curve values read against labelled linear gridlines; printed numbers preferred."
+ },
+ "caveats": [
+  "No per-percentile P99 TBT numeric values or TPOT ms values printed for the vLLM vs Sarathi example: only 'tail TBT of 1 second' for vLLM; TPOT values in ms NOT FOUND; model/hardware of Fig. 3 not stated in text.",
+  "Fig. 6 in this PDF (v2) shows a single visible panel (ArxivSumm, y 0-1.2); the text layer holds a hidden 'ShareGPT' panel (y 0-4) not rendered, so ShareGPT capacities cannot be read.",
+  "Fig. 6a bars are chart reads except fluidity-index 0.6 QPS (printed). Fig. 3b values chart-read, ratios may not match printed '3x'.",
+  "Scheduling slack value NOT FOUND."
+ ]
+}

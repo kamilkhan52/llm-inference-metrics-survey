@@ -1,0 +1,121 @@
+{
+ "key": "arxiv_2506.12708",
+ "title": "Serving Large Language Models on Huawei CloudMatrix384",
+ "first_author": "Pengfei Zuo",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2506.12708",
+ "cluster": "D5",
+ "technique": "CloudMatrix-Infer: PDC-disaggregated (prefill/decode/caching) serving of DeepSeek-R1 on a 384-NPU UB-interconnect supernode with EP320 decode, microbatch pipelining, INT8, MTP, EMS context caching",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2506.12708.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "sustained throughput, while meeting tight service-level latency objectives under dynamic, heterogeneous real-world conditions",
+   "locator": "§2.2 (txt lines 293-295)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "We assess absolute decode throughput (tokens/s) targeting a time-per-output-token (TPOT) SLO of below 50 ms",
+   "locator": "§5.2 Decode Throughput (txt line 2201)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "a tailored microbatch-based decode pipeline for CloudMatrix384 that maximizes resource utilization and reduces execution latency",
+   "locator": "§4.2.3 (txt line 1364)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "CloudMatrix-Infer delivers a prefill throughput of 6,688 tokens/s per NPU, and a decode throughput of 1,943 tokens/s per NPU (at <50 ms TPOT)... sustaining a decode throughput of 538 tokens/s per NPU even under the stricter sub-15 ms TPOT constraint.",
+  "metrics": [
+   "THR_TOK",
+   "TPOT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Tables 2-4 (prefill/decode tokens/s per NPU)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "tokens/s per TFLOPS, Tables 2-3"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "where": "Table 3-4 achieved TPOT (ms)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "Fig 23b (EMS context caching)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "§5.3, 16 benchmarks"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "decode throughput (tokens/s per NPU)",
+   "canonical": "THR_TOK",
+   "definition_quote": "We assess absolute decode throughput (tokens/s) targeting a time-per-output-token (TPOT) SLO of below 50 ms, and also evaluate throughput normalized by the accelerator's computer power (tokens/s per TFLOPS) as an indicator of compute efficiency.",
+   "locator": "§5.2",
+   "notes": "Per-accelerator (NPU, i.e. per die/chip as in tables), per-decode-phase; output tokens at fixed batch size (96 per NPU) and KV length 4096; the TPOT bound is met by choosing the batch size (Table 4: batch 96/24/8 for 50/30/15 ms SLO). Effective MTP acceptance rate of 70% assumed for single speculative token. No formal definition of TPOT given; Table 3 reports 'Achieved TPOT (ms)' per decode step (e.g. 49.4)."
+  },
+  {
+   "term_as_written": "TPOT SLO",
+   "canonical": "TPOT",
+   "definition_quote": "Under a relaxed SLO of 50 ms, CloudMatrix-Infer supports a batch size of 96 and achieves a throughput of 1,943 tokens/s per NPU while satisfying the latency constraint. As the SLO tightens to 30 ms and 15 ms, the batch sizes reduce to 24 and 8 respectively, resulting in lower throughputs of 974 and 538 tokens/s per NPU.",
+   "locator": "§5.2 Table 4",
+   "notes": "TPOT-constrained throughput = max per-NPU decode tokens/s with batch size tuned so achieved TPOT <= SLO (achieved 49.4/24.6/14.9 ms). Measured under steady-state fixed batch, not request-rate sweep."
+  },
+  {
+   "term_as_written": "prefill throughput (tokens/s per NPU)",
+   "canonical": "THR_TOK",
+   "definition_quote": "Table 2. Overall prefill throughput (per accelerator) for DeepSeek-R1. [Batch size 16,384, input length 4,096]",
+   "locator": "§5.2 Table 2",
+   "notes": "Input (prompt) tokens/s per accelerator; batch size 16,384 tokens; default 5,655 vs 'Perfect EPLB' (idealized, projected) 6,688."
+  },
+  {
+   "term_as_written": "tokens/s per TFLOPS",
+   "canonical": "UTIL",
+   "definition_quote": "throughput normalized by the accelerator's computer power (tokens/s per TFLOPS) as an indicator of compute efficiency",
+   "locator": "§5.2",
+   "notes": "Hardware-normalized throughput; used to compare against H800/H100 numbers."
+  }
+ ],
+ "slo_spec": "TPOT SLO of 50 ms (also 30 ms and 15 ms) in decode; batch size tuned per SLO; no percentile specified; latency SLOs mentioned qualitatively for PDC node ratio adaptation.",
+ "load_regime": "fixed batch size per phase (decode batch 96/NPU at 4K KV; prefill 16K-token batches); no request-rate sweep",
+ "tradeoff_acknowledged": "Throughput-latency: decode throughput falls from 1,943 to 974 to 538 tokens/s per NPU as TPOT SLO tightens from 50 to 30 to 15 ms (batch 96->24->8). MTP raises per-iteration latency but improves overall throughput (§6).",
+ "eval_type": "real-system",
+ "hardware": "Huawei CloudMatrix384 (384 Ascend 910 NPUs, 192 Kunpeng CPUs, UB network)",
+ "models": "DeepSeek-R1 671B (INT8)",
+ "workloads": "synthetic prompt/KV lengths (1K-4K); comparisons with published DeepSeek H800 and SGLang H100 numbers",
+ "confidence": "high",
+ "extractor_notes": "Industrial system paper. TPOT never formally defined; used as per-step decode latency. Baseline comparisons are against published numbers (different batch sizes: 128 vs 96) so TPOT-constrained throughput is not exactly iso-batch. Prefill 'Perfect EPLB' numbers are idealized projections.",
+ "load_class": "offline-batch",
+ "load_class_quote": "Table 2. Overall prefill throughput (per accelerator) for DeepSeek-R1. [Batch size 16,384, input length 4,096] [§5.2; fixed-batch steady-state decode (batch 96/NPU), no request-rate sweep]",
+ "repass_log": [
+  "THR_TOK: result quote replaced by §2.2 design requirement",
+  "TPOT: kept (SLO constraint design quote); stat_basis unspecified (<50 ms bound, no statistic)",
+  "UTIL: result quote replaced by §4.2.3 design statement (maximize resource utilization)"
+ ]
+}

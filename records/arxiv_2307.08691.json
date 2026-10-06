@@ -1,0 +1,88 @@
+{
+ "key": "arxiv_2307.08691",
+ "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+ "first_author": "Dao",
+ "year": 2023,
+ "venue": "arXiv preprint (ICLR'24)",
+ "url": "https://arxiv.org/abs/2307.08691",
+ "cluster": "D5",
+ "technique": "Fewer non-matmul FLOPs, sequence-length parallelism across thread blocks, intra-block warp work partitioning",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2307.08691.txt",
+ "optimized_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "It is thus important to reduce non-matmul FLOPs and spend as much time as possible doing matmul FLOPs. ... This increases occupancy (utilization of GPU resources) in the case where the sequences are long",
+   "locator": "§1 contributions 1-2 (txt line 72-77)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Building on FlashAttention, we propose FlashAttention-2 with better parallelism and work partitioning to address these challenges.",
+   "locator": "§1 (txt line 66)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "These yield around 2× speedup compared to FlashAttention, reaching 50-73% of the theoretical maximum FLOPs/s on A100 ... FlashAttention-2 reaches training speed of up to 225 TFLOPs/s per A100 GPU (72% model FLOPs utilization).",
+  "metrics": [
+   "UTIL",
+   "OTHER:kernel_speedup"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "Fig 4-7 (attention TFLOPs/s fwd/bwd, A100 and H100)"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "Table 1 (end-to-end training TFLOPs/s/GPU, MFU)"
+  },
+  {
+   "metric": "OTHER:kernel_speedup",
+   "stat": "n/a",
+   "where": "Fig 4-6, Table 1"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TFLOPs/s (attention benchmark)",
+   "canonical": "UTIL",
+   "definition_quote": "To calculate the FLOPs of the forward pass, we use: 4 · seqlen2 · head dimension · number of heads. With causal mask, we divide this number by 2 to account for the fact that approximately only half of the entries are calculated. To get the FLOPs of the backward pass, we multiply the forward pass FLOPs by 2.5",
+   "locator": "§4.1",
+   "notes": "Achieved throughput in TFLOPs/s as fraction of A100 312 TFLOPs/s peak; kernel-level"
+  },
+  {
+   "term_as_written": "model FLOPs utilization",
+   "canonical": "UTIL",
+   "definition_quote": "6 · seqlen · number of params + 12 · number of layers · hidden dim · seqlen2 . ... one can argue that the second term should be halved, as with causal mask we only need to compute approximately half ... We choose to follow the formula from the literature (without dividing the attention FLOPs by 2) for consistency.",
+   "locator": "§4.2",
+   "notes": "Training MFU formula (Megatron); not an inference metric"
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "sequence-length sweep with fixed total tokens (16k); training runs",
+ "tradeoff_acknowledged": null,
+ "eval_type": "real-system",
+ "hardware": "A100 80GB SXM4, H100 80GB SXM5 (no new instructions), 8xA100 for training",
+ "models": "GPT3-1.3B, 2.7B at 2k/8k context",
+ "workloads": "attention microbenchmark and GPT training; no serving",
+ "confidence": "high",
+ "extractor_notes": "Kernel-level: targets achieved FLOPs/s (UTIL) and runtime of the attention kernel, not any end-to-end serving metric. Evaluation is training-focused; inference is only mentioned (MQA/GQA support, KV cache size) and not benchmarked. Largely out of serving scope.",
+ "load_class": "offline-batch",
+ "load_class_quote": "\"we vary the sequence length from 512, 1k, ..., 16k, and set batch size so that the total number of tokens is 16k\" (§4.1, txt line 493); fixed-batch kernel and training benchmarks",
+ "repass_log": [
+  "evidence_kind=design for both entries",
+  "UTIL and kernel_speedup result quotes replaced with design statements (§1)",
+  "load_class offline-batch"
+ ]
+}

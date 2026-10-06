@@ -1,0 +1,183 @@
+{
+  "key": "arxiv_2504.20068",
+  "title": "JITServe: SLO-aware LLM Serving with Imprecise Request Information",
+  "first_author": "Wei Zhang",
+  "year": 2025,
+  "venue": "arXiv preprint (v3)",
+  "url": "https://arxiv.org/abs/2504.20068",
+  "cluster": "D1",
+  "technique": "just-in-time SLO-aware scheduling using imprecise (predicted) output length and dependency info: grouped margin goodput maximization (GMAX) allocates just enough bandwidth per request to meet its SLO, then groups requests by length for batch efficiency",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.20068.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "the first SLO-aware LLM serving system designed to maximize service goodput (e.g., the number of tokens meeting request SLOs) across diverse workloads.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Latency-sensitive requests: ... token i counts toward goodput if it finishes by TTFT_SLO + i x TBT_SLO.",
+      "locator": "§3 Design Space",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "token i counts toward goodput if it finishes by TTFT_SLO + i x TBT_SLO"
+    },
+    {
+      "metric": "TBT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Latency-sensitive requests: measured as the number of tokens delivered within the expected timeline. Specifically, token i counts toward goodput if it finishes by TTFT_SLO + i x TBT_SLO.",
+      "locator": "§3 Design Space",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "token i counts toward goodput if it finishes by TTFT_SLO + i x TBT_SLO"
+    },
+    {
+      "metric": "E2E",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Deadline-sensitive requests: require low end-to-end latency (i.e., E2EL like time-to-last-token) to return a complete response quickly",
+      "locator": "abstract / §3",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "if the request completes before its deadline; zero otherwise"
+    },
+    {
+      "metric": "PROGRAM_JCT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Compound requests: measured as the total number of tokens across all subrequests if the final generation completes by the E2EL deadline; zero otherwise",
+      "locator": "§3 Design Space",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "measured as the total number of tokens across all subrequests if the final generation completes by the E2EL deadline; zero otherwise"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Goodput Efficiency: Maximize service goodput and resource utilization for providers, while remaining robust to",
+      "locator": "§3 design goals",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "JITServe improves service goodput by 1.4x-6.3x, alternatively achieving 28.5%-83.2% resource savings, compared to state-of-the-art designs.",
+    "metrics": [
+      "GOODPUT",
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "n/a",
+      "where": "token-level and request-level service goodput (§6.2, main figures)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P50",
+      "where": "§6.3 per-pattern latency"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P95",
+      "where": "§6.3"
+    },
+    {
+      "metric": "TBT",
+      "stat": "P95",
+      "where": "§6.3"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P95",
+      "where": "§6.3 deadline-sensitive/compound E2EL"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "§6 breakdown"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "GPU resource savings for equal goodput"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "service goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "maximizing service goodput (i.e., effective service throughput like the total number of tokens that meet request SLOs)",
+      "locator": "§1",
+      "notes": "tokens-based"
+    },
+    {
+      "term_as_written": "goodput (latency-sensitive)",
+      "canonical": "GOODPUT",
+      "definition_quote": "Latency-sensitive requests: measured as the number of tokens delivered within the expected timeline [71, 75]. Specifically, token i counts toward goodput if it finishes by TTFT_SLO + i x TBT_SLO.",
+      "locator": "§3 Design Space",
+      "notes": "per-token timeline goodput (token-level SLO), akin to a QoE-style deadline per token"
+    },
+    {
+      "term_as_written": "goodput (deadline-sensitive)",
+      "canonical": "GOODPUT",
+      "definition_quote": "Deadline-sensitive requests: measured as the total number of tokens, including input and output, if the request completes before its deadline; zero otherwise",
+      "locator": "§3 Design Space",
+      "notes": "counts input + output tokens, all-or-nothing per request"
+    },
+    {
+      "term_as_written": "goodput (compound)",
+      "canonical": "GOODPUT",
+      "definition_quote": "Compound requests: measured as the total number of tokens across all subrequests if the final generation completes by the E2EL deadline; zero otherwise",
+      "locator": "§3 Design Space",
+      "notes": "all-or-nothing over the whole workflow"
+    },
+    {
+      "term_as_written": "evaluation goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "(1) Token-level goodput: the number of tokens meeting SLO requirements, following popular SLO preferences; and (2) Request-level goodput: the number of requests meeting the SLO requirements. We also report traditional metrics such as TTFT, TBT, and throughput for performance breakdown.",
+      "locator": "§6.1 Metrics",
+      "notes": "two goodput variants evaluated; JITServe is agnostic to goodput definition"
+    },
+    {
+      "term_as_written": "E2EL",
+      "canonical": "E2E",
+      "definition_quote": "low end-to-end latency (i.e., E2EL like time-to-last-token)",
+      "locator": "abstract",
+      "notes": "E2EL = time to last token"
+    }
+  ],
+  "slo_spec": "SLOs set from P95 latencies measured on 1K DeepSeek API calls: latency-sensitive ~2 s TTFT and ~100 ms TBT; deadline-sensitive E2EL 20 s; compound E2EL = 20 s x number of stages. 1:1:1 mix of the three request patterns by default; best-effort requests get a default deadline.",
+  "load_regime": "trace replay (Microsoft LLM serving trace scaled to cluster; Poisson ablation); >10K requests over >=1 hour",
+  "tradeoff_acknowledged": "Grouping cutoff p trades batch-length homogeneity (efficiency) vs diluting group goodput; goodput-only scheduling can be unfair (fairness-adjustable priority); aggressive optimization can sacrifice a small subset of requests (shown not to occur).",
+  "eval_type": "real-system",
+  "hardware": "cluster of 16 NVIDIA A100 GPUs",
+  "models": "Llama-3.1-8B, Qwen2.5-14B, Qwen3-30B-A3B (MoE), Llama-3.1-70B",
+  "workloads": "chat, deep research, agentic pipelines, code generation; request mix from LMSYS-Chat statistics and a user study; Microsoft serving trace",
+  "confidence": "high",
+  "extractor_notes": "Goodput is explicitly parametric (provider-defined); evaluated as token-level and request-level variants; deadline-sensitive goodput counts input+output tokens. TTFT/TBT SLO as per-token timeline (token i due at TTFT_SLO + i*TBT_SLO) - not a percentile of TBT. SLO thresholds derived from P95 of DeepSeek API.",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "SLO thresholds calibrated from P95 of measured API latency; P50/P95 reported",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "Request arrivals follow Microsoft's real-world serving trace, scaled to match our cluster resources ... ablation with arrivals generated using a Poisson distribution (§6.1)",
+  "repass_log": [
+    "All entries are design statements (design goals / goodput definitions per request class)",
+    "TTFT/TBT/E2E/PROGRAM_JCT: stat n/a->attainment explicit (per-token timeline or deadline attainment)",
+    "load_class online-arrivals"
+  ]
+}

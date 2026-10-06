@@ -1,0 +1,106 @@
+{
+  "key": "arxiv_2503.18292",
+  "title": "Jenga: Effective Memory Management for Serving LLM with Heterogeneity",
+  "first_author": "Zhang",
+  "year": 2025,
+  "venue": "SOSP'25 (arXiv preprint v1)",
+  "url": "https://arxiv.org/abs/2503.18292",
+  "cluster": "D3",
+  "technique": "Two-level LCM-based page allocator for heterogeneous KV/state sizes (cross-attention, sliding window, Mamba, vision embeddings) plus per-layer-type prefix caching and eviction APIs, implemented on vLLM",
+  "layer": "KV-memory",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2503.18292.txt",
+  "optimized_metrics": [
+    {
+      "metric": "MEMORY",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Therefore, a new memory allocator is needed to reduce the memory waste of heterogeneous LLMs.",
+      "locator": "§3.2 (txt line 160-161)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "To lower costs, maximizing the request batch size by managing GPU memory efficiently is crucial.",
+      "locator": "abstract; §1",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Jenga improves GPU memory utilization by up to 79.6%, and increases serving throughput by up to 4.92x (1.80x on average).",
+    "metrics": [
+      "MEMORY",
+      "THR_REQ"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "mean",
+      "where": "Fig 13 end-to-end throughput (req/s) on H100 and L4"
+    },
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 14 averaged E2EL vs request rate (Llama vision)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 14 (up to 29.43x lower at high load)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "Fig 14 (Jenga higher than vLLM due to larger batches)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "mean",
+      "where": "memory waste / utilization, Fig 3, decode batch size (§7.3), prefix cache hit rate"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "E2EL / TTFT / TPOT",
+      "canonical": "E2E",
+      "definition_quote": "E2EL denotes end-to-end latency, TTFT denotes time to first token, and TPOT denotes time per output token.",
+      "locator": "Fig 14 caption",
+      "notes": "Only acronym expansions; no formal definitions or percentile. Averages."
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "Figure 13: End-to-end throughput. Amplified Ministral's throughput in both vLLM and Jenga by 10x for better visualization.",
+      "locator": "Fig 13 (axis: Throughput (req/s))",
+      "notes": "Requests/s on offline dataset replay; text never defines it formally."
+    },
+    {
+      "term_as_written": "memory waste",
+      "canonical": "MEMORY",
+      "definition_quote": "In the MMMU-pro dataset, which contains 6193 image tokens and 43 text tokens for each request on average, the resulting memory waste is 79.6%.",
+      "locator": "§2.2 Memory Fragmentation",
+      "notes": "79.6% is wasted fraction of KV memory under PagedAttention for Llama 3.2 Vision (analytic); the abstract's 'GPU memory utilization improvement up to 79.6%' reuses the same number."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "offline dataset replay for throughput; request-rate sweep for the Llama vision latency study (Fig 14)",
+  "tradeoff_acknowledged": "TPOT of Jenga is larger than vLLM because it batches more requests (same TPOT if scheduling the same number of requests per step); low-rate latency differs by only 2.6%.",
+  "eval_type": "real-system",
+  "hardware": "NVIDIA H100 80GB (default) and L4 24GB",
+  "models": "Llama 3.2 Vision, Gemma-2, Ministral, Jamba-1.5, Character.ai-style, PyramidKV, Llama 3.1",
+  "workloads": "MMLU-pro, MMMU-pro, arXiv-QA, ShareGPT-style long contexts",
+  "confidence": "high",
+  "extractor_notes": "Throughput measured as req/s without any SLO or percentile; latency treated as a do-no-harm constraint (mean). Abstract 'memory utilization +79.6%' coincides numerically with the analytic waste figure of PagedAttention on one model; ambiguous whether measured improvement. Model sizes vary by platform.",
+  "load_class": "mixed",
+  "load_class_quote": "Offline dataset replay for the throughput study ('Figure 13: End-to-end throughput', MMLU-pro/MMMU-pro/arXiv-QA datasets) vs request-rate sweep for latency: 'Figure 14 shows the latency under different request rates of the Llama Vision model.' (§7.2)",
+  "repass_log": [
+    "MEMORY: evidence/locator replaced with design statement (was: 'Evaluations show that Jenga improves GPU memory utilization ...')",
+    "THR_REQ: evidence/locator replaced with design statement (was: 'To lower costs, maximizing the request batch size by managin...')",
+    "E2E: demoted to reported_metrics (headline only; no design statement found)",
+    "load_class = mixed"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+ "key": "arxiv_2309.06180",
+ "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+ "first_author": "Kwon",
+ "year": 2023,
+ "venue": "SOSP'23",
+ "url": "https://arxiv.org/abs/2309.06180",
+ "cluster": "D3",
+ "technique": "PagedAttention: block-based non-contiguous KV cache with on-demand allocation, copy-on-write sharing, swap/recompute preemption; vLLM with iteration-level (continuous) batching",
+ "layer": "KV-memory",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2309.06180.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "In this work, we build vLLM, a high-throughput distributed LLM serving engine on top of PagedAttention",
+   "locator": "§1 (design goal; throughput read off normalized-latency-vs-rate curves, §6.1)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "vLLM, an LLM serving system that achieves (1) near-zero waste in KV cache memory and (2) flexible sharing of KV cache within and across requests to further reduce memory usage.",
+   "locator": "abstract",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "role": "constraint",
+   "evidence": "A high-throughput serving system should retain low normalized latency against high request rates.",
+   "locator": "§6.1 Key metrics",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "normalized latency of the systems, the mean of every request's end-to-end latency divided by its output length"
+  }
+ ],
+ "headline_claim": {
+  "text": "vLLM improves the throughput of popular LLMs by 2-4x with the same level of latency compared to the state-of-the-art systems, such as FasterTransformer and Orca.",
+  "metrics": [
+   "THR_REQ",
+   "NORM_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 12, 14, 16, 17 (normalized latency vs request rate)"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "§6.2 max sustainable request rate at similar latency (1.7-2.7x vs Orca Oracle)"
+  },
+  {
+   "metric": "MEMORY",
+   "stat": "mean",
+   "where": "Fig 2 (waste breakdown), Fig 15 (memory saving from sharing), Fig 13 (avg # batched requests)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 1 right (token/s vs batch size), motivation only"
+  },
+  {
+   "metric": "OTHER:kernel_latency",
+   "stat": "n/a",
+   "where": "Fig 18a attention kernel latency"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "normalized latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "we measure normalized latency of the systems, the mean of every request's end-to-end latency divided by its output length, as in Orca [60].",
+   "locator": "§6.1 Key metrics",
+   "notes": "Mean over requests of E2E/output-length (s/token); output length only, not input+output. E2E presumably includes queueing (open-loop Poisson arrivals, latency 'explodes' when queue grows). Not defined further."
+  },
+  {
+   "term_as_written": "throughput / request rate sustained",
+   "canonical": "THR_REQ",
+   "definition_quote": "vLLM can sustain 1.7x-2.7x higher request rates compared to Orca (Oracle) and 2.7x-8x compared to Orca (Max), while maintaining similar latencies.",
+   "locator": "§6.2",
+   "notes": "Throughput is operationalised as the highest request rate before normalized latency blows up (knee of the curve); no explicit SLO value. Fig 1 uses token/s vs batch size."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "request-rate sweep with Poisson arrivals over synthesized ShareGPT/Alpaca length traces; 1-hour traces (15 min for OPT-175B)",
+ "tradeoff_acknowledged": "Kernel-level: PagedAttention adds 20-26% higher attention kernel latency vs FasterTransformer kernel (but better end-to-end); block size trade-off between fragmentation and kernel efficiency; swap vs recompute overheads.",
+ "eval_type": "real-system",
+ "hardware": "Google Cloud A2 instances, NVIDIA A100 40GB (1-8 GPUs)",
+ "models": "OPT-13B/66B/175B, LLaMA-13B",
+ "workloads": "ShareGPT, Alpaca (lengths only), Poisson arrivals; parallel sampling, beam search, shared prefix, chatbot",
+ "confidence": "high",
+ "extractor_notes": "Headline throughput is never measured as tokens/s or req/s directly; it is read off normalized-latency-vs-request-rate curves. No tail percentile, no TTFT/TPOT, no SLO. The 'same level of latency' constraint is mean normalized latency.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "we generate request arrival times using Poisson distribution with different request rates (§6.1); 1-hour traces",
+ "repass_log": [
+  "THR_REQ: evidence replaced by design statement (§1 'we build vLLM, a high-throughput ... serving engine')",
+  "MEMORY: abstract design sentence (near-zero KV waste) kept, design",
+  "NORM_LAT constraint: evidence replaced by §6.1 constraint formulation; stat_basis explicit mean of per-request E2E/output length",
+  "added load_class online-arrivals"
+ ]
+}

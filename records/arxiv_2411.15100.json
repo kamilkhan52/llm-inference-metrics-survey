@@ -1,0 +1,101 @@
+{
+ "key": "arxiv_2411.15100",
+ "title": "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models",
+ "first_author": "Yixin Dong",
+ "year": 2024,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2411.15100",
+ "cluster": "D6",
+ "technique": "Context-free-grammar constrained decoding: adaptive token-mask cache for context-independent tokens, persistent stack, grammar-computation overlapped with GPU execution",
+ "layer": "kernels/attention",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2411.15100.txt",
+ "optimized_metrics": [
+  {
+   "metric": "OTHER:mask_gen_latency_per_token",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "to minimize the overhead of constrained decoding.",
+   "locator": "§3 overview (txt line 246)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "Finally, we co-designed the grammar ... engine with LLM inference engines to overlap the grammar ... computations with GPU computations, bringing minimal ... overhead for structured generation.",
+   "locator": "§1 (txt lines 121-125)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "average time per output token (TPOT)"
+  }
+ ],
+ "headline_claim": {
+  "text": "XGrammar can achieve up to 100x reduction in per-token latency for context-free grammar compared to current state-of-the-art methods. Additionally, the XGrammar-integrated LLM serving engine for Llama3.1 models achieves up to an 80x speedup in end-to-end LLM serving with structured output on the H100 GPU.",
+  "metrics": [
+   "OTHER:mask_gen_latency_per_token",
+   "TPOT"
+  ],
+  "locator": "§1"
+ },
+ "reported_metrics": [
+  {
+   "metric": "OTHER:mask_gen_latency_per_token",
+   "stat": "mean",
+   "where": "Fig 9 (per-token mask-generation latency, microseconds)"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "mean",
+   "where": "Fig 10, Table 1-2, Fig 11 (ms)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 12 (on-device)"
+  },
+  {
+   "metric": "OTHER:mask_preprocessing_time",
+   "stat": "n/a",
+   "where": "grammar compilation/preprocessing time"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TPOT",
+   "canonical": "TPOT",
+   "definition_quote": "Efficiency is measured by the average time per output token (TPOT), which reflects the overhead of applying constraints during token generation.",
+   "locator": "§4.2",
+   "notes": "Mean TPOT in ms in online serving with fixed batch sizes (1, 8, 16, 32...), H100, Llama-3.1-8B; input avg 139 tokens, output avg 53 tokens; fixed maximum output length."
+  },
+  {
+   "term_as_written": "per-token latency (mask generation)",
+   "canonical": "OTHER:mask_gen_latency_per_token",
+   "definition_quote": "XGrammar consistently achieves the lowest latency across all tasks, with under 40 µs per token for JSON Schema and CFG (JSON), and under 200 µs for XML and Python DSL.",
+   "locator": "§4.1",
+   "notes": "CPU time to generate the token mask per decoding step (grammar engine only, no LLM), RTX 4090 setup; separate from end-to-end TPOT."
+  },
+  {
+   "term_as_written": "TTFT and TPOT (on-device)",
+   "canonical": "TTFT",
+   "definition_quote": "We compare the time to first token (TTFT) and time per output token (TPOT) between structured generation with XGrammar and non-structured generation while ensuring the number of generated tokens is the same.",
+   "locator": "§4.3",
+   "notes": "Overhead measured as the ratio vs unstructured generation; used (not defined) in browser/iPhone experiments."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "fixed batch sizes in online serving (no request-rate sweep); JSON-mode-eval and synthetic datasets",
+ "tradeoff_acknowledged": "none stated; preprocessing (mask-cache build) cost is amortised/overlapped with prefill",
+ "eval_type": "both",
+ "hardware": "H100 and RTX 4090 (server), MacBook M3 Max and iPhone 14 Pro Max (on-device)",
+ "models": "Llama-3.1-8B-Instruct (server, 4-bit on-device), Llama-3.1 models (Fig 10), Qwen-2.5-0.5B-Instruct",
+ "workloads": "JSON schema, unconstrained JSON (CFG), XML, Python DSL; JSON-mode-eval",
+ "confidence": "high",
+ "extractor_notes": "Not an agent-scheduling paper: structured generation engine where the objective is per-token constraint overhead (microseconds mask time and TPOT overhead), i.e. a TOKEN_LAT / TPOT-overhead metric, not request latency. Two different 'latencies': Fig 9 per-token mask time (us) vs Fig 10 end-to-end TPOT (ms). Batch sizes fixed, no tails.",
+ "load_class": "single-sequence",
+ "load_class_quote": "All tests are run in an online serving setting with fixed batch [§4.2: fixed batch sizes 1-32, no arrival process; §4.1 mask-generation microbenchmark]",
+ "repass_log": [
+  "TOKEN_LAT recoded to OTHER:mask_gen_latency_per_token (grammar-engine CPU time per token, not sequence decode speed); headline result replaced by §3 design statement",
+  "TPOT: metric-definition quote replaced by §1 design statement (minimal overhead); stat explicit"
+ ]
+}

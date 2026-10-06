@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2505.23416",
+ "title": "KVzip: Query-Agnostic KV Cache Compression with Context Reconstruction",
+ "first_author": "Kim",
+ "year": 2025,
+ "venue": "NeurIPS'25",
+ "url": "https://arxiv.org/abs/2505.23416",
+ "cluster": "D3",
+ "technique": "query-agnostic KV eviction via context reconstruction scoring",
+ "layer": "KV-compression",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "reduces KV cache size by $3$-$4\\times$",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "FlashAttention decoding latency by approximately $2\\times$",
+   "locator": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "with negligible performance loss",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "KVzip reduces KV cache size by $3$-$4\\times$ and FlashAttention decoding latency by approximately $2\\times$, with negligible performance loss",
+  "metrics": [
+   "MEMORY",
+   "QUALITY",
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "MEMORY",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"FlashAttention decoding latency\" is attention kernel latency during decoding."
+}

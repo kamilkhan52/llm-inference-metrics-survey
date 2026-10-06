@@ -1,0 +1,134 @@
+{
+  "key": "arxiv_2407.00023",
+  "title": "Preble: Efficient Distributed Prompt Scheduling for LLM Serving",
+  "first_author": "Vikranth Srivatsa",
+  "year": 2024,
+  "venue": "arXiv preprint (later ICLR'25)",
+  "url": "https://arxiv.org/abs/2407.00023",
+  "cluster": "D2",
+  "technique": "Distributed prefix-aware scheduling: E2 (exploration+exploitation) global scheduler co-optimizing KV prefix reuse and load balance, with autoscaling of hot prefixes, prefill/decode-aware mixing, and fairness-aware local priority queue",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2407.00023.txt",
+  "optimized_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Preble ... aims to provide high serving throughput and low request average and tail latency for long and shared prompts.",
+      "locator": "\u00a71 Introduction",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "low request average and tail latency"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We consider p99 latency since it is important to control the tail latency in LLM serving as with all other user-facing services",
+      "locator": "\u00a74.1 Metrics",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": "We consider p99 latency since it is important to control the tail latency"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Preble aims to provide high serving throughput and low request average and tail latency for long and shared prompts.",
+      "locator": "\u00a71 Introduction",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "FAIRNESS",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "Preble aims to achieve high prefix reusing while ensuring fairness, which is important in multi-tenancy environments.",
+      "locator": "\u00a71 / \u00a73.3",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a naive solution that always sends requests with shared prefixes to the same GPU would result in imbalanced loads and low overall GPU utilization",
+      "locator": "\u00a71 Introduction",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Preble outperforms the SOTA serving systems by 1.5\u00d7 to 14.5\u00d7 on average latency and 2\u00d7 to 10\u00d7 on p99 latency.",
+    "metrics": [
+      "E2E"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Figs 3-4 avg latency vs RPS"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P99",
+      "where": "Figs 3-4"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "RPS sustained at given latency; global scheduler max throughput \u00a74.5"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 4 Azure trace"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "where": "Fig 4 Azure trace"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "average end-to-end request latency",
+      "canonical": "E2E",
+      "definition_quote": "We use three key metrics: request per second, which measures serving capacity; average end-to-end request latency (including scheduling time, queueing time, prefill, and decoding time); and p99 request latency.",
+      "locator": "\u00a74.1 Metrics",
+      "notes": "E2E includes scheduling and queueing; RPS = serving capacity"
+    },
+    {
+      "term_as_written": "TTFT/TPOT not key metrics",
+      "canonical": "TTFT",
+      "definition_quote": "Note that our metrics differ slightly from some existing LLM serving works Kwon et al. (2023); Yu et al. (2022), as we do not use TPOT (time per output token) or TTFT (time to first token) as key metrics. This is because our target LLM use has short output lengths, rendering TPOT not as meaningful and TTFT close to the request latency.",
+      "locator": "\u00a74.1 Metrics",
+      "notes": "explicit justification for E2E over TTFT/TPOT; TTFT and TPOT only shown in Fig 4 on Azure trace"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "request-rate sweep (Poisson arrivals, RPS on x-axis) plus Azure trace arrival pattern for tool-use/video-QA mix",
+  "tradeoff_acknowledged": "Local fairness-oriented priority wait queue improves p99 but not average latency (ablation)",
+  "eval_type": "real-system",
+  "hardware": "two-server cluster, each with two NVIDIA A6000 GPUs; one eight-H100 server",
+  "models": "Mistral 7B, Llama-3 70B",
+  "workloads": "five long/shared-prompt workloads (toolbench tool use, VideoQA, programming, long document QA, etc.); Azure LLM trace arrival pattern",
+  "confidence": "high",
+  "extractor_notes": "Notable: paper deliberately avoids TTFT/TPOT, uses E2E mean and p99 plus RPS capacity. Text says 'A600' in one place (typo for A6000). The scheduler's internal cost is in GPU-computation-time units ('prompt-aware load').",
+  "tail_role": "T-OBJ",
+  "tail_audit": {
+    "class": "T-OBJ",
+    "metrics": "E2E mean + P99 (stated design aim; no tail-specific mechanism)",
+    "correction": "Keep E2E P99 objective but flag as stated-goal/weak (mechanism E2 is load+cache-aware, not tail-driven). Weakest T-OBJ in the set.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "'we set the inter-arrival time using a Poisson distribution' with RPS sweep; Azure trace arrival pattern for one mix (\u00a74.1, txt l.~425)",
+  "repass_log": [
+    "E2E mean quote replaced by design aim statement; stat explicit (average)",
+    "E2E P99 kept (design: tail latency control); stat explicit",
+    "UTIL quote replaced: prior-work description -> Preble's own problem statement (imbalance/low utilization); THR_REQ and FAIRNESS marked design",
+    "load_class online-arrivals; tail_audit note kept (weak T-OBJ)",
+    "orchestrator R4: E2E P99 objective -> n/a (design aim is \"average and tail latency\"; P99 is the evaluation statistic); tier 1b set by hand"
+  ]
+}

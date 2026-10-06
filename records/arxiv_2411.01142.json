@@ -1,0 +1,97 @@
+{
+ "key": "arxiv_2411.01142",
+ "title": "NEO: Saving GPU Memory Crisis with CPU Offloading for Online LLM Inference",
+ "first_author": "Jiang",
+ "year": 2024,
+ "venue": "arXiv preprint (MLSys'25)",
+ "url": "https://arxiv.org/abs/2411.01142",
+ "cluster": "D5",
+ "technique": "offload part of decode attention and KV cache to host CPU; asymmetric GPU-CPU pipelining and load-aware scheduling",
+ "layer": "parallelism/offloading/hardware-mapping",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2411.01142.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "This paper aims to achieve higher throughput for online LLM inference without compromising accuracy or latency",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "role": "constraint",
+   "evidence": "This paper aims to achieve higher throughput for online LLM inference without compromising accuracy or latency",
+   "locator": "§1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "For each request, we compute its per-token latency by dividing its full latency by its output token number, and then we take the average among all requests."
+  }
+ ],
+ "headline_claim": {
+  "text": "N EO achieves up to 7.5x, 26%, and 14% higher throughput compared to GPU-only approach on T4, A10G, and H100 GPUs, respectively, while maintaining the same latency",
+  "metrics": [
+   "THR_TOK",
+   "NORM_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "NORM_LAT",
+   "stat": "mean",
+   "where": "Fig 6 load-latency curves"
+  },
+  {
+   "metric": "E2E",
+   "stat": "P50",
+   "where": "Fig 7a latency distribution (all percentiles)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 6-10 relative throughput"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "per-token latency",
+   "canonical": "NORM_LAT",
+   "definition_quote": "For each request, we compute its per-token latency by dividing its full latency by its output token number, and then we take the average among all requests.",
+   "locator": "Fig 6 caption",
+   "notes": "This is normalized latency (E2E/output tokens), not TPOT/TBT."
+  },
+  {
+   "term_as_written": "GPU token throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "the GPU token throughput, i.e., the total time elapsed divided by the total number of tokens processed (input length + output length)",
+   "locator": "§5.5",
+   "notes": "As written the ratio is inverted (time/tokens); counts input+output tokens."
+  },
+  {
+   "term_as_written": "throughput at latency",
+   "canonical": "THR_REQ",
+   "definition_quote": "14.3% higher throughput on H100 (at 2 sec latency), 6.40% higher on A10G (at 2 sec latency), and 563% higher on T4 (at 1 sec latency)",
+   "locator": "§5.2",
+   "notes": "Throughput read off the load-latency curve at a fixed average per-token latency, i.e. latency-bounded throughput (units not stated; request rate)."
+  }
+ ],
+ "slo_spec": "no SLO; latency-bounded throughput read at average per-token latency of 1-2 s",
+ "load_regime": "Poisson request-rate sweep (load-latency curves); offline fixed workloads",
+ "tradeoff_acknowledged": "KV offload could raise latency at high rates: 'NEO's latency gets slightly higher' as request rate grows vs heavily optimized vLLM",
+ "eval_type": "real-system",
+ "hardware": "T4, A10G, H100 + host CPU (AWS g5)",
+ "models": "LLaMA-3.1-8B, 70B, LLaMA-2-7B",
+ "workloads": "Azure LLM coding trace; OpenAI summarization comparison; synthetic",
+ "confidence": "medium",
+ "extractor_notes": "Scheduler's per-iteration goal is stated as 'maximize T/x' (iteration time over batch size, sic) and picks the schedule with higher estimated throughput. Only mean per-token latency curve; Fig 7 shows full distribution but no tail target.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "\"We evaluate the online latency of NEO under various request rates. We sample request arrival timestamps following the Poisson process.\" (§5.2); offline throughput also reported (Fig 7b) but headline is throughput at same latency under load",
+ "repass_log": [
+  "THR_TOK: design (§1 aims)",
+  "NORM_LAT constraint: abstract result quote replaced with §1 'without compromising ... latency'; stat_basis explicit (average of per-token latency over requests, Fig 6 caption)",
+  "load_class online-arrivals"
+ ]
+}

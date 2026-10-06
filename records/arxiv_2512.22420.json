@@ -1,0 +1,59 @@
+{
+ "key": "arxiv_2512.22420",
+ "title": "Nightjar: Dynamic Adaptive Speculative Decoding for Large Language Models Serving",
+ "first_author": "Rui Li",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2512.22420",
+ "cluster": "D4",
+ "technique": "load-adaptive speculative length, disables SD under load, draft offload to CPU",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "maximizing overall system throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "up to 20.18% lower latency",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Nightjar achieves up to 14.76% higher throughput than standard speculative decoding and up to 20.18% lower latency",
+  "metrics": [
+   "E2E",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"latency\" unspecified; E2E assumed."
+}

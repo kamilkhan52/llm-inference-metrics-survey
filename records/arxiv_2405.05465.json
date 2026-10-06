@@ -1,0 +1,65 @@
+{
+ "key": "arxiv_2405.05465",
+ "title": "Vidur: A Large-Scale Simulation Framework For LLM Inference",
+ "first_author": "Agrawal",
+ "year": 2024,
+ "venue": "MLSys'24 (arXiv preprint)",
+ "url": "https://arxiv.org/abs/2405.05465",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: LLM inference performance simulator (operator-level profiling + predictive models, hierarchical scheduler) plus Vidur-Search, which picks the deployment configuration maximizing QPS per dollar under TTFT-P90 / TBT-P99 SLOs and a P99 scheduling-delay capacity definition",
+ "layer": "other",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2405.05465.txt",
+ "optimized_metrics": [
+  {"metric": "COST", "stat": "n/a", "role": "objective",
+   "evidence": "Vidur-Search helps the operator maximize QPS per dollar. Consider a deployment with 16 A100 GPUs. Capacity of the system is defined as the maximum queries per second that it can support without the queuing delay blowing up. Specifically we constrain the P99 scheduling delay to be under 5 seconds. This QPS value is divided by the cost of renting 16 A100 GPUs per hour to get the QPS per dollar value.",
+   "locator": "§6 Vidur-Search, Optimization objective"},
+  {"metric": "THR_REQ", "stat": "P99", "role": "objective",
+   "evidence": "we instead target to find the maximum QPS that a given configuration can support. ... searches for the maximum QPS which does not increase the scheduling delay beyond a threshold.",
+   "locator": "§6 Vidur-Search"},
+  {"metric": "TTFT", "stat": "P90", "role": "constraint",
+   "evidence": "We put the following SLO constraints on the latency metrics: TTFT P90 < 2s and TBT P99 < 200ms.",
+   "locator": "§7.3 What-if Analysis, SLOs"},
+  {"metric": "TBT", "stat": "P99", "role": "constraint",
+   "evidence": "We put the following SLO constraints on the latency metrics: TTFT P90 < 2s and TBT P99 < 200ms.",
+   "locator": "§7.3 What-if Analysis, SLOs"},
+  {"metric": "QUEUE", "stat": "P99", "role": "constraint",
+   "evidence": "Specifically we constrain the P99 scheduling delay to be under 5 seconds.",
+   "locator": "§6 Vidur-Search"}
+ ],
+ "headline_claim": {"text": "it estimates inference latency with less than 9% error across the range. Further, we present Vidur-Search, a configuration search tool that helps optimize LLM deployment. Vidur-Search uses Vidur to automatically identify the most cost-effective deployment configuration that meets application performance constraints.",
+  "metrics": ["NORM_LAT", "COST"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "NORM_LAT", "stat": "P50/P95", "where": "Fig 3, Fig 4 (fidelity error)"},
+  {"metric": "TTFT", "stat": "P90", "where": "Fig 5"},
+  {"metric": "TBT", "stat": "P99", "where": "Fig 5"},
+  {"metric": "THR_REQ", "stat": "capacity QPS per dollar", "where": "Fig 5, 6"},
+  {"metric": "UTIL", "stat": "mean MFU", "where": "Fig 2 / simulator outputs"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "normalized end-to-end latency", "canonical": "NORM_LAT", "definition_quote": "we compare the percentage error of Vidur predictions for normalized end-to-end latency, which captures the request's end-to-end latency divided by its output length (Yu et al., 2022; Kwon et al., 2023).", "locator": "§7.2 Evaluation Metric", "notes": "divides by output length only; for static workloads the paper uses request execution time excluding scheduling delay"},
+  {"term_as_written": "request-level metrics (TTFT, TBT, scheduling delay)", "canonical": "TTFT", "definition_quote": "Request-level metrics. These include per-request metrics such as the scheduling delay, prefill completion time, time-to-first-token (TTFT), and time-between-tokens (TBT).", "locator": "§4.6 Metric store", "notes": "TTFT and TBT never formally defined; listed as simulator outputs"},
+  {"term_as_written": "Capacity", "canonical": "THR_REQ", "definition_quote": "Capacity of the system is defined as the maximum queries per second that it can support without the queuing delay blowing up. Specifically we constrain the P99 scheduling delay to be under 5 seconds.", "locator": "§6 Vidur-Search", "notes": "capacity defined via P99 scheduling delay <5s (found by binary search on QPS), not via TTFT/TBT SLOs"},
+  {"term_as_written": "QPS per dollar", "canonical": "COST", "definition_quote": "This QPS value is divided by the cost of renting 16 A100 GPUs per hour to get the QPS per dollar value.", "locator": "§6 Vidur-Search", "notes": "capacity QPS / GPU rental $ per hour"},
+  {"term_as_written": "replica / cluster metrics", "canonical": "UTIL", "definition_quote": "cluster (Model FLOPs utilization, KV-Cache utilization, etc.) performance metrics", "locator": "§4.1", "notes": "MFU and KV-cache utilization; not formalized"},
+  {"term_as_written": "SLO percentiles", "canonical": "SLO_ATT", "definition_quote": "We use a more relaxed constraint of P90 for TTFT since it is a one time delay experienced by the user, as opposed to TBT which is recurrent for each output token.", "locator": "§7.3", "notes": "rationale for using P90 on TTFT vs P99 on TBT"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "TTFT", "critique_quote": "configurations which are optimal on one metric may not satisfy the SLO constraint on the other metric (these are the blue points on the Pareto curve).", "locator": "§7.3"},
+  {"target_metric": "TBT", "critique_quote": "small changes in latency SLOs can result in a significant cost overhead. For example, for the LLaMA2-70B-LMSys-Chat1M workload, if the TBT SLO is changed from 0.12 seconds to 0.14 seconds (a difference of only 20ms), the Pareto curve point moves from approximately 0.07 to 0.13, ~1.85x reduction in cost!", "locator": "§7.3"}
+ ],
+ "recommended_practice": [
+  {"quote": "We use a more relaxed constraint of P90 for TTFT since it is a one time delay experienced by the user, as opposed to TBT which is recurrent for each output token.", "locator": "§7.3"},
+  {"quote": "Vidur achieves high fidelity (< 5% error) in almost all scenarios with request rate set to 85% of the system capacity – which is reflective of real production scenarios. Note that, as we approach capacity point, any small error in execution time prediction gets amplified", "locator": "§7.2 Dynamic workloads"},
+  {"quote": "any system configuration will have a maximum QPS capacity for a given workload at which it can process the input requests without accumulating the request queue. We use this property to find the maximum QPS supported by a system via a simple binary search", "locator": "§6"}
+ ],
+ "slo_spec": "TTFT P90 < 2 s and TBT P99 < 200 ms (what-if analysis); capacity = max QPS with P99 scheduling delay < 5 s",
+ "load_regime": "Poisson arrivals at 85% (and 95%) of capacity for fidelity; QPS binary search for capacity; static offline traces",
+ "tradeoff_acknowledged": "Throughput vs latency vs cost: SLO tightening raises cost (TBT SLO 0.12->0.14 s gives ~1.85x cost reduction); configs Pareto-optimal on TTFT may violate TBT SLO",
+ "eval_type": "simulation",
+ "hardware": "A100 and H100 (profiled); up to 16 GPUs in search",
+ "models": "LLaMA2-7B/70B, InternLM-20B, Qwen-72B",
+ "workloads": "LMSys-Chat-1M, Arxiv-Summarization, Bilingual-Web-Book (4K)",
+ "confidence": "high",
+ "extractor_notes": "Simulator paper; its own fidelity metric is percentage error of (median and P95) normalized E2E latency. Vidur-Search objective is QPS/$ with SLO constraints; TTFT and TBT used but never formally defined."
+}

@@ -1,0 +1,98 @@
+{
+ "key": "arxiv_2312.04511",
+ "title": "An LLM Compiler for Parallel Function Calling",
+ "first_author": "Sehoon Kim",
+ "year": 2023,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2312.04511",
+ "cluster": "D6",
+ "technique": "LLMCompiler: planner emits a function-call DAG, task fetching unit and executor run independent calls in parallel (with streaming planner)",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2312.04511.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "the first framework to optimize ... the orchestration of LLM function calling that can not only ... improve latency and cost, but also accuracy",
+   "locator": "§1 (txt lines 113-115)",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "the first framework to optimize ... the orchestration of LLM function calling that can not only ... improve latency and cost, but also accuracy",
+   "locator": "§1 (txt lines 113-115)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "the first framework to optimize ... the orchestration of LLM function calling that can not only ... improve latency and cost, but also accuracy",
+   "locator": "§1 (txt lines 113-115)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "We observe consistent latency speedup of up to 3.7×, cost savings of up to 6.7×, and accuracy improvement of up to ∼9% compared to ReAct.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "COST",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Table 1 (end-to-end latency (s), speedup), Fig E.5 breakdown"
+  },
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "where": "Table 2 (input/output tokens, $ cost)"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "mean",
+   "where": "Table 1 accuracy (%)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "end-to-end latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "For all experiments, we have measured accuracy, end-to-end latency, as well as input and output token usage.",
+   "locator": "§5",
+   "notes": "Latency of the whole function-calling task (planning + parallel tool execution + joiner); per-query average; not request rate-based. Includes planner overhead (slightly raises latency when there is no parallelism, App. E)."
+  },
+  {
+   "term_as_written": "cost",
+   "canonical": "COST",
+   "definition_quote": "The cost is computed based on the [number of input and output tokens]",
+   "locator": "§5 Table 2",
+   "notes": "Token-based API $ cost for GPT experiments."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "single-query / benchmark latency (no concurrent load)",
+ "tradeoff_acknowledged": "Planner overhead slightly increases end-to-end latency on tasks without parallelizable calls.",
+ "eval_type": "real-system",
+ "hardware": "API calls (GPT-3.5/4-turbo) and LLaMA-2 70B open-source serving (vLLM)",
+ "models": "gpt-3.5-turbo, gpt-4-turbo, LLaMA-2 70B",
+ "workloads": "HotpotQA, Movie Recommendation, ParallelQA, Game of 24, WebShop",
+ "confidence": "medium",
+ "extractor_notes": "Application-level (program) latency only; no TTFT/TPOT or throughput. Original ReAct latency not reported because of looping/early stopping. Mostly an LLM-agent framework paper; serving-layer relevance is as the PROGRAM_JCT-optimising orchestrator. Quality is also a headline.",
+ "load_class": "single-sequence",
+ "load_class_quote": "end latency, and relative speed-up of LLMCompiler [§5 Table 1: per-benchmark query latency, no concurrent load or arrival process]",
+ "repass_log": [
+  "PROGRAM_JCT: abstract problem quote replaced by §1 design aim; stat n/a (end-to-end latency, statistic not stated)",
+  "COST: headline result replaced by §1 design aim",
+  "QUALITY: headline result replaced by §1 design aim (accuracy via reduced interference)"
+ ]
+}

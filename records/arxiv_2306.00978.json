@@ -1,0 +1,94 @@
+{
+  "key": "arxiv_2306.00978",
+  "title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
+  "first_author": "Ji Lin",
+  "year": 2023,
+  "venue": "MLSys'24",
+  "url": "https://arxiv.org/abs/2306.00978",
+  "cluster": "D4",
+  "technique": "activation-aware per-channel scaling to protect ~1% salient weights in 4-bit weight-only quantization; TinyChat inference framework with fused dequant kernels",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2306.00978.txt",
+  "optimized_metrics": [
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "We focus on the second setting in this work since it not only reduces the hardware barrier (requiring a smaller memory size) but also speeds up the token generation (remedies memory-bound workload).",
+      "locator": "§1 (txt line 108-112)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "while post-training quantization (PTQ) suffers from large accuracy degradation under a low-bit setting.",
+      "locator": "§1 (txt line 64-67)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "median",
+      "role": "objective",
+      "evidence": "We focus on the second setting in this work since it not only reduces the hardware barrier (requiring a smaller memory size) but also speeds up the token generation (remedies memory-bound workload).",
+      "locator": "§1 (txt line 108-112)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We perform batch size = 1 inference ... We generate 200 tokens for each inference run and calculate the median latency as the final result. (§5.4)"
+    }
+  ],
+  "headline_claim": {
+    "text": "TinyChat offers more than 3x speedup over the Huggingface FP16 implementation on both desktop and mobile GPUs. It also democratizes the deployment of the 70B Llama-2 model on mobile GPUs.",
+    "metrics": [
+      "TOKEN_LAT",
+      "MEMORY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Tables 1-4, 6-8 (WikiText perplexity, benchmarks)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "median",
+      "where": "Fig 9, 10 (tokens/s speedup of TinyChat)"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "Fig 1/3, §4.1 memory traffic analysis"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "inference speed (tokens/s)",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "We perform batch size = 1 inference for all LLMs using a fixed prompt length of 4 tokens. We generate 200 tokens for each inference run and calculate the median latency as the final result.",
+      "locator": "§5.4",
+      "notes": "Speed reported as tokens/s at batch 1 (e.g. Llama-2-7B 52 -> 62 tokens/s from FP16 kernel fusion, then 3.1x more from quantized kernels); speedup baseline is Huggingface FP16."
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "batch=1, 4-token prompt, 200 generated tokens, median over runs",
+  "tradeoff_acknowledged": "W8A8 methods unsuitable for on-device generation stage (arithmetic intensity ~1; memory-bound), so weight-only 4-bit chosen; context stage is compute-bound and 10 ms for 200 tokens vs 310 ms to generate 20 tokens",
+  "eval_type": "real-system",
+  "hardware": "RTX 4090, RTX 4070 laptop, Jetson Orin, Raspberry Pi 4B, Apple M1",
+  "models": "Llama/Llama-2, OPT, MPT, Falcon, Vicuna, OpenFlamingo, VILA",
+  "workloads": "WikiText perplexity, MMLU, coding/math benchmarks, VLM benchmarks",
+  "confidence": "high",
+  "extractor_notes": "Edge/on-device, batch 1; no serving, no percentiles. Latency profile shows generation stage dominates (310 ms for 20 tokens vs 10 ms for 200-token prompt) which motivates weight-only quantization.",
+  "load_class": "single-sequence",
+  "load_class_quote": "We perform batch size = 1 inference for all LLMs using a fixed prompt length of 4 tokens. (§5.4)",
+  "repass_log": [
+    "MEMORY: evidence/locator replaced with design statement (was: 'Low-bit weight quantization for LLMs can significantly reduc...')",
+    "QUALITY: evidence/locator replaced with design statement (was: 'Protecting only 1% salient weights can greatly reduce quanti...')",
+    "TOKEN_LAT: evidence/locator replaced with design statement (was: 'TinyChat offers more than 3x speedup over the Huggingface FP...')",
+    "TOKEN_LAT: median over repeated runs, not over a request distribution",
+    "TOKEN_LAT: stat_basis explicit (median)",
+    "load_class = single-sequence"
+  ]
+}

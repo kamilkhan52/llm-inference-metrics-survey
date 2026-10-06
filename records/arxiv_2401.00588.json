@@ -1,0 +1,109 @@
+{
+  "key": "arxiv_2401.00588",
+  "title": "Fairness in Serving Large Language Models",
+  "first_author": "Sheng",
+  "year": 2023,
+  "venue": "OSDI'24 (arXiv v2 Jun 2024)",
+  "url": "https://arxiv.org/abs/2401.00588",
+  "cluster": "D1",
+  "technique": "Virtual Token Counter (VTC) fair scheduler on continuous batching, with per-client weighted token-count service",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2401.00588.txt",
+  "optimized_metrics": [
+    {
+      "metric": "FAIRNESS",
+      "stat": "max",
+      "role": "objective",
+      "evidence": "Any two clients f, g that are continuously backlogged during a given time interval [t1,t2) should receive the same service during this interval",
+      "locator": "§3 (fairness properties, max-min fairness)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "Thus, we want a solution that provides not only isolation (like RPM limit) but also high resource utilization.",
+      "locator": "§1 (work-conserving requirement)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "We prove a 2x tight upper bound on the service difference between two backlogged clients, adhering to the requirement of work-conserving. Through extensive experiments, we demonstrate the superior performance of VTC in ensuring fairness",
+    "metrics": [
+      "FAIRNESS"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "FAIRNESS",
+      "stat": "max",
+      "where": "Fig 3-9, Tables (max/avg/var service difference)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "response time figures (average first-token latency per client in window)"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "n/a",
+      "where": "Fig 14, Tables (throughput incl. input+output tokens)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "service (weighted token count)",
+      "canonical": "FAIRNESS",
+      "definition_quote": "W(t1,t2) = w_p * n_p(t1,t2) + w_q * n_q(t1,t2)",
+      "locator": "§3.1",
+      "notes": "w_p=1, w_q=2 in evaluation (following OpenAI pricing); general monotone cost h(n_p,n_q)"
+    },
+    {
+      "term_as_written": "fair w.r.t. delta",
+      "canonical": "FAIRNESS",
+      "definition_quote": "A schedule is fair w.r.t. delta, if for any clients f and g, for all intervals [t1,t2) in which clients f and g are backlogged, we have |W_f(t1,t2) - W_g(t1,t2)| <= delta.",
+      "locator": "Def 4.2",
+      "notes": "max-min fairness among backlogged clients; delta independent of interval length"
+    },
+    {
+      "term_as_written": "service difference (metric)",
+      "canonical": "FAIRNESS",
+      "definition_quote": "the service difference between two clients is defined as the minimum of two values: the difference between their received services, and the difference between the lower service and its corresponding request rate.",
+      "locator": "§5.1 Metrics",
+      "notes": "min(s2 - s1, |r1 - s1|); smaller = fairer"
+    },
+    {
+      "term_as_written": "response time",
+      "canonical": "TTFT",
+      "definition_quote": "The response time of client i at time t is measured as the average first token latency of the requests sent by client i during the time window [t - T, t + T].",
+      "locator": "§5.1 Metrics",
+      "notes": "T = 30 s; mean first-token latency per client, includes queueing"
+    },
+    {
+      "term_as_written": "Throughput",
+      "canonical": "THR_TOK",
+      "definition_quote": "Throughput is the total number of tokens (including input and output tokens) processed divided by the total execution time.",
+      "locator": "App. tables (txt line ~1434)",
+      "notes": "input+output tokens, whole system, tokens/s"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "synthetic clients with constant/Poisson/on-off request rates (overloaded and underloaded); real-trace (LMSYS-Chat-1M) clients",
+  "tradeoff_acknowledged": "fairness vs throughput/utilization: RPM limits give isolation but low utilization; VTC variants (predict) trade off; strict bound tightening may compromise work conservation (Remark 4.7)",
+  "eval_type": "real-system",
+  "hardware": "A10G 24GB (Llama-2-7b), A100 80GB (Llama-2-13b)",
+  "models": "Llama-2-7b, Llama-2-13b (S-LoRA codebase)",
+  "workloads": "synthetic client mixes, real-world trace",
+  "confidence": "high",
+  "extractor_notes": "Fairness is the sole objective; it is defined over token-weighted service, not latency. Latency (response time) is reported to show isolation. Service units follow OpenAI pricing (output tokens weigh 2x input) - an unusual metric basis for cost/service accounting.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "Client 1 sends 90 requests per minute. Client 2 sends 180 requests per minute, both evenly spaced out (§5.2); also Poisson/on-off clients and LMSYS-Chat-1M trace clients",
+  "repass_log": [
+    "FAIRNESS: abstract result (2x bound) replaced by §3 design property (backlogged clients receive equal service)",
+    "UTIL: design (work-conserving requirement)",
+    "no latency entries",
+    "load_class online-arrivals"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+"key":"arxiv_2403.19708","title":"Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention","first_author":"Bin Gao","year":2024,"venue":"USENIX ATC'24 (arXiv v3)","url":"https://arxiv.org/abs/2403.19708","cluster":"D3",
+"technique":"hierarchical (DRAM/SSD) KV cache store reused across conversation turns, with layer-wise preloading, async saving, scheduler-aware fetch/eviction and decoupled positional encoding","layer":"prefix/context-caching","read_level":"full","fulltext_path":"fulltext/arxiv_2403.19708.txt",
+"optimized_metrics":[
+{"metric":"TTFT","stat":"mean","role":"objective","evidence":"CachedAttention significantly decreases the time to the first token (TTFT) by up to 87%","locator":"abstract"},
+{"metric":"COST","stat":"n/a","role":"objective","evidence":"reduces the end-to-end inference cost by up to 70%","locator":"abstract"},
+{"metric":"OTHER:prefill_throughput","stat":"n/a","role":"objective","evidence":"improves the prompt prefilling throughput by up to 7.8x for multi-turn conversations","locator":"abstract"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"CachedAttention enables the saved KV caches to remain valid via decoupling the positional encoding and effectively truncating the KV caches","locator":"abstract; §4.3.5 (PPL check)"}
+],
+"headline_claim":{"text":"CachedAttention significantly decreases the time to the first token (TTFT) by up to 87%, improves the prompt prefilling throughput by up to 7.8x for multi-turn conversations, and reduces the end-to-end inference cost by up to 70%.","metrics":["TTFT","OTHER:prefill_throughput","COST"],"locator":"abstract"},
+"reported_metrics":[{"metric":"TTFT","stat":"mean","where":"Fig 14"},{"metric":"OTHER:prefill_throughput","stat":"n/a","where":"Fig 15"},{"metric":"COST","stat":"n/a","where":"Fig 16 GPU time, Fig 17 $"},{"metric":"OTHER:cache_hit_rate","stat":"n/a","where":"Fig 13"},{"metric":"QUALITY","stat":"n/a","where":"§4.3.5 PPL"}],
+"metric_definitions":[
+{"term_as_written":"TTFT","canonical":"TTFT","definition_quote":"TTFT is an important metric for quality of service in LLM serving. It indicates how quickly users start seeing the output of LLMs after entering their prompt.","locator":"§4.2","notes":"mean not stated; under Poisson arrivals so queueing may be included but is not discussed"},
+{"term_as_written":"Prefilling throughput","canonical":"OTHER:prefill_throughput","definition_quote":"Prefilling throughput is the metric to evaluate the speed of processing the prompt.","locator":"§4.2","notes":"prompt tokens/s; not decode throughput"},
+{"term_as_written":"Inference cost","canonical":"COST","definition_quote":"We evaluate the resource cost based on the on-demand price of AWS EC2 instances, i.e., $5/hour per A100 GPU, $0.0088/hour/GB for DRAM and $0.000082/hour/GB for SSD.","locator":"§4.2","notes":"GPU time plus DRAM/SSD storage cost"}],
+"slo_spec":null,"load_regime":"Poisson session arrivals (lambda=1.0 sessions/s) over 9K ShareGPT conversations; also varied session arrival rate sweep (§4.3.8)",
+"tradeoff_acknowledged":null,"eval_type":"real-system","hardware":"A100 GPUs, DRAM and SSD (up to 10TB) tier","models":"LLaMA-13B, LLaMA-65B, LLaMA-70B, Falcon-40B","workloads":"ShareGPT multi-turn (avg 5.75 turns)",
+"confidence":"high","extractor_notes":"Title and abstract frame the goal as cost; TTFT is the primary latency metric. Cache hit rate is the internal driver (eviction policy) but treated as reported intermediate."
+}

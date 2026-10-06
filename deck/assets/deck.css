@@ -1,0 +1,106 @@
+/* Deck design system: 1280x720 slides on white; technical, quiet; one meaning per accent colour.
+   Four semantic slots (rename the meanings per project in BRIEF.md §B, keep one meaning per colour):
+     --near  blue    (e.g., option A)
+     --far   orange  (e.g., option B)
+     --mid   slate   (e.g., the baseline / middle)
+     --conv  green   (e.g., convergence / hybrid)
+   Neutral data uses --ink, --ink-2, --ink-3. --ink-3 is darkened for >=5.5:1 contrast on white. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --ink: #111418;
+  --ink-2: #4a5059;
+  --ink-3: #5f6570;
+  --rule: #e3e6ea;
+  --panel: #f6f7f9;
+  --near: #2a78d6;
+  --near-soft: #e6f0fb;
+  --far: #eb6834;
+  --far-soft: #fdeee7;
+  --mid: #3c4a5c;
+  --mid-soft: #eceff3;
+  --conv: #1baf7a;
+  --conv-soft: #e4f6ef;
+  --warn: #b42318;
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --slide-w: 1280px;
+  --slide-h: 720px;
+}
+html, body { background: var(--bg); color: var(--ink); }
+body { margin: 0; font-family: var(--font-body); }
+
+/* ---------- slide frame ---------- */
+.deck { display: flex; flex-direction: column; align-items: center; gap: 28px; padding-block: 28px; }
+.slide {
+  position: relative; box-sizing: border-box;
+  width: var(--slide-w); height: var(--slide-h);
+  padding: 44px 60px 0 60px;
+  background: var(--bg); color: var(--ink);
+  border: 1px solid var(--rule);
+  display: grid; grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  font-size: 18px; line-height: 1.45;
+}
+.slide-head { margin-bottom: 18px; }
+.kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+.slide h2 { font-family: var(--font-display); font-weight: 600; font-size: 34px; line-height: 1.15; margin: 0; max-width: 1100px; text-wrap: balance; }
+.slide .sub { font-size: 18px; color: var(--ink-2); margin-top: 8px; max-width: 1050px; }
+.slide-body { min-height: 0; position: relative; }
+.slide-foot {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
+  border-top: 1px solid var(--rule); padding: 8px 0 12px; margin-top: 10px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); line-height: 1.4;
+}
+.slide-foot .sources { max-width: 1060px; min-height: 4.2em; display: flex; flex-direction: column; justify-content: flex-end; }
+.slide-foot .pageno { white-space: nowrap; }
+
+/* ---------- common building blocks ---------- */
+.cols { display: grid; gap: 28px; height: 100%; }
+.cols.c2 { grid-template-columns: 1fr 1fr; }
+.cols.c-6-4 { grid-template-columns: 6fr 4fr; }
+.cols.c-4-6 { grid-template-columns: 4fr 6fr; }
+.cols > * { min-width: 0; }
+.slide p { margin: 0 0 10px; }
+.slide ul { margin: 0 0 10px; padding-left: 20px; }
+.slide li { margin-bottom: 6px; }
+.small { font-size: 15px; color: var(--ink-2); }
+.tiny { font-size: 12.5px; color: var(--ink-3); }
+.tag { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+.callout { border-left: 3px solid var(--ink); padding: 4px 0 4px 14px; font-family: var(--font-display); font-size: 21px; line-height: 1.3; }
+.box { border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; }
+.box.near { border-color: var(--near); background: var(--near-soft); }
+.box.far { border-color: var(--far); background: var(--far-soft); }
+.box.mid { border-color: var(--mid); background: var(--mid-soft); }
+.box.conv { border-color: var(--conv); background: var(--conv-soft); }
+.label-near { color: var(--near); font-weight: 600; }
+.label-far { color: var(--far); font-weight: 600; }
+.label-mid { color: var(--mid); font-weight: 600; }
+.label-conv { color: var(--conv); font-weight: 600; }
+table.t { border-collapse: collapse; width: 100%; font-size: 15px; }
+table.t th, table.t td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.t th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); font-weight: 600; }
+table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- charts (SVG) ---------- */
+.slide svg { display: block; max-width: 100%; height: auto; }
+.slide svg text { font-family: var(--font-body); fill: var(--ink); }
+.slide svg .axis { fill: var(--ink-2); font-family: var(--font-mono); font-size: 12px; }
+.slide svg .lbl { fill: var(--ink-2); font-size: 13px; }
+.slide svg .muted { fill: var(--ink-2); }
+.slide svg .faint { fill: var(--ink-3); }
+.slide svg .halo { paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+
+/* ---------- deck chrome (assembled deck only) ---------- */
+.deck-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; width: 100%; background: rgba(255,255,255,.94); border-bottom: 1px solid var(--rule); font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; box-sizing: border-box; }
+.deck-bar button { font: inherit; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); border-radius: 4px; padding: 3px 9px; cursor: pointer; }
+.deck-bar button:focus-visible { outline: 2px solid var(--near); outline-offset: 2px; }
+.scaler { transform-origin: top center; }
+body.present { overflow: hidden; height: 100%; }
+body.present .deck { gap: 0; padding: 0; }
+body.present .slide { display: none; border: none; }
+body.present .slide.active { display: grid; }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: #fff; font-family: var(--font-body); font-size: 12.5px; padding: 6px 8px; border-radius: 4px; line-height: 1.35; max-width: 300px; z-index: 20; }

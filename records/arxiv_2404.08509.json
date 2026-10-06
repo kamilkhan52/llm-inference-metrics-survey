@@ -1,0 +1,95 @@
+{
+  "key": "arxiv_2404.08509",
+  "title": "Efficient Interactive LLM Serving with Proxy Model-based Sequence Length Prediction",
+  "first_author": "Qiu",
+  "year": 2024,
+  "venue": "arXiv preprint (v2 Nov 2024; AIOps'24 workshop version)",
+  "url": "https://arxiv.org/abs/2404.08509",
+  "cluster": "D1",
+  "technique": "speculative shortest-job-first (SSJF) scheduler using a fine-tuned BERT-base proxy model (regression, L1 loss) to predict output length; no change to batching/memory management",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.08509.txt",
+  "optimized_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "their interactive nature mandates low job completion times (JCT) and higher throughput for inference requests",
+      "locator": "§1 (txt line 63)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": null
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "their interactive nature mandates low job completion times (JCT) and higher throughput for inference requests",
+      "locator": "§1 (txt line 63)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "SSJF reduces average job completion times by 30.5-39.6% and increases throughput by 2.2-3.6x compared to FCFS schedulers, across no batching, dynamic batching, and continuous batching settings.",
+    "metrics": [
+      "E2E",
+      "THR_REQ"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Fig 4, 5 (average JCT vs rate and burstiness)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 6, 7"
+    },
+    {
+      "metric": "OTHER:predictor_accuracy_F1",
+      "stat": "n/a",
+      "where": "§4.3 ablation (accuracy, F1)"
+    },
+    {
+      "metric": "OTHER:predictor_overhead",
+      "stat": "mean",
+      "where": "§4.3 (7.6 ms avg, 0.02% of latency)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "job completion time (JCT)",
+      "canonical": "E2E",
+      "definition_quote": "(not defined) 'long job completion times (JCT)' attributed to 'high waiting times'",
+      "locator": "§2 (txt lines ~117-119)",
+      "notes": "JCT used as end-to-end request latency incl. queueing (waiting time causes long JCT); never formally defined; average only (no tail)"
+    },
+    {
+      "term_as_written": "throughput",
+      "canonical": "THR_REQ",
+      "definition_quote": "(not defined) 'the serving throughput' reported as relative improvement vs FCFS",
+      "locator": "§4.2",
+      "notes": "units not stated; requests-based presumably; reported as multiples at varying request rate/burstiness"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "Poisson-like arrival rate sweep and burstiness sweep using Microsoft Azure function traces for arrival times; LMSYS-Chat-1M prompts; batching: none / dynamic / continuous (max batch 4)",
+  "tradeoff_acknowledged": "no starvation handling or preemption in SSJF (aging mentioned as option); gains shrink as batch size increases; pairwise predictor rejected for O(log N) cost",
+  "eval_type": "real-system",
+  "hardware": "IBM Cloud gx2-16x128x2v100, 2x NVIDIA V100 16GB",
+  "models": "OPT-1.3b/2.7b, GPT2-large/xl, CodeGen-350m/2b, Bloom-1b1/3b, Switch-base-16/32 (small models)",
+  "workloads": "LMSYS-Chat-1M; arrival times from Azure function traces",
+  "confidence": "high",
+  "extractor_notes": "JCT and throughput used without formal definition. Only mean JCT is reported (no percentiles). Small models on V100; continuous batching max batch size 4, so generalisation to modern serving is limited. Compared against FCFS and oracle SJF (oracle reduces JCT by 43-58%).",
+  "load_class": "online-arrivals",
+  "load_class_quote": "Fig 4 and Fig 5 show the average LLM serving JCT with varying request arrival rates and burstiness (§4); arrival times from Azure function traces",
+  "repass_log": [
+    "E2E: abstract result quote replaced by §1 problem statement (low JCT mandated); stat mean->n/a, unspecified (paper states no statistic for the targeted JCT; mean is only the evaluation measure)",
+    "THR_REQ: design (same §1 statement)",
+    "load_class online-arrivals"
+  ]
+}

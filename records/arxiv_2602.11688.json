@@ -1,0 +1,99 @@
+{
+ "key": "arxiv_2602.11688",
+ "title": "GORGO: Online Tuning for Cross-Region Network-Aware LLM Serving",
+ "first_author": "Ricci Toniolo",
+ "year": 2026,
+ "venue": "arXiv preprint (v3, Jul 2026)",
+ "url": "https://arxiv.org/abs/2602.11688",
+ "cluster": "D2",
+ "technique": "Cross-region proxy router scoring each replica by weighted network RTT + queue (tokens in flight) + uncached-prefill cost; the two weights are tuned online by a (1+1) evolution strategy whose fitness is rolling-window p95 TTFT",
+ "layer": "cluster-routing/placement",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2602.11688.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "P95",
+   "role": "objective",
+   "evidence": "GORGO proxy uses a simple (1+1) evolutionary strategy to tune weights Wrtt and Wqueue on the objective function, p95 TTFT.",
+   "locator": "§2.3 (txt line ~143)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "evolutionary strategies guide the GORGO policy's parameters to directly optimize p95 TTFT. ; The fitness function is the negative p95 TTFT (in seconds) of the rolling 128-request tuning window"
+  }
+ ],
+ "headline_claim": {
+  "text": "we fix the parameter values learned from tuning and improve p95 TTFT by 6.9–15.5% and p95 end-to-end (E2E) latency by 14.3–30.9% over baseline loadbalancing policies such as simple session affinity and prefix-cache.",
+  "metrics": [
+   "TTFT",
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "P50/P95/P99",
+   "where": "Table 2, 3, 4 (headline p95 E2E gain is NOT an optimized objective: tuner optimizes p95 TTFT only; Limitations: it trades 'E2E and ITL tails for TTFT')"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "P50/P99",
+   "where": "Table 2, 3"
+  },
+  {
+   "metric": "TBT",
+   "stat": "median",
+   "where": "Table 2 ITL (ms), 'ITL is the median'"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Table 4 input tok/s (offered load, not an outcome)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "TTFT is known to consist of three different costs: network latency, prefill time, and queueing delay [He et al., 2025].",
+   "locator": "§2.2",
+   "notes": "TTFT includes client-proxy-to-replica network RTT, queueing and prefill (uncached tokens only): TTFT = Tnetwork(i) + Tqueue(i) + Tprefill(xr \\ ci) (Eq. 1). Measured at the proxy so includes WAN RTT."
+  },
+  {
+   "term_as_written": "p95 TTFT tuning objective",
+   "canonical": "TTFT",
+   "definition_quote": "tune GORGO's weights online to minimize the p95 TTFT of a rolling 128-request window with hop size 32",
+   "locator": "§4 Tuning and evaluation windows",
+   "notes": "Fitness is computed over a rolling 128-request window (hop 32), so the optimized quantity is a windowed p95, lower than the whole-window p95 in Table 2."
+  },
+  {
+   "term_as_written": "queued requests (proxy-side)",
+   "canonical": "QUEUE",
+   "definition_quote": "Queued requests to the proxy are defined as recently dispatched requests without a token response",
+   "locator": "§4 Baseline policies",
+   "notes": "Tqueue input is the total tokens of requests without a completion event on the proxy, not the engine's queue."
+  },
+  {
+   "term_as_written": "E2E latency / ITL",
+   "canonical": "E2E",
+   "definition_quote": "Table 2 reports TTFT, E2E latency, and inter-token latency (ITL) for all policies in all three windows.",
+   "locator": "§5",
+   "notes": "E2E and ITL never defined; ITL reported as median only."
+  }
+ ],
+ "slo_spec": null,
+ "load_regime": "trace replay of ART-Chat-2.5M (Mooncake format timestamps) with time_scale 1.0/2.0/3.0 to vary saturation; BFCL replay with 128 concurrent episodes",
+ "tradeoff_acknowledged": "Optimizing p95 TTFT can exploit continuous batching by concentrating load on the nearest replica, trading E2E and ITL tails for TTFT (Table 8 'reward hacking': wqueue=0 wins every TTFT percentile but is worst on E2E and ITL tails; p95 TTFT 17% better than next-best).",
+ "eval_type": "real-system",
+ "hardware": "3 regions (us-ashburn, eu-frankfurt, ap-seoul), 2x L40S each; BFCL: 2x H200 replicas",
+ "models": "Qwen3.5-35B-A3B FP8 (SGLang); Qwen3-4B for BFCL",
+ "workloads": "ART-Chat-2.5M (synthetic from production metadata, long-context high prefix reuse), WildChat-4.8M (appendix), BFCL multi-turn",
+ "confidence": "high",
+ "extractor_notes": "TAIL IN OBJECTIVE: yes - the ES fitness is negative rolling-window p95 TTFT (single-statistic, tail objective). p95/p99 E2E improvements are reported only; E2E demoted from objective. Paper itself documents reward hacking of the p95 TTFT objective (Appendix D / Table 8). Load classed online-arrivals (timestamped trace replay, time-scaled); BFCL part is closed-loop concurrent episodes. Not a Vidur/simulator study; real multi-region deployment.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "The trace follows Mooncake's FAST'25 format [Qin et al., 2025] containing per-request timestamps, which can be linearly scaled to simulate variable saturation profiles.",
+ "repass_log": [
+  "new record"
+ ]
+}

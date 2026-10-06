@@ -1,0 +1,77 @@
+{
+ "key": "arxiv_2510.14392",
+ "title": "FairBatching: Fairness-Aware Batch Formation for LLM Inference",
+ "first_author": "Lyu",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2510.14392",
+ "cluster": "D1",
+ "technique": "fair prefill/decode batch formation with adaptive batch capacity",
+ "layer": "request-scheduling",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "P99",
+   "role": "objective",
+   "evidence": "significantly reduces TTFT tail latency by up to 2.29x",
+   "locator": "abstract"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "robustly maintaining TPOT SLOs",
+   "locator": "abstract"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "achieving overall 20.0% improvement in single-node capacity",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "FairBatching significantly reduces TTFT tail latency by up to 2.29x while robustly maintaining TPOT SLOs",
+  "metrics": [
+   "THR_REQ",
+   "TPOT",
+   "TTFT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "TBT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "medium",
+ "extractor_notes": "Abstract-only extraction. \"tail latency\" percentile not stated in abstract (stat set to P99 as a guess); capacity assumed to be sustainable request load -> THR_REQ."
+}

@@ -1,0 +1,52 @@
+{
+ "key": "arxiv_2505.09999",
+ "title": "ServeGen: Workload Characterization and Generation of Large Language Model Serving in Production",
+ "first_author": "Xiang",
+ "year": 2025,
+ "venue": "arXiv preprint (v3, May 2026)",
+ "url": "https://arxiv.org/abs/2505.09999",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: characterization of production LLM serving workloads (arrival burstiness, length distributions, multimodal, reasoning) and a per-client workload generator (ServeGen); metrics enter only through benchmarking use cases (instance provisioning under P99 TTFT/TBT SLOs; PD-disaggregation SLO attainment)",
+ "layer": "other",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2505.09999.txt",
+ "optimized_metrics": [
+  {"metric": "SLO_ATT", "stat": "P99", "role": "constraint",
+   "evidence": "determining the minimum number of inference instances required to serve a workload while maintaining certain service-level objectives (SLOs).",
+   "locator": "§6.3 Use Case #1"},
+  {"metric": "COST", "stat": "n/a", "role": "objective",
+   "evidence": "we benchmark one instance with workloads generated via both ServeGen and NAIVE, adjusting the workload rate to find the maximum rate each instance can (supposedly) sustain without violating the SLOs (measured as P99 values), and thus derive the number of instances needed in each case.",
+   "locator": "§6.3 Detailed setups"}
+ ],
+ "headline_claim": {"text": "Practical use cases validate that ServeGen achieves more accurate performance benchmarking compared to naive workload generation, and reveals new design implications that could otherwise be overlooked.",
+  "metrics": ["SLO_ATT"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "TTFT", "stat": "distribution/P99", "where": "§4 multimodal Fig 10; §6.3 Fig 20"},
+  {"metric": "TBT", "stat": "P99", "where": "§6.3 Fig 20, Fig 21"},
+  {"metric": "SLO_ATT", "stat": "attainment", "where": "Fig 21"},
+  {"metric": "OTHER:instances_provisioned_over_under", "stat": "n/a", "where": "Fig 20"},
+  {"metric": "OTHER:arrival_CV_burstiness", "stat": "CV", "where": "Fig 1, 2"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "SLO measurement for provisioning", "canonical": "SLO_ATT", "definition_quote": "adjusting the workload rate to find the maximum rate each instance can (supposedly) sustain without violating the SLOs (measured as P99 values)", "locator": "§6.3", "notes": "capacity = max rate with P99 TTFT and P99 TBT within target; SLO grid, e.g. P99 TTFT 2.25 s with TBT 0.5 s"},
+  {"term_as_written": "Base / Tight SLO", "canonical": "SLO_ATT", "definition_quote": "Base SLO: 8s TTFT, 60ms TBT. Tight SLO: 4s TTFT, 30ms TBT (half of Base).", "locator": "Fig 21 caption", "notes": "SLO attainment compared across PD configs"},
+  {"term_as_written": "burstiness (CV)", "canonical": "OTHER:arrival_CV_burstiness", "definition_quote": "we find that the arrival patterns exhibit notable burstiness, indicated by coefficients of variation (CVs) greater than 1. Consequently, Poisson processes (CV=1) often poorly model bursty workloads", "locator": "§3 (Finding 1)", "notes": "workload characteristic, not a serving metric"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "SLO_ATT", "critique_quote": "the results may disagree about the best PD configuration under NAIVE and ServeGen workloads even under similar distributions. In two of the three cases (Figures 21(a) and 21(b)), the best configuration under ServeGen is 2P6D, which happens to be a worse configuration reported by NAIVE benchmarking.", "locator": "§6.4"},
+  {"target_metric": "OTHER:benchmark_workload", "critique_quote": "NAIVE is meant to represent the workload generation method (e.g., sampling ShareGPT over Poisson processes) used in many existing works when direct workload replay is not an option", "locator": "§6.2"}
+ ],
+ "recommended_practice": [
+  {"quote": "Poisson processes (CV=1) often poorly model bursty workloads (such as in Figure 1(a)), where Gamma and Weibull processes are better alternatives. However, there is not a universally best modeling", "locator": "§3"},
+  {"quote": "a significant portion of TTFT stems from preprocessing (i.e., downloading, normalization, and encoding). This highlights the importance of conducting full-stack optimizations", "locator": "§7 Discussion"}
+ ],
+ "slo_spec": "Provisioning grid of P99 TTFT x P99 TBT targets (e.g. 2.25 s / 0.5 s); PD-disaggregation: Base 8 s TTFT, 60 ms TBT; Tight 4 s / 30 ms",
+ "load_regime": "trace replay / generated per-client workloads; rate sweep to find max sustainable rate",
+ "tradeoff_acknowledged": "NAIVE (Poisson, whole-workload resampling) benchmarking mis-provisions instances and can pick a worse PD config than ServeGen",
+ "eval_type": "real-system",
+ "hardware": "2x A100-80GB per instance (vLLM); 4 nodes x 8 H20 (SGLang PD)",
+ "models": "Qwen2.5-14B, Qwen2.5-72B (use cases); production M-large/M-mid/M-small",
+ "workloads": "Alibaba Cloud Model Studio production traces (language, multimodal, reasoning)",
+ "confidence": "medium",
+ "extractor_notes": "Pure characterization/workload paper. Records the metrics used in its two use cases as the headline measurements; no metric is proposed. TTFT and TBT are used without formal definition. Read via targeted grep of §3-§7."
+}

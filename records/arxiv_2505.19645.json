@@ -1,0 +1,56 @@
+{
+ "key": "arxiv_2505.19645",
+ "title": "MoESD: Unveil Speculative Decoding's Potential for Accelerating Sparse MoE",
+ "first_author": "Zongle Huang",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2505.19645",
+ "cluster": "D4",
+ "technique": "analysis of speculative decoding for sparse MoE; new metric target efficiency",
+ "layer": "speculative/decoding-algorithm",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "up to 2.29x speedup for Qwen2-57B-A14B at medium batch sizes",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Experiments on different GPUs show up to 2.29x speedup for Qwen2-57B-A14B at medium batch sizes",
+  "metrics": [
+   "TOKEN_LAT"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "ACCEPT",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "OTHER:target_efficiency",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. Analysis paper; speedup measured at medium batch sizes, not single-sequence, so TOKEN_LAT is a loose mapping. Introduces \"target efficiency\" metric (abstract: characterizes how workload and architecture affect SD acceleration)."
+}

@@ -1,0 +1,133 @@
+{
+  "key": "arxiv_2507.17769",
+  "title": "PolyServe: Efficient Multi-SLO Serving at Scale",
+  "first_author": "Kan Zhu",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2507.17769",
+  "cluster": "D1",
+  "technique": "bins requests by per-token latency (TPOT) tier into server clusters, routes to highest-load still-SLO-attainable server, per-tier autoscaling, wait-time-aware scheduling and dynamic chunking",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2507.17769.txt",
+  "optimized_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "we propose PolyServe, a novel multi-SLO scheduling policy at scale that maintains high SLO attainment while maximizing throughput.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "maintains high SLO attainment while maximizing throughput",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a good policy must use as few servers as possible while attaining the SLO.",
+      "locator": "§5.4 Cost Evaluation",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "the i-th token must be produced before TTFT + i * TPOT ... Due to this flexibility, we adopt DSLO in this paper.",
+      "locator": "§2 (deadline-based SLO)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "the i-th token must be produced before TTFT + i * TPOT"
+    }
+  ],
+  "headline_claim": {
+    "text": "PolyServe achieves 1.23x goodput gain compared to existing policies, achieving up to 92.5% of optimal goodput.",
+    "metrics": [
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "overall and per-TPOT-tier breakdown, load sweep figure"
+    },
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "goodput at 90% attainment; Fig 9 per-instance goodput"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "Fig 8 cost per request (instance x seconds)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "Time to First Token (TTFT), measured from request submission to the generation of the first token",
+      "locator": "§2",
+      "notes": "includes queueing (from submission)"
+    },
+    {
+      "term_as_written": "TPOT",
+      "canonical": "TBT",
+      "definition_quote": "Time per Output Token (TPOT), measuring the time between consecutive tokens.",
+      "locator": "§2",
+      "notes": "TPOT defined as inter-token time but enforced via deadline: 'the i-th token must be produced before TTFT + i · TPOT'; paper notes 'some works target average TPOT' vs 'adhering to maximum TPOT can be too restrictive'"
+    },
+    {
+      "term_as_written": "DSLO",
+      "canonical": "OTHER:deadline_SLO",
+      "definition_quote": "a deadline-based SLO (DSLO) [22]. Specifically, the i-th token must be produced before TTFT + i · TPOT.",
+      "locator": "§2",
+      "notes": "cumulative per-token deadline, lets provider delay early tokens"
+    },
+    {
+      "term_as_written": "cost",
+      "canonical": "COST",
+      "definition_quote": "We define the cost as instance · second, meaning the total time spent on the instance for serving this request. For example, with a batch size B that is served on an instance of N GPUs, taking T to finish, the total cost is NT, and thus the per-request cost is NT/B.",
+      "locator": "§3",
+      "notes": ""
+    },
+    {
+      "term_as_written": "goodput",
+      "canonical": "GOODPUT",
+      "definition_quote": "At 90% attainment, PD-PolyServe and CO-PolyServe provide on average 1.23x and 1.18x more goodput than the best baseline.",
+      "locator": "§5.3",
+      "notes": "no standalone formal definition; operationally request rate at which overall SLO attainment is 90%"
+    }
+  ],
+  "slo_spec": "Fixed (TTFT, TPOT) tiers. Eval: TTFT sampled uniformly from 300/500/1000 ms; TPOT tiers 20/30/50/100 ms with probability 10/20/30/40%; SLO assigned only if achievable on an idle server; goodput at 90% attainment; example provider tiers (1000ms,20ms),(1000ms,30ms),(2000ms,50ms), best-effort",
+  "load_regime": "request-rate sweep (20%-120% of optimal throughput), Poisson; burstiness test with inverted tier mix",
+  "tradeoff_acknowledged": "tighter SLO restricts batching, lowering utilization and raising cost; chunked prefill adds extra iterations (tail TTFT)",
+  "eval_type": "simulation",
+  "hardware": "profiling traces from NVIDIA H200; 20 simulated instances",
+  "models": "LLaMA3.1-8B",
+  "workloads": "mooncake, lmsys, sharegpt, splitwise traces (300k sampled requests), synthetic uniform lengths; SLOs synthetic",
+  "confidence": "high",
+  "extractor_notes": "Paper says 'tail latency must be controlled' but the measured outcome is attainment, not a percentile. TPOT is defined as inter-token time but operationalized as DSLO deadlines (neither mean nor max). Two-column PDF; read with non-layout pdftotext. | TAIL AUDIT 2026-10-06: TPOT max->attainment",
+  "tail_role": "T-OBJ",
+  "tail_audit": {
+    "class": "T-OBJ",
+    "metrics": "TPOT/TTFT per-token deadline violations (no percentile); 'tail latency management' stated as design concern",
+    "correction": "Weak T-OBJ (low confidence): tail is stated as design goal but operationalized as per-request deadline attainment, no percentile. TPOT 'max' stat should be 'attainment' (deadline-based DSLO); consider adding note rather than a P99 entry.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "'All requests follow a Poisson arrival process.' (§5.3); request-rate sweep 20%-120% of optimal throughput (simulation)",
+  "repass_log": [
+    "GOODPUT quote replaced: result headline -> design statement 'maintains high SLO attainment while maximizing throughput'",
+    "TPOT stat_basis explicit (per-token deadline attainment, DSLO), stat attainment per tail_audit",
+    "load_class online-arrivals"
+  ]
+}

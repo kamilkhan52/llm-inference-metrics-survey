@@ -1,0 +1,122 @@
+{
+ "key": "arxiv_2507.19427",
+ "title": "Step-3 is Large yet Affordable: Model-system Co-design for Cost-effective Decoding",
+ "first_author": "StepFun",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2507.19427",
+ "cluster": "D5",
+ "technique": "Model-system co-design: Multi-Matrix Factorization Attention (MFA) + Attention-FFN Disaggregation (AFD) with 3-stage pipeline and StepMesh communication; analytical decoding cost model",
+ "layer": "MoE-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2507.19427.txt",
+ "optimized_metrics": [
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "specifically engineered for the test-time scaling paradigm with the primary optimization objective of minimizing decoding costs.",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "achieves high-throughput decoding under strict SLO",
+   "locator": "§3 opening (txt line 160)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "Performance target: 50ms time per output token (TPOT, ≥ 20 tokens/sec) via a 3-stage pipeline, with 16.6ms per stage for A/F/communication",
+   "locator": "§3.1 design goals",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  }
+ ],
+ "headline_claim": {
+  "text": "decoding throughput of up to 4,039 tokens per second per GPU under 50ms TPOT SLA (4K context, FP8, no MTP). It is higher than DeepSeek-V3's 2,324 in the same setup",
+  "metrics": [
+   "THR_TOK",
+   "TPOT",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "COST",
+   "stat": "mean",
+   "where": "Tables 2-6, Fig 1,3 (theoretical decoding cost in USD per 1M tokens)"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Table 8 (TGS)"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "n/a",
+   "where": "50 ms SLA design target"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "MFU analysis §5-6"
+  },
+  {
+   "metric": "TOKEN_LAT",
+   "stat": "n/a",
+   "where": "Table 9 attention layer latency (us)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "TPOT (50 ms SLA)",
+   "canonical": "TPOT",
+   "definition_quote": "Performance target: 50ms time per output token (TPOT, ≥ 20 tokens/sec) via a 3-stage pipeline, with 16.6ms per stage for A/F/communication, respectively. Here the time is accumulated across all model layers.",
+   "locator": "§3.1",
+   "notes": "TPOT is the per-token decode step time summed over all layers; stated as equivalent to >=20 tokens/s per user (the 'decoding SLA' elsewhere phrased '20 tokens/s decoding SLA'). Not a percentile; a design budget enforced via a 3-stage pipeline."
+  },
+  {
+   "term_as_written": "20 tokens/s decoding SLA",
+   "canonical": "TPS_USER",
+   "definition_quote": "Both numbers are obtained under 20 tokens/s decoding SLA.",
+   "locator": "§7.3",
+   "notes": "Per-user token rate floor (=1/50ms), used interchangeably with 50 ms TPOT; the DSv3 comparison numbers are stated to be under the same SLA, and other higher numbers are excluded because they 'do not run with the same 20 tokens/s decoding SLA'."
+  },
+  {
+   "term_as_written": "TGS (Tokens/GPU/s)",
+   "canonical": "THR_TOK",
+   "definition_quote": "Table 8: Performance comparison with reported number of DSv3 under 20 tokens/s decoding SLA. TGS: Tokens/GPU/s.",
+   "locator": "§7.3 Table 8",
+   "notes": "Per-GPU decoding throughput in output tokens/s, SLA-constrained. 'Peak TGS' = peak minute (4,039); 'long-term average' 3,910. Totals divided across all GPUs of the A+F deployment (e.g. 2A2F = 32 GPUs, total batch 6144, 4K context). Without MTP."
+  },
+  {
+   "term_as_written": "theoretical decoding cost (USD)",
+   "canonical": "COST",
+   "definition_quote": "Suppose, in the theoretically ideal case, accelerators constantly at their peak FLOPs and maximum memory bandwidth, we derive the unit costs of a floating-point operation (UFLOP) and a byte of memory access (Ubyte)",
+   "locator": "§4.2",
+   "notes": "Analytical roofline cost (USD per 1M tokens) = max(attention FLOPs*UFLOP, KV bytes*Ubyte) + linear FLOPs*UFLOP + FFN; hardware prices per card-hour (H800 $2, H20 $0.8, A800 $0.75, 910B $0.67 est.). Not measured."
+  }
+ ],
+ "slo_spec": "50 ms TPOT (>=20 tokens/s per user) fixed; split into 16.6 ms per pipeline stage (attention, FFN, communication) across all layers; no percentile.",
+ "load_regime": "fixed large batch (6144 total, three micro batches of 2048) at 4K/8K average context; offline benchmark of steady-state decoding",
+ "tradeoff_acknowledged": "Longer context lowers TGS (4,039 at 4K to ~2,693 at 8K with 4A2F); BF16 attention gives 3,321 TGS vs 4,039 FP8; over-sparse MoE hits network bandwidth limit (upcycled 3A4F: 3,291 TGS). Megascale-Infer cited as 150 ms per token (high throughput, high latency).",
+ "eval_type": "both",
+ "hardware": "Hopper GPUs (H800, H20), A800, Ascend 910B in cost model; real tests on Hopper (32-48 GPUs)",
+ "models": "Step-3 (321B total/38B active), DeepSeek-V3, Qwen3-235B, Kimi K2 etc. (cost model)",
+ "workloads": "decoding at 4K/8K average context",
+ "confidence": "high",
+ "extractor_notes": "Industrial/co-design paper whose primary stated objective is decoding cost; measured result is SLA-constrained per-GPU decode throughput. TPOT and the '20 tokens/s' SLA are the same constraint in two units. Throughput normalization per GPU counts GPUs of both A and F instances. Peak-minute vs long-term average distinction (4,039 vs 3,910).",
+ "load_class": "offline-batch",
+ "load_class_quote": "The total batch size is 6144 [§7.3; fixed large batch steady-state decode benchmark, no arrival process]",
+ "repass_log": [
+  "COST: already design quote (primary optimization objective)",
+  "THR_TOK: result quote replaced by §3 design statement (high-throughput decoding under strict SLO)",
+  "TPOT: design-goal constraint kept; stat_basis unspecified"
+ ]
+}

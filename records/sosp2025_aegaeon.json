@@ -1,0 +1,147 @@
+{
+ "key": "sosp2025_aegaeon",
+ "title": "Aegaeon: Effective GPU Pooling for Concurrent LLM Serving on the Market",
+ "first_author": "Yuxing Xiang",
+ "year": 2025,
+ "venue": "SOSP 2025",
+ "url": "https://dl.acm.org/doi/10.1145/3731569.3764815",
+ "cluster": "D2",
+ "technique": "token-level auto-scaling and scheduling for multi-model GPU pooling: disaggregated prefill/decode instances, preemptive model switching, component reuse, explicit memory management, fine-grained KV synchronization",
+ "layer": "LoRA/multi-model",
+ "read_level": "full",
+ "fulltext_path": "fulltext/sosp2025_aegaeon.txt",
+ "optimized_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "Aegaeon schedules both the request execution and the auto-scaling decisions in unison to maximize request SLO attainment.",
+   "locator": "§4 Token-Level Scheduling",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Given a list of 𝑀 models to be served, our goal is to minimize the number of GPU instances 𝑁 required to meet the SLOs for all models through auto-scaling, thus maximizing resource usage.",
+   "locator": "§3 Aegaeon Overview",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "quantifies SLOs as the ability to meet generation deadlines (i.e., the target TTFT and TBT metrics) on a per-token basis",
+   "locator": "§2.1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "setting TTFT to 10s and TBT to 100ms; SLO attainment is defined as the percentage of token generation times that meet their deadlines"
+  },
+  {
+   "metric": "TBT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "setting TTFT to 10s and TBT to 100ms according to our internal criterion",
+   "locator": "§7.1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "setting TTFT to 10s and TBT to 100ms; SLO attainment is defined as the percentage of token generation times that meet their deadlines"
+  }
+ ],
+ "headline_claim": {
+  "text": "Aegaeon sustains 2-2.5x higher request arrival rates or 1.5-9x more goodput compared to existing solutions ... reduces the number of GPUs required for serving these models from 1,192 to 213, highlighting an 82% GPU resource saving",
+  "metrics": [
+   "GOODPUT",
+   "THR_REQ",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Figs 11-13,17"
+  },
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "where": "Figs 11-12 (max RPS at 90% attainment)"
+  },
+  {
+   "metric": "OTHER:autoscaling_latency",
+   "stat": "n/a",
+   "where": "Fig 15 CDF"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "where": "production GPU utilization before/after"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "GPU count 1192 -> 213"
+  },
+  {
+   "metric": "GOODPUT",
+   "stat": "attainment",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "SLO attainment",
+   "canonical": "SLO_ATT",
+   "definition_quote": "we define SLO attainment as the percentage of token generation times that meet their deadlines, which better reflects the end-user experience.",
+   "locator": "§2.1 (Fig 3 caption: 'the proportion of the green area')",
+   "notes": "per-token, not per-request: each token has a deadline (TTFT deadline for first, then TBT cadence with buffered output)"
+  },
+  {
+   "term_as_written": "TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "(i) TTFT, which measures the latency to produce the initial output token",
+   "locator": "§2.1",
+   "notes": "includes model auto-scaling and queueing delay across models (HOL blocking is the main motivation)"
+  },
+  {
+   "term_as_written": "TBT",
+   "canonical": "TBT",
+   "definition_quote": "(ii) TBT, which gauges the latency to generate each subsequent token",
+   "locator": "§2.1",
+   "notes": "per-token deadline; single large TBT can be masked by buffering earlier tokens"
+  },
+  {
+   "term_as_written": "goodput",
+   "canonical": "GOODPUT",
+   "definition_quote": "Vertical lines indicate the maximum goodput while meeting the 90% overall SLO requirement.",
+   "locator": "§7.2 (Fig 11 text)",
+   "notes": "max per-model RPS at which overall SLO attainment >= 90%"
+  },
+  {
+   "term_as_written": "SLO setting",
+   "canonical": "SLO_ATT",
+   "definition_quote": "We report the SLO attainment as defined in §2.1, setting TTFT to 10s and TBT to 100ms according to our internal criterion for our online inference service, and also in alignment with industrial practices",
+   "locator": "§7.1 Metrics",
+   "notes": "stricter variants 0.5x/0.3x/0.2x (down to 2s TTFT / 20ms TBT); recommendation service uses 3s TTFT and 30ms TBT"
+  }
+ ],
+ "slo_spec": "TTFT 10 s and TBT 100 ms (internal criterion); stricter 0.5x/0.3x/0.2x down to 2 s / 20 ms; goodput at 90% overall attainment.",
+ "load_regime": "request-rate sweep per model (RPS 0.1, 0.5, ...) with number of models varied (up to ~40+); production deployment",
+ "tradeoff_acknowledged": "stricter SLOs reduce slack and GPU-pooling opportunity: under the strictest setup (0.2x SLO) Aegaeon no longer outperforms MuxServe; at 0.5x/0.3x it supports at least 50% / 12.5% more models; looser TBT allows more aggressive sharing",
+ "eval_type": "both",
+ "hardware": "2 nodes x 8 H800 80GB testbed (A10 4-GPU and 8xH800 sub-experiments); production H20 GPUs (1,192 -> 213)",
+ "models": "6B-14B Qwen/Llama/InternLM/Yi for main eval; 72B with TP in Fig 17; production 1.8B-72B",
+ "workloads": "ShareGPT, ShareGPT-ix2, ShareGPT-ox2 (length-scaled); production traces on model marketplace",
+ "confidence": "high",
+ "extractor_notes": "Token-granularity SLO attainment (fraction of token deadlines met) differs from the common per-request attainment. Goodput = max RPS at 90% attainment (rate-based). Scheduler explicitly picks decode time quotas to minimize alpha = reciprocal of estimated SLO attainment. Full text from SOSP'25 PDF (ennanzhai.github.io), no arXiv version.",
+ "repass_log": [
+  "SLO_ATT: design (goal sentence)",
+  "GOODPUT: result-only headline, no design statement -> demoted to reported_metrics",
+  "COST: abstract result replaced by design goal quote §3",
+  "TTFT/TBT constraints: design, stat_basis explicit (attainment of 10s/100ms thresholds)",
+  "added load_class online-arrivals"
+ ],
+ "load_class": "online-arrivals",
+ "load_class_quote": "follows a Poisson process with rate 𝜆 (§4); Figure 11. End-to-end SLO attainment under varying RPS with the ShareGPT dataset"
+}

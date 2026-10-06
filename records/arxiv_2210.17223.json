@@ -1,0 +1,51 @@
+{
+ "key": "arxiv_2210.17223",
+ "title": "Accelerating Distributed MoE Training and Inference with Lina",
+ "first_author": "Jiamin Li",
+ "year": 2022,
+ "venue": "USENIX ATC 2023",
+ "url": "https://arxiv.org/abs/2210.17223",
+ "cluster": "D4",
+ "technique": "all-to-all prioritization over allreduce; popularity-aware expert resource scheduling in inference",
+ "layer": "MoE-serving",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "P95",
+   "role": "objective",
+   "evidence": "reduces the 95%ile inference time by an average of 1.63x",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "Lina reduces the training step time by up to 1.73x and reduces the 95%ile inference time by an average of 1.63x over the state-of-the-art systems",
+  "metrics": [
+   "E2E"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "OTHER:training_step_time",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"inference time\" (P95) presumably per-batch/request inference latency; unit not defined. Also targets training step time."
+}

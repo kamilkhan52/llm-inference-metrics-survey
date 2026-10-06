@@ -1,0 +1,72 @@
+{
+ "key": "arxiv_2502.09334",
+ "title": "ThunderServe: High-performance and Cost-efficient LLM Serving in Cloud Environments",
+ "first_author": "Jiang",
+ "year": 2025,
+ "venue": "arXiv",
+ "url": "https://arxiv.org/abs/2502.09334",
+ "cluster": "D2",
+ "technique": "heterogeneous-cloud deployment scheduling + lightweight re-scheduling",
+ "layer": "energy/cost",
+ "read_level": "abstract",
+ "fulltext_path": null,
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "delivers up to a 2.1$\\times$ and on average a $1.7\\times$ increase in throughput",
+   "locator": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "a 2.5$\\times$ and on average a $1.5\\times$ reduction in latency deadlines",
+   "locator": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "given the same price budget",
+   "locator": "abstract"
+  }
+ ],
+ "headline_claim": {
+  "text": "ThunderServe delivers up to a 2.1$\\times$ and on average a $1.7\\times$ increase in throughput and achieves up to a 2.5$\\times$ and on average a $1.5\\times$ reduction in latency deadlines",
+  "metrics": [
+   "COST",
+   "E2E",
+   "THR_TOK"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "abstract"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "abstract"
+  }
+ ],
+ "metric_definitions": [],
+ "slo_spec": null,
+ "load_regime": null,
+ "tradeoff_acknowledged": null,
+ "eval_type": "unknown",
+ "hardware": null,
+ "models": null,
+ "workloads": null,
+ "confidence": "low",
+ "extractor_notes": "Abstract-only extraction. \"latency deadlines\" undefined in abstract; throughput unit unspecified."
+}

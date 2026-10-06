@@ -1,0 +1,212 @@
+[
+ {
+  "key": "arxiv_2512.15705",
+  "tier": "T2b",
+  "quote": "SLA-aware forced flushing (§5.3): if requests’ SLA deadlines approach without the system accumulating a sufficiently large batch, DREX will forcefully flush",
+  "locator": "Sec 4 overview / 5.3",
+  "note": "Per-request SLA deadline guard on a throughput/quality-focused early-exit batching design; no percentile. Borderline T5."
+ },
+ {
+  "key": "arxiv_2502.07903",
+  "tier": "T3",
+  "quote": "reduces the average inference latency by 1.5×",
+  "locator": "Abstract/Sec 1",
+  "note": "Method maximizes throughput via max-flow/partitioning; latency framed as average; SLO attainment appears as eval metric only. Borderline T5/T2a."
+ },
+ {
+  "key": "osdi2022_orca",
+  "tier": "T3",
+  "quote": "A well-managed inference service should provide low latency",
+  "locator": "Sec 2.2 / 4",
+  "note": "Iteration-level scheduling to cut latency of early-finishing requests; statistic unspecified."
+ },
+ {
+  "key": "arxiv_2308.16369",
+  "tier": "T5",
+  "quote": "Chunked-prefills which allows the construction of work units that are compute saturating and uniform.",
+  "locator": "Sec 1",
+  "note": "Throughput and pipeline-bubble reduction; no latency target."
+ },
+ {
+  "key": "arxiv_2406.01566",
+  "tier": "T5",
+  "quote": "maximize a serving performance metric",
+  "locator": "Sec 4",
+  "note": "Max-flow throughput maximization; latency checked only to show it is not sacrificed."
+ },
+ {
+  "key": "arxiv_2510.18586",
+  "tier": "T3",
+  "quote": "TokenCake reduces end-to-end latency by up to 47.06%",
+  "locator": "Abstract",
+  "note": "Agent-app end-to-end latency / critical path, statistic unspecified."
+ },
+ {
+  "key": "arxiv_2411.01142",
+  "tier": "T3",
+  "quote": "Average per token latency (s)",
+  "locator": "Sec 5.2",
+  "note": "Maximize throughput at same (average per-token) latency; no tail."
+ },
+ {
+  "key": "arxiv_2404.08509",
+  "tier": "T3",
+  "quote": "SSJF reduces the average JCT by",
+  "locator": "Intro",
+  "note": "Average JCT objective via SJF-style scheduling."
+ },
+ {
+  "key": "arxiv_2510.09665",
+  "tier": "T3",
+  "quote": "needs in latency SLO and resource constraints",
+  "locator": "Sec 4",
+  "note": "KV cache layer reducing TTFT; tail only mentioned in motivation/eval; statistic unspecified."
+ },
+ {
+  "key": "arxiv_2312.17238",
+  "tier": "T5",
+  "quote": "generate multiple tokens per second at batch size 1",
+  "locator": "Sec 1",
+  "note": "Batch-1 interactive offloading speed."
+ },
+ {
+  "key": "arxiv_2603.13358",
+  "tier": "T3",
+  "quote": "minimizing Turn 2 TTFT, minimizing TPOT, and maximizing throughput",
+  "locator": "Sec 4.4/Table 2",
+  "note": "Weighted routing score over TTFT/TPOT/throughput, statistic unspecified (P99 only in a figure)."
+ },
+ {
+  "key": "arxiv_2410.18038",
+  "tier": "T5",
+  "quote": "POD-Attention addresses these issues by fusing",
+  "locator": "Sec 1",
+  "note": "Attention kernel for prefill-decode overlap; speed of kernel, no serving-latency target. Borderline T3."
+ },
+ {
+  "key": "arxiv_2401.00588",
+  "tier": "T2b",
+  "quote": "it will be processed within a latency bound that is independent",
+  "locator": "Sec 4.3 (latency bounds)",
+  "note": "Fairness is the goal; deterministic response-time bound for compliant clients is a secondary guarantee. Borderline T5."
+ },
+ {
+  "key": "arxiv_2602.11688",
+  "tier": "T1a",
+  "quote": "evolutionary strategies guide the GORGO policy’s parameters to directly optimize p95 TTFT",
+  "locator": "Abstract",
+  "note": "Fitness is p95 TTFT."
+ },
+ {
+  "key": "arxiv_2507.07400",
+  "tier": "T3",
+  "quote": "significantly reduces per-agent inference latency",
+  "locator": "Abstract",
+  "note": "Prefix-cache for agent workflows; latency statistic unspecified."
+ },
+ {
+  "key": "arxiv_2401.10774",
+  "tier": "T5",
+  "quote": "M EDUSA-1 can achieve over 2.2× speedup",
+  "locator": "Abstract",
+  "note": "Single-sequence decoding speedup."
+ },
+ {
+  "key": "arxiv_2602.16603",
+  "tier": "T2a",
+  "quote": "FlowPrefill, a TTFT-goodput-optimized",
+  "locator": "Abstract",
+  "note": "Maximizes TTFT goodput under heterogeneous SLOs."
+ },
+ {
+  "key": "arxiv_2404.16283",
+  "tier": "T2a",
+  "quote": "Andes improves the average QoE by",
+  "locator": "Abstract/Sec 3",
+  "note": "QoE over token delivery timeline is the optimization target."
+ },
+ {
+  "key": "arxiv_2508.16449",
+  "tier": "T2a",
+  "quote": "hold tail TBT within target",
+  "locator": "Abstract/Sec 1",
+  "note": "Minimizes energy subject to P95 TBT / TTFT SLOs."
+ },
+ {
+  "key": "arxiv_2311.01282",
+  "tier": "T5",
+  "quote": "the throughput of generating tokens",
+  "locator": "Sec 1",
+  "note": "Kernel-level decode speed."
+ },
+ {
+  "key": "arxiv_2606.00946",
+  "tier": "T3",
+  "quote": "route inference requests to the instance that will maximize given reward (e.g., minimizing TTFT)",
+  "locator": "Abstract / Sec 4.1",
+  "note": "Per-request -TTFT reward (mean-like); P99 reported in eval only. Hardest call vs T1b."
+ },
+ {
+  "key": "arxiv_2503.18292",
+  "tier": "T5",
+  "quote": "without any impact on latency",
+  "locator": "Abstract",
+  "note": "Memory-management; latency only non-regression."
+ },
+ {
+  "key": "arxiv_2403.01876",
+  "tier": "T5",
+  "quote": "computations severely increase end-to-end request latency",
+  "locator": "Sec 1",
+  "note": "Fault tolerance and prompt-token disaggregation; no latency statistic target. Borderline T3."
+ },
+ {
+  "key": "arxiv_2405.16444",
+  "tier": "T3",
+  "quote": "reduces time-to-first-token (TTFT) by 2.2–3.3×",
+  "locator": "Abstract",
+  "note": "TTFT reduction, statistic unspecified."
+ },
+ {
+  "key": "arxiv_2501.14808",
+  "tier": "T2a",
+  "quote": "These requirements often manifest in different statistical metrics—from strict P99 latency bounds to mean performance targets",
+  "locator": "Sec 1",
+  "note": "Must meet online SLOs defined on mean/P99 TTFT/TBT while maximizing offline throughput."
+ },
+ {
+  "key": "arxiv_2502.04563",
+  "tier": "T5",
+  "quote": "memory-bandwidth-bound",
+  "locator": "Sec 1",
+  "note": "Wafer-scale batch-1 style decode speed."
+ },
+ {
+  "key": "arxiv_2408.00741",
+  "tier": "T2a",
+  "quote": "we assume an SLO such that the P99 tail latency is within 5× of the individual workloads",
+  "locator": "Sec 3/4",
+  "note": "Minimizes energy subject to P99-style TTFT/TBT SLOs."
+ },
+ {
+  "key": "arxiv_2309.06180",
+  "tier": "T5",
+  "quote": "eliminates most memory waste",
+  "locator": "Sec 3",
+  "note": "Memory/throughput design."
+ },
+ {
+  "key": "arxiv_2512.18194",
+  "tier": "T3",
+  "quote": "inflates prefill latency, increases tail variability",
+  "locator": "Abstract",
+  "note": "CXL KV transfer reducing TTFT; no tail-specific operationalization. Borderline T1b."
+ },
+ {
+  "key": "arxiv_2404.09526",
+  "tier": "T3",
+  "quote": "to improve the throughput and reduce the latency of requests",
+  "locator": "Sec 3",
+  "note": "Elastic sequence parallelism; latency statistic unspecified."
+ }
+]

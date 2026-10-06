@@ -1,0 +1,215 @@
+key	arxiv_id	cluster	year	title	track	batch
+osdi2022_orca		D1	2022	Orca: A Distributed Serving System for Transformer-Based Generative Models	full	E01
+mlsys2025_sola		D1	2025	SOLA: Optimizing SLO Attainment for Large Language Model Serving with State-Aware Scheduling	full	E02
+arxiv_2308.16369	2308.16369	D1	2023	SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills	full	E01
+arxiv_2403.02310	2403.02310	D1	2024	Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve	full	E01
+arxiv_2305.05920	2305.05920	D1	2023	Fast Distributed Inference Serving for Large Language Models	full	E01
+arxiv_2404.16283	2404.16283	D1	2024	Andes: Defining and Enhancing Quality-of-Experience in LLM-Based Text Streaming Services	full	E01
+arxiv_2401.00588	2401.00588	D1	2023	Fairness in Serving Large Language Models	full	E01
+arxiv_2306.06000	2306.06000	D1	2023	S$^{3}$: Increasing GPU Utilization during Generative Inference for Higher Throughput	full	E01
+arxiv_2408.15792	2408.15792	D1	2024	Efficient LLM Scheduling by Learning to Rank	full	E01
+arxiv_2404.08509	2404.08509	D1	2024	Efficient Interactive LLM Serving with Proxy Model-based Sequence Length Prediction	full	E01
+arxiv_2407.00047	2407.00047	D1	2024	Queue management for slo-oriented large language model serving	full	E02
+arxiv_2401.08671	2401.08671	D1	2024	DeepSpeed-FastGen: High-throughput Text Generation for LLMs via MII and DeepSpeed-Inference	full	E02
+arxiv_2405.06856	2405.06856	D1	2024	Aladdin: Joint Placement and Scaling for SLO-Aware LLM Serving	full	E02
+arxiv_2410.01228	2410.01228	D1	2024	ConServe: Fine-Grained GPU Harvesting for LLM Online and Offline Co-Serving	full	E02
+arxiv_2501.14808	2501.14808	D1	2025	HyGen: Efficient LLM Serving via Elastic Online-Offline Request Co-location	full	E02
+arxiv_2412.03594	2412.03594	D1	2024	BatchLLM: Optimizing Large Batched LLM Inference with Global Prefix Sharing and Throughput-oriented Token Batching	abstract	
+arxiv_2410.01035	2410.01035	D1	2024	Don't Stop Me Now: Embedding Based Scheduling for LLMs	abstract	
+arxiv_2504.07494	2504.07494	D1	2025	Apt-Serve: Adaptive Request Scheduling on Hybrid Cache for Scalable LLM Inference Serving	full	E02
+arxiv_2504.08784	2504.08784	D1	2025	SLOs-Serve: Optimized Serving of Multi-SLO LLMs	full	E02
+arxiv_2504.20068	2504.20068	D1	2025	JITServe: SLO-aware LLM Serving with Imprecise Request Information	full	E02
+arxiv_2505.23022	2505.23022	D1	2025	Scorpio: Serving Right Requests at the Right Time for Heterogeneous SLOs in LLM Inference	abstract	
+arxiv_2501.14312	2501.14312	D1	2025	Locality-aware Fair Scheduling in LLM Serving	full	E02
+arxiv_2510.14392	2510.14392	D1	2025	FairBatching: Fairness-Aware Batch Formation for LLM Inference	abstract	
+arxiv_2504.07347	2504.07347	D1	2025	Throughput-Optimal Scheduling Algorithms for LLM Inference and AI Agents	full	E03
+arxiv_2305.13144	2305.13144	D1	2023	Response Length Perception and Sequence Scheduling: An LLM-Empowered LLM Inference Pipeline	full	E01
+arxiv_2406.04785	2406.04785	D1	2024	Enabling Efficient Batch Serving for LMaaS via Generation Length Prediction	abstract	
+arxiv_2505.09142	2505.09142	D1	2025	ELIS: Efficient LLM Iterative Scheduling System with Response Length Predictor	abstract	
+arxiv_2510.03243	2510.03243	D1	2025	Ranking Before Serving: Low-Latency LLM Serving via Pairwise Learning-to-Rank	abstract	
+arxiv_2602.16603	2602.16603	D1	2026	FlowPrefill: Decoupling Preemption from Prefill Scheduling Granularity to Mitigate Head-of-Line Blocking in LLM Serving	full	E03
+arxiv_2512.12928	2512.12928	D1	2025	ProServe: Unified Multi-Priority Request Scheduling for LLM Serving	abstract	
+arxiv_2507.17769	2507.17769	D1	2025	PolyServe: Efficient Multi-SLO Serving at Scale	full	E03
+arxiv_2411.06364	2411.06364	D1	2024	EconoServe: Maximizing Multi-Resource Utilization with SLO Guarantees in LLM Serving	abstract	
+arxiv_2606.05933	2606.05933	D1	2026	Beyond Greedy Chunking: SLO-Aware Sliding-Window Scheduling for LLM Inference	abstract	
+arxiv_2604.00499	2604.00499	D1	2026	Scheduling LLM Inference with Uncertainty-Aware Output Length Predictions	abstract	
+arxiv_2504.14966	2504.14966	D1	2025	SLO-Aware Scheduling for Large Language Model Inferences	abstract	
+arxiv_2401.09670	2401.09670	D2	2024	DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving	full	E03
+arxiv_2311.18677	2311.18677	D2	2023	Splitwise: Efficient generative LLM inference using phase splitting	full	E03
+arxiv_2401.11181	2401.11181	D2	2024	Inference without Interference: Disaggregate LLM Inference for Mixed Downstream Workloads	full	E03
+arxiv_2407.00079	2407.00079	D2	2024	Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving	full	E03
+arxiv_2403.01876	2403.01876	D2	2024	DejaVu: KV-cache Streaming for Fast, Fault-tolerant Generative LLM Serving	full	E04
+arxiv_2406.03243	2406.03243	D2	2024	Llumnix: Dynamic Scheduling for Large Language Model Serving	full	E04
+arxiv_2407.00023	2407.00023	D2	2024	Preble: Efficient Distributed Prompt Scheduling for LLM Serving	full	E04
+arxiv_2302.11665	2302.11665	D2	2023	AlpaServe: Statistical Multiplexing with Model Parallelism for Deep Learning Serving	full	E03
+arxiv_2311.15566	2311.15566	D2	2023	SpotServe: Serving Generative Large Language Models on Preemptible Instances	full	E03
+arxiv_2404.14527	2404.14527	D2	2024	Melange: Cost Efficient Large Language Model Serving by Exploiting GPU Heterogeneity	full	E04
+arxiv_2311.11514	2311.11514	D2	2023	HexGen: Generative Inference of Large Language Model over Heterogeneous Environment	abstract	
+arxiv_2406.01566	2406.01566	D2	2024	Helix: Serving Large Language Models over Heterogeneous GPUs and Network via Max-Flow	full	E04
+arxiv_2408.00741	2408.00741	D2	2024	DynamoLLM: Designing LLM Inference Clusters for Performance and Energy Efficiency	full	E04
+arxiv_2308.12908	2308.12908	D2	2023	POLCA: Power Oversubscription in LLM Cloud Providers	abstract	
+arxiv_2311.03285	2311.03285	D2	2023	S-LoRA: Serving Thousands of Concurrent LoRA Adapters	full	E03
+arxiv_2310.18547	2310.18547	D2	2023	Punica: Multi-Tenant LoRA Serving	abstract	
+arxiv_2401.14351	2401.14351	D2	2024	ServerlessLLM: Low-Latency Serverless Inference for Large Language Models	full	E04
+arxiv_2404.02015	2404.02015	D2	2024	MuxServe: Flexible Spatial-Temporal Multiplexing for Multiple LLM Serving	abstract	
+arxiv_2408.13510	2408.13510	D2	2024	Intelligent Router for LLM Workloads: Improving Performance Through Workload-Aware Load Balancing	full	E04
+arxiv_2504.03648	2504.03648	D2	2025	AIBrix: Towards Scalable, Cost-Effective Large Language Model Inference Infrastructure	abstract	
+arxiv_2412.17246	2412.17246	D2	2024	BLITZSCALE: Fast and Live Large Model Autoscaling with O(1) Host Caching	full	E04
+arxiv_2606.00946	2606.00946	D2	2026	Lodestar: An Online-Learning LLM Inference Router	full	E05
+osdi2024_dlora		D2	2024	dLoRA: Dynamically Orchestrating Requests and Adapters for LoRA LLM Serving	full	E04
+sosp2025_aegaeon		D2	2025	Aegaeon: Effective GPU Pooling for Concurrent LLM Serving on the Market	full	E05
+arxiv_2504.19867	2504.19867	D2	2025	semi-PD: Towards Efficient LLM Serving via Phase-Wise Disaggregated Computation and Unified Storage	full	E05
+arxiv_2504.09285	2504.09285	D2	2025	DynaServe: Unified and Elastic Execution for Dynamic Disaggregated LLM Serving	abstract	
+arxiv_2508.01989	2508.01989	D2	2025	Prefill-Decode Aggregation or Disaggregation? Unifying Both for Goodput-Optimized LLM Serving	full	E05
+arxiv_2501.08090	2501.08090	D2	2025	Hierarchical Autoscaling for Large Language Model Serving with Chiron	abstract	
+arxiv_2502.14617	2502.14617	D2	2025	SageServe: Optimizing LLM Serving on Cloud Data Centers with Forecast Aware Auto-Scaling	abstract	
+arxiv_2512.03416	2512.03416	D2	2025	TokenScale: Timely and Accurate Autoscaling for Disaggregated LLM Serving with Token Velocity	full	E05
+arxiv_2505.04021	2505.04021	D2	2025	Prism: Cost-Efficient Multi-LLM Serving via GPU Memory Ballooning	abstract	
+arxiv_2502.09334	2502.09334	D2	2025	ThunderServe: High-performance and Cost-efficient LLM Serving in Cloud Environments	abstract	
+arxiv_2502.07903	2502.07903	D2	2025	HexGen-2: Disaggregated Generative Inference of LLMs in Heterogeneous Environment	full	E05
+arxiv_2602.06502	2602.06502	D2	2026	DualMap: Enabling Both Cache Affinity and Load Balancing for Distributed LLM Serving	abstract	
+arxiv_2508.16449	2508.16449	D2	2025	GreenLLM: SLO-Aware Dynamic Frequency Scaling for Energy-Efficient LLM Serving	full	E05
+arxiv_2408.05235	2408.05235	D2	2024	SLO-aware GPU Frequency Scaling for Energy Efficient LLM Inference Serving	abstract	
+arxiv_2309.06180	2309.06180	D3	2023	Efficient Memory Management for Large Language Model Serving with PagedAttention	full	E06
+arxiv_2312.07104	2312.07104	D3	2023	SGLang: Efficient Execution of Structured Language Model Programs	full	E06
+arxiv_2310.07240	2310.07240	D3	2023	CacheGen: KV Cache Compression and Streaming for Fast Large Language Model Serving	full	E06
+arxiv_2311.04934	2311.04934	D3	2023	Prompt Cache: Modular Attention Reuse for Low-Latency Inference	full	E06
+arxiv_2306.14048	2306.14048	D3	2023	H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models	full	E06
+arxiv_2309.17453	2309.17453	D3	2023	Efficient Streaming Language Models with Attention Sinks	full	E06
+arxiv_2312.05516	2312.05516	D3	2023	Stateful Large Language Model Serving with Pensieve	full	E06
+arxiv_2405.04437	2405.04437	D3	2024	vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention	full	E06
+arxiv_2403.19708	2403.19708	D3	2024	Cost-Efficient Large Language Model Serving for Multi-turn Conversations with CachedAttention	full	E06
+arxiv_2405.16444	2405.16444	D3	2024	CacheBlend: Fast Large Language Model Serving for RAG with Cached Knowledge Fusion	full	E06
+arxiv_2402.02750	2402.02750	D3	2024	KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache	full	E07
+arxiv_2401.18079	2401.18079	D3	2024	KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization	abstract	
+arxiv_2404.14469	2404.14469	D3	2024	SnapKV: LLM Knows What You are Looking for Before Generation	full	E07
+arxiv_2406.10774	2406.10774	D3	2024	Quest: Query-Aware Sparsity for Efficient Long-Context LLM Inference	full	E07
+arxiv_2406.19707	2406.19707	D3	2024	InfiniGen: Efficient Generative Inference of Large Language Models with Dynamic KV Cache Management	full	E07
+arxiv_2401.02669	2401.02669	D3	2024	Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache	abstract	
+arxiv_2404.09526	2404.09526	D3	2024	LoongServe: Efficiently Serving Long-Context Large Language Models with Elastic Sequence Parallelism	full	E07
+arxiv_2406.17565	2406.17565	D3	2024	MemServe: Context Caching for Disaggregated LLM Serving with Elastic Memory Pool	abstract	
+arxiv_2402.15220	2402.15220	D3	2024	ChunkAttention: Efficient Self-Attention with Prefix-Aware KV Cache and Two-Phase Partition	abstract	
+arxiv_2402.05099	2402.05099	D3	2024	Hydragen: High-Throughput LLM Inference with Shared Prefixes	full	E07
+arxiv_2410.21465	2410.21465	D3	2024	ShadowKV: KV Cache in Shadows for High-Throughput Long-Context LLM Inference	full	E07
+arxiv_2410.16179	2410.16179	D3	2024	MagicPIG: LSH Sampling for Efficient LLM Generation	abstract	
+arxiv_2411.19379	2411.19379	D3	2024	Marconi: Prefix Caching for the Era of Hybrid LLMs	full	E07
+arxiv_2510.09665	2510.09665	D3	2025	LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference	full	E07
+arxiv_2503.18292	2503.18292	D3	2025	Jenga: Effective Memory Management for Serving LLM with Heterogeneity	full	E07
+arxiv_2505.23416	2505.23416	D3	2025	KVzip: Query-Agnostic KV Cache Compression with Context Reconstruction	abstract	
+arxiv_2502.14051	2502.14051	D3	2025	RocketKV: Accelerating Long-Context LLM Inference via Two-Stage KV Cache Compression	abstract	
+arxiv_2502.14866	2502.14866	D3	2025	LServe: Efficient Long-sequence LLM Serving with Unified Sparse Attention	full	E08
+arxiv_2508.18572	2508.18572	D3	2025	Strata: Hierarchical Context Caching for Long Context Language Model Serving	full	E08
+arxiv_2512.18194	2512.18194	D3	2025	TraCT: Disaggregated LLM Serving with CXL Shared Memory KV Cache at Rack-Scale	full	E08
+arxiv_2512.14946	2512.14946	D3	2025	EVICPRESS: Joint KV-Cache Compression and Eviction for Efficient LLM Serving	abstract	
+arxiv_2506.02634	2506.02634	D3	2025	KVCache Cache in the Wild: Characterizing and Optimizing KVCache Cache at a Large Cloud Provider	mp-full	E15
+arxiv_2503.24000	2503.24000	D3	2025	Rethinking Key-Value Cache Compression Techniques for Large Language Model Serving	mp-full	E15
+arxiv_2605.05219	2605.05219	D3	2026	Sparse Prefix Caching for Hybrid and Recurrent LLM Serving	abstract	
+arxiv_2211.17192	2211.17192	D4	2022	Fast Inference from Transformers via Speculative Decoding	full	E08
+arxiv_2302.01318	2302.01318	D4	2023	Accelerating Large Language Model Decoding with Speculative Sampling	abstract	
+arxiv_2305.09781	2305.09781	D4	2023	SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification	full	E08
+arxiv_2401.10774	2401.10774	D4	2024	Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads	full	E09
+arxiv_2401.15077	2401.15077	D4	2024	EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty	full	E09
+arxiv_2406.16858	2406.16858	D4	2024	EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees	abstract	
+arxiv_2503.01840	2503.01840	D4	2025	EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test	full	E10
+arxiv_2402.12374	2402.12374	D4	2024	Sequoia: Scalable, Robust, and Hardware-aware Speculative Decoding	full	E09
+arxiv_2406.14066	2406.14066	D4	2024	TurboSpec: Closed-loop Speculation Control System for Optimizing LLM Serving Goodput	full	E09
+arxiv_2408.11049	2408.11049	D4	2024	MagicDec: Breaking the Latency-Throughput Tradeoff for Long Context Generation with Speculative Decoding	full	E09
+arxiv_2501.12162	2501.12162	D4	2025	AdaServe: Accelerating Multi-SLO LLM Serving with SLO-Customized Speculative Decoding	full	E10
+arxiv_2503.05096	2503.05096	D4	2025	AdaSpec: Adaptive Speculative Decoding for Fast, SLO-Aware Large Language Model Serving	full	E10
+arxiv_2512.22420	2512.22420	D4	2025	Nightjar: Dynamic Adaptive Speculative Decoding for Large Language Models Serving	abstract	
+arxiv_2502.15197	2502.15197	D4	2025	TETRIS: Optimal Draft Token Selection for Batch Speculative Decoding	abstract	
+arxiv_2604.20503	2604.20503	D4	2026	FASER: Fine-Grained Phase Management for Speculative Decoding in Dynamic LLM Serving	abstract	
+arxiv_2505.19645	2505.19645	D4	2025	MoESD: Unveil Speculative Decoding's Potential for Accelerating Sparse MoE	abstract	
+arxiv_2605.15051	2605.15051	D4	2026	An Interpretable Latency Model for Speculative Decoding in LLM Serving	excluded	
+arxiv_2402.02057	2402.02057	D4	2024	Break the Sequential Dependency of LLM Inference Using Lookahead Decoding	full	E09
+arxiv_2404.16710	2404.16710	D4	2024	LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding	full	E09
+arxiv_2512.15705	2512.15705	D4	2025	Dynamic Rebatching for Efficient Early-Exit Inference with DREX	full	E10
+arxiv_2504.10724	2504.10724	D4	2025	HELIOS: Adaptive Model And Early-Exit Selection for Efficient LLM Inference Serving	abstract	
+arxiv_2208.07339	2208.07339	D4	2022	LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale	full	E08
+arxiv_2210.17323	2210.17323	D4	2022	GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers	full	E08
+arxiv_2211.10438	2211.10438	D4	2022	SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models	full	E08
+arxiv_2306.00978	2306.00978	D4	2023	AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration	full	E08
+arxiv_2405.04532	2405.04532	D4	2024	QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving	full	E09
+arxiv_2310.19102	2310.19102	D4	2023	Atom: Low-bit Quantization for Efficient and Accurate LLM Serving	full	E08
+arxiv_2404.00456	2404.00456	D4	2024	QuaRot: Outlier-Free 4-Bit Inference in Rotated LLMs	abstract	
+arxiv_2509.01229	2509.01229	D4	2025	LiquidGEMM: Hardware-Efficient W4A8 GEMM Kernel for High-Performance LLM Serving	abstract	
+arxiv_2301.00774	2301.00774	D4	2023	SparseGPT: Massive Language Models Can Be Accurately Pruned in One-Shot	abstract	
+arxiv_2310.17157	2310.17157	D4	2023	Deja Vu: Contextual Sparsity for Efficient LLMs at Inference Time	full	E09
+arxiv_2312.17238	2312.17238	D4	2023	Fast Inference of Mixture-of-Experts Language Models with Offloading	full	E09
+arxiv_2411.11217	2411.11217	D4	2024	MoE-Lightning: High-Throughput MoE Inference on Memory-constrained GPUs	full	E10
+arxiv_2308.12066	2308.12066	D4	2023	Pre-gated MoE: An Algorithm-System Co-Design for Fast and Scalable Mixture-of-Expert Inference	abstract	
+arxiv_2210.17223	2210.17223	D4	2022	Accelerating Distributed MoE Training and Inference with Lina	abstract	
+arxiv_2504.02263	2504.02263	D4	2025	MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregated Expert Parallelism	full	E10
+arxiv_2502.05370	2502.05370	D4	2025	Taming Latency-Memory Trade-Off in MoE-Based LLM Serving via Fine-Grained Expert Offloading	full	E10
+arxiv_2512.09277	2512.09277	D4	2025	Efficient MoE Serving in the Memory-Bound Regime: Balance Activated Experts, Not Tokens	abstract	
+arxiv_2205.14135	2205.14135	D5	2022	FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness	full	E11
+arxiv_2307.08691	2307.08691	D5	2023	FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning	full	E11
+arxiv_2407.08608	2407.08608	D5	2024	FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision	full	E11
+arxiv_2311.01282	2311.01282	D5	2023	FlashDecoding++: Faster Large Language Model Inference on GPUs	full	E11
+arxiv_2501.01005	2501.01005	D5	2025	FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving	full	E12
+arxiv_2408.12757	2408.12757	D5	2024	NanoFlow: Towards Optimal Large Language Model Serving Throughput	full	E11
+arxiv_2410.18038	2410.18038	D5	2024	POD-Attention: Unlocking Full Prefill-Decode Overlap for Faster LLM Inference	full	E12
+arxiv_2207.00032	2207.00032	D5	2022	DeepSpeed- Inference: Enabling Efficient Inference of Transformer Models at Unprecedented Scale	full	E11
+arxiv_2211.05102	2211.05102	D5	2022	Efficiently Scaling Transformer Inference	full	E11
+arxiv_2303.06865	2303.06865	D5	2023	High-throughput Generative Inference of Large Language Models with a Single GPU	full	E11
+arxiv_2312.12456	2312.12456	D5	2023	PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU	full	E11
+arxiv_2406.06282	2406.06282	D5	2024	PowerInfer-2: Fast Large Language Model Inference on a Smartphone	abstract	
+arxiv_2312.11514	2312.11514	D5	2023	LLM in a flash: Efficient Large Language Model Inference with Limited Memory	full	E11
+arxiv_2402.07033	2402.07033	D5	2024	Fiddler: CPU-GPU Orchestration for Fast Inference of Mixture-of-Experts Models	abstract	
+arxiv_2409.17264	2409.17264	D5	2024	No Request Left Behind: Tackling Heterogeneity in Long-Context LLM Inference with Medha	full	E12
+arxiv_2411.01142	2411.01142	D5	2024	NEO: Saving GPU Memory Crisis with CPU Offloading for Online LLM Inference	full	E12
+arxiv_2411.01783	2411.01783	D5	2024	Context Parallelism for Scalable Million-Token Inference	full	E12
+arxiv_2406.06858	2406.06858	D5	2024	FLUX: Fast Software-based Communication Overlap On GPUs Through Kernel Fusion	abstract	
+arxiv_2407.05858	2407.05858	D5	2024	Fast On-device LLM Inference with NPUs	full	E12
+arxiv_2403.00579	2403.00579	D5	2024	NeuPIMs: NPU-PIM Heterogeneous Acceleration for Batched LLM Inferencing	full	E12
+arxiv_2505.11329	2505.11329	D5	2025	TokenWeave: Efficient Compute-Communication Overlap for Distributed LLM Inference	full	E12
+arxiv_2507.07120	2507.07120	D5	2025	Helix Parallelism: Rethinking Sharding Strategies for Interactive Multi-Million-Token LLM Decoding	full	E12
+arxiv_2502.04563	2502.04563	D5	2025	WaferLLM: Large Language Model Inference at Wafer Scale	full	E12
+arxiv_2501.14794	2501.14794	D5	2025	Characterizing Mobile SoC for Accelerating Heterogeneous LLM Inference	abstract	
+arxiv_2503.06433	2503.06433	D5	2025	Seesaw: High-throughput LLM Inference via Model Re-sharding	abstract	
+arxiv_2603.05451	2603.05451	D5	2026	FlashAttention-4: Algorithm and Kernel Pipelining Co-Design for Asymmetric Hardware Scaling	abstract	
+arxiv_2506.12708	2506.12708	D5	2025	Serving Large Language Models on Huawei CloudMatrix384	full	E13
+arxiv_2507.19427	2507.19427	D5	2025	Step-3 is Large yet Affordable: Model-system Co-design for Cost-effective Decoding	full	E13
+arxiv_2506.10470	2506.10470	D5	2025	TD-Pipe: Temporally-Disaggregated Pipeline Parallelism Architecture for High-Throughput LLM Inference	abstract	
+arxiv_2512.22219	2512.22219	D5	2025	MPK: A Compiler and Runtime for Mega-Kernelizing Tensor Programs	abstract	
+arxiv_2502.15470	2502.15470	D5	2025	PAPI: Exploiting Dynamic Parallelism in Large Language Model Decoding with a Processing-In-Memory-Enabled Computing System	abstract	
+arxiv_2407.00088	2407.00088	D5	2024	T-MAC: CPU Renaissance via Table Lookup for Low-Bit LLM Deployment on Edge	abstract	
+arxiv_2405.19888	2405.19888	D6	2024	Parrot: Efficient Serving of LLM-based Applications with Semantic Variable	full	E13
+arxiv_2502.13965	2502.13965	D6	2025	Autellix: An Efficient Serving Engine for LLM Agents as General Programs	full	E13
+arxiv_2407.00326	2407.00326	D6	2024	Teola: Towards End-to-End Optimization of LLM-based Applications	full	E13
+arxiv_2402.01869	2402.01869	D6	2024	InferCept: Efficient Intercept Support for Augmented Large Language Model Inference	full	E13
+arxiv_2312.04511	2312.04511	D6	2023	An LLM Compiler for Parallel Function Calling	full	E13
+arxiv_2507.07400	2507.07400	D6	2025	KVFlow: Efficient Prefix Caching for Accelerating LLM-Based Multi-Agent Workflows	full	E14
+arxiv_2406.00059	2406.00059	D6	2024	Conveyor: Efficient Tool-aware LLM Serving with Tool Partial Execution	full	E13
+arxiv_2412.20993	2412.20993	D6	2024	Efficiently Scaling LLM Reasoning with Certaindex	full	E13
+arxiv_2505.13326	2505.13326	D6	2025	Thinking Short and Right Over Thinking Long: Serving LLM Reasoning Efficiently and Accurately	full	E14
+arxiv_2510.18672	2510.18672	D6	2025	Reasoning Language Model Inference Serving Unveiled: An Empirical Study	mp-full	E15
+arxiv_2411.15100	2411.15100	D6	2024	XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models	full	E13
+arxiv_2506.03887	2506.03887	D6	2025	Pre$^3$: Enabling Deterministic Pushdown Automata for Faster Structured LLM Generation	abstract	
+arxiv_2502.05111	2502.05111	D6	2025	Flexible and Efficient Grammar-Constrained Decoding	abstract	
+arxiv_2501.10868	2501.10868	D6	2025	JSONSchemaBench: A Rigorous Benchmark of Structured Outputs for Language Models	excluded	
+arxiv_2511.02230	2511.02230	D6	2025	Continuum: Efficient and Robust Multi-Turn LLM Agent Scheduling with KV Cache Time-to-Live	full	E14
+arxiv_2510.18586	2510.18586	D6	2025	TokenCake: A KV-Cache-centric Serving Framework for LLM-based Multi-Agent Applications	full	E14
+arxiv_2508.06948	2508.06948	D6	2025	Kairos: Low-latency Multi-Agent Serving with Shared LLMs and Excessive Loads in the Public Cloud	full	E14
+arxiv_2604.25899	2604.25899	D6	2026	Pythia: Exploiting Workflow Predictability for Efficient Agent-Native LLM Serving	abstract	
+arxiv_2601.05109	2601.05109	D6	2026	Nalar: Workflow-Aware Management of Agentic Applications	abstract	
+arxiv_2512.04013	2512.04013	D6	2025	AugServe: Adaptive Request Scheduling for Augmented Large Language Model Inference Serving	full	E14
+arxiv_2506.14851	2506.14851	D6	2025	Efficient Serving of LLM Applications with Probabilistic Demand Modeling	full	E14
+arxiv_2503.14649	2503.14649	D6	2025	RAGO: Systematic Performance Optimization for Retrieval-Augmented Generation Serving	full	E14
+arxiv_2603.16104	2603.16104	D6	2026	Efficient LLM Serving for Agentic Workflows: A Data Systems Perspective	full	E14
+arxiv_2407.07000	2407.07000	D6	2024	Etalon: Holistic Performance Evaluation Framework for LLM Inference Systems	mp-full	E15
+arxiv_2410.14257	2410.14257	D6	2024	Revisiting Service Level Objectives and System Level Metrics in Large Language Model Serving	mp-full	E15
+arxiv_2405.05465	2405.05465	D6	2024	Vidur: A Large-Scale Simulation Framework For LLM Inference	mp-full	E15
+arxiv_2401.17644	2401.17644	D6	2024	BurstGPT: A Real-world Workload Dataset to Optimize LLM Serving Systems	excluded	
+arxiv_2408.05499	2408.05499	D6	2024	LLMServingSim: A HW/SW Co-Simulation Infrastructure for LLM Inference Serving at Scale	excluded	
+arxiv_2505.09999	2505.09999	D6	2025	ServeGen: Workload Characterization and Generation of Large Language Model Serving in Production	mp-full	E15
+arxiv_2505.06371	2505.06371	D6	2025	The ML.ENERGY Benchmark: Toward Automated Inference Energy Measurement and Optimization	mp-full	E15
+arxiv_2512.03024	2512.03024	D6	2025	TokenPowerBench: Benchmarking the Power Consumption of LLM Inference	mp-full	E15
+arxiv_2411.00136	2411.00136	D6	2024	LLM-Inference-Bench: Inference Benchmarking of Large Language Models on AI Accelerators	mp-full	E15
+arxiv_2608.15127	2608.15127	D6	2026	From LLM Inference to Agentic Workloads: Characterization and Implications for Serving Systems	excluded	
+arxiv_2606.30560	2606.30560	D6	2026	TraceLab: Characterizing Coding Agent Workloads for LLM Serving	excluded	
+arxiv_2310.03003	2310.03003	D6	2023	From Words to Watts: Benchmarking the Energy Costs of Large Language Model Inference	excluded	
+arxiv_2602.11688	2602.11688	D2	2026	GORGO: Online Tuning for Cross-Region Network-Aware LLM Serving	full	E16
+arxiv_2607.03948	2607.03948	D2	2026	Online Linear Programming for Multi-Objective Routing in LLM Serving	full	E16
+arxiv_2603.13358	2603.13358	D2	2026	Not All Prefills Are Equal: PPD Disaggregation for Multi-turn LLM Serving	full	E16
+arxiv_2404.07947	2404.07947	D1	2024	ExeGPT: Constraint-Aware Resource Scheduling for LLM Inference	full	E16

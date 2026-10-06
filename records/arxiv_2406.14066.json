@@ -1,0 +1,91 @@
+{
+  "key": "arxiv_2406.14066",
+  "title": "TurboSpec: Closed-loop Speculation Control System for Optimizing LLM Serving Goodput",
+  "first_author": "Xiaoxuan Liu",
+  "year": 2024,
+  "venue": "arXiv preprint (v3, 2025)",
+  "url": "https://arxiv.org/abs/2406.14066",
+  "cluster": "D4",
+  "technique": "closed-loop control of speculation length per step in vLLM using offline-profiled batch latency model plus online acceptance-rate feedback to maximize goodput; disables speculation at high load",
+  "layer": "speculative/decoding-algorithm",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2406.14066.txt",
+  "optimized_metrics": [
+    {
+      "metric": "OTHER:spec_goodput",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "TurboSpec predicts \"goodput\"—the amount of successfully generated tokens— to evaluate and adjust intra-request parallelism amount to that with the highest goodput in runtime.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "TurboSpec ... demonstrate its effectiveness across diverse workloads and hardware configurations, providing consistent performance improvements across all test scenarios.",
+    "metrics": [
+      "OTHER:spec_goodput"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "mean",
+      "where": "Tables 4-5 average request latency (s); Fig 13-14 request latency CDF under QPS/dataset shifts; headline only (re-pass)"
+    },
+    {
+      "metric": "TOKEN_LAT",
+      "stat": "mean",
+      "where": "Fig 9-10 speedup = non-spec / spec latency per request across batch sizes 1-64"
+    },
+    {
+      "metric": "THR_TOK",
+      "stat": "mean",
+      "where": "Fig 11 offline throughput speedup (spec / non-spec), up to ~2x on L40S"
+    },
+    {
+      "metric": "ACCEPT",
+      "stat": "mean",
+      "where": "Fig 5, acceptance rate sweeps"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "Goodput",
+      "canonical": "OTHER:spec_goodput",
+      "definition_quote": "Goodput = Number of Generated Tokens / Execution Time (1) i.e., goodput counts only the tokens that contribute to the final output: the validated speculative and bonus tokens.",
+      "locator": "§4.1.1",
+      "notes": "NOT the SLO-attainment goodput of DistServe etc.: no SLO involved; it is correct-token rate, equal to throughput when no speculation (\"in the absence of speculative decoding, the goodput and throughput are the same\", §1). Estimated per step as accept_len / batch_latency"
+    },
+    {
+      "term_as_written": "Speedup",
+      "canonical": "TOKEN_LAT",
+      "definition_quote": "we measure speedup as the ratio between non-speculative and speculative decoding latency per request.",
+      "locator": "§6",
+      "notes": "average request latency over 10 profiling iterations"
+    },
+    {
+      "term_as_written": "average request latency",
+      "canonical": "E2E",
+      "definition_quote": "we measure the average request latency across varying batch sizes using real datasets",
+      "locator": "§7",
+      "notes": "per-request end-to-end latency; not formally defined; no TTFT/TPOT"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "static fixed batch sizes (1-64) and dynamic request-rate (QPS) changes plus dataset-distribution shift; online serving in vLLM; separate offline throughput test",
+  "tradeoff_acknowledged": "Occasional degradation: Vicuna-33B at QPS=16 average request latency 43.32s original vs 46.16s TurboSpec. Speculation is harmful at high load / low acceptance, so it is throttled or disabled.",
+  "eval_type": "real-system",
+  "hardware": "H100, L40S (also 70B multi-GPU)",
+  "models": "Llama2-7B (draft Llama-160M), Llama3-8B/70B, Vicuna-33B; methods: draft model, prompt lookup, EAGLE",
+  "workloads": "ShareGPT, Sonnet, CNN/DailyMail",
+  "confidence": "medium",
+  "extractor_notes": "Two-column layout garbled by pdftotext; line refs approximate. Title/abstract 'goodput' means correct tokens/s, unrelated to SLO. The system's actual objective is a throughput-like quantity (goodput) used as a proxy to reduce request latency; headline abstract gives no numeric result. Only mean latency, no tail percentiles (CDFs shown only).",
+  "load_class": "mixed",
+  "load_class_quote": "For the static setting, we measure the average request latency across varying batch sizes using real datasets ... dynamic QPS; online serving under varying request rates (§7) plus fixed batch sizes 1-64 (§6) and offline throughput test (Fig 11)",
+  "repass_log": [
+    "E2E: result-only (average request latency in §7 results); no design statement for request latency (design target is goodput); demoted to reported_metrics",
+    "OTHER:spec_goodput: design",
+    "load_class mixed (online-arrivals dynamic QPS + fixed-batch static)"
+  ]
+}

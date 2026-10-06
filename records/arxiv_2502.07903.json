@@ -1,0 +1,105 @@
+{
+ "key": "arxiv_2502.07903",
+ "title": "HexGen-2: Disaggregated Generative Inference of LLMs in Heterogeneous Environment",
+ "first_author": "Youhe Jiang",
+ "year": 2025,
+ "venue": "arXiv preprint (ICLR 2025 per arXiv listing; not stated in text read)",
+ "url": "https://arxiv.org/abs/2502.07903",
+ "cluster": "D2",
+ "technique": "constraint-optimization scheduler (graph partition + max-flow + iterative refinement) for placing prefill/decode replicas, parallel strategies and KV-cache routing over heterogeneous GPUs under a price budget",
+ "layer": "cluster-routing/placement",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2502.07903.txt",
+ "optimized_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "we run preflow-push algorithm (Cheriyan & Maheshwari, 1989) to get the max flow between source and sink node, with one unit of flow representing one request that can pass through a compute node or network connection per unit time",
+   "locator": "§3.3 (max-flow phase)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "the first four settings use a similar budget as the homogeneous setting, while the last setting use a 70% budget of the homogeneous settings",
+   "locator": "§5.1 (budget is the fixed resource constraint of the scheduling problem; abstract: 'constraint optimization problem')",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "HexGen-2 delivers up to a 2.0x and on average a 1.3x improvement in serving throughput, reduces the average inference latency by 1.5x compared with state-of-the-art systems given the same price budget, and achieves comparable inference performance with a 30% lower price budget",
+  "metrics": [
+   "THR_TOK",
+   "E2E",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "THR_TOK",
+   "stat": "mean",
+   "where": "Figs 6,7,9,11 (offline average decoding throughput)"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Fig 8 (vs SLO scale)"
+  },
+  {
+   "metric": "E2E",
+   "stat": "n/a",
+   "where": "headline only (re-pass)"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "Throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "Throughput refers to the number of tokens a system can generate within a specified time period.",
+   "locator": "§2",
+   "notes": "output tokens only; total (cluster) throughput, not per GPU; scheduler capacities expressed as requests per period T (e.g. 10 min)"
+  },
+  {
+   "term_as_written": "Inference latency",
+   "canonical": "E2E",
+   "definition_quote": "Inference latency is the time required to complete each inference request from start to finish.",
+   "locator": "§2",
+   "notes": ""
+  },
+  {
+   "term_as_written": "SLO attainment / SLO scale",
+   "canonical": "SLO_ATT",
+   "definition_quote": "This SLO is adjusted to various multiples of single device execution latency (termed as SLO scale) to measure performance under different degrees of SLO stringency.",
+   "locator": "§2",
+   "notes": "single E2E latency deadline, no separate TTFT/TPOT SLO; example attainment level 99%"
+  },
+  {
+   "term_as_written": "average decoding throughput",
+   "canonical": "THR_TOK",
+   "definition_quote": "For offline serving, we report the average decoding throughput, measured as the number of tokens generated per second. For online serving, we additionally report the SLO attainments as detailed in §2.",
+   "locator": "§5.1 Evaluation metrics",
+   "notes": ""
+  }
+ ],
+ "slo_spec": "latency deadline = multiple ('SLO scale') of single-device execution latency; attainment (e.g. 99%) swept over SLO scale; online arrival rate = 75% of cluster peak throughput.",
+ "load_regime": "offline (saturating arrival, 4 workload types HPLD/HPHD/LPHD/LPLD) and online (75% of peak throughput, Azure conversation trace)",
+ "tradeoff_acknowledged": "Prefill is placed with latency-optimal parallelism and decode with throughput-optimal parallelism (explicit per-phase objective split); chunked prefill gives ~20% throughput on some workloads vs 5% on others",
+ "eval_type": "real-system",
+ "hardware": "heterogeneous H100/A100/L40/A6000 clusters at ~$27-29/h budgets; homogeneous 8xH100 (29.5 $/h) for DistServe",
+ "models": "OPT-30B, Llama-2-70B",
+ "workloads": "Azure Conversation-derived traces (HPLD, HPHD, LPHD, LPLD) for offline; online trace Fig 5",
+ "confidence": "medium",
+ "extractor_notes": "Resource budget ($/h) is a hard constraint; objective is max-flow (system throughput) with per-phase latency-optimal prefill and throughput-optimal decode. The abstract's 'average inference latency 1.5x' maps to SLO-deadline attainment in Fig 8 rather than a mean-latency table; no TTFT/TPOT metrics used (despite intro mentioning 'first token latency').",
+ "load_class": "mixed",
+ "load_class_quote": "In the online setting, we scale the average arrival rate to 75% of the cluster's peak throughput ... In the offline setting, we permit requests to arrive at a rate that fully utilizes the cluster (§5.1); offline = throughput results, online = SLO attainment",
+ "repass_log": [
+  "THR_TOK: abstract result quote replaced by max-flow design statement §3.3",
+  "COST constraint: evidence replaced by budget setup quote §5.1 (kind design)",
+  "E2E (mean 'average inference latency' abstract result only) -> demoted to reported_metrics",
+  "SLO_ATT objective rested on a metric definition used for evaluation only (Fig 8) -> demoted to reported_metrics",
+  "added load_class mixed (offline throughput + online SLO attainment)"
+ ]
+}

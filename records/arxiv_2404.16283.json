@@ -1,0 +1,125 @@
+{
+  "key": "arxiv_2404.16283",
+  "title": "Andes: Defining and Enhancing Quality-of-Experience in LLM-Based Text Streaming Services",
+  "first_author": "Liu",
+  "year": 2024,
+  "venue": "arXiv preprint (v2 Dec 2024)",
+  "url": "https://arxiv.org/abs/2404.16283",
+  "cluster": "D1",
+  "technique": "QoE-aware token-level preemptive scheduler (knapsack formulation, priority by QoE gain per resource) + client-side token pacer",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2404.16283.txt",
+  "optimized_metrics": [
+    {
+      "metric": "QOE",
+      "stat": "mean",
+      "role": "objective",
+      "evidence": "Its objective is to maximize the average QoE across all requests.",
+      "locator": "§4.1 Scheduling Setup and Objective",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "total weight (context length) does not exceed the knapsack's capacity (GPU memory)",
+      "locator": "§4.1",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "compared to state-of-the-art LLM serving systems, Andes improves the average QoE by up to 4.7x given the same GPU resource, or saves up to 61% GPU resources while maintaining the same high QoE",
+    "metrics": [
+      "QOE",
+      "COST"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QOE",
+      "stat": "mean",
+      "where": "Fig 11-16 (average QoE, CDF of QoE)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 4, 11 (average TTFT, CDF)"
+    },
+    {
+      "metric": "OTHER:TDS",
+      "stat": "mean",
+      "where": "Fig 4, 11 (token delivery speed, tokens/s)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "resource savings % GPUs for avg QoE 0.95"
+    },
+    {
+      "metric": "QUEUE",
+      "stat": "max",
+      "where": "peak waiting queue length (§6.2, Fig 3)"
+    },
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "headline only (re-pass); resource saving is a result of the QoE objective, no design statement"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "QoE",
+      "canonical": "QOE",
+      "definition_quote": "QoE = 1 - S_delay / S_whole  (Eq. 3), with S_delay = sum_{i=1..n} (T_i^Actual - T_i^Ideal) (Eq. 1) and S_whole = sum_{i=1..n} (T_n^Actual - T_i^Ideal) (Eq. 2)",
+      "locator": "§3.1",
+      "notes": "in [0,1]; 1 = every token delivered no later than the ideal consumption timeline (TTFT target + constant reading-speed TDS); 0 = no tokens arrive. Computed per request over the whole timeline; reported as average (and CDF)."
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "During the former phase, time-to-first-token (TTFT) matters; the first token should be delivered to users before they lose patience. The target TTFT should depend on the service, be it constant or proportional to the prompt length.",
+      "locator": "§2.1",
+      "notes": "not formally defined as arrival-to-first-token, but includes queueing in practice (HOL blocking inflates TTFT)"
+    },
+    {
+      "term_as_written": "TDS (token delivery speed)",
+      "canonical": "OTHER:TDS",
+      "definition_quote": "users expect the server's token delivery speed (TDS) to match their consumption speed",
+      "locator": "§2.1",
+      "notes": "tokens/s delivered; equals 1/TPOT-like quantity per request; faster than reading speed gives no benefit"
+    },
+    {
+      "term_as_written": "Average QoE (metric)",
+      "canonical": "QOE",
+      "definition_quote": "Average QoE: The QoE value of requests when they finish, averaged across all requests.",
+      "locator": "§6.1 Metrics",
+      "notes": "mean over requests"
+    },
+    {
+      "term_as_written": "Resource savings (%)",
+      "canonical": "COST",
+      "definition_quote": "Resource savings (%): How much fewer GPUs Andes needs to maintain an average QoE of 0.95.",
+      "locator": "§6.1 Metrics",
+      "notes": "target avg QoE 0.95 is the quality bar"
+    }
+  ],
+  "slo_spec": "No SLO per se; QoE parameters per request (TTFT target and expected token delivery speed, e.g. reading speed; tiers of speeds). Quality bar avg QoE >= 0.95 for resource-saving claim.",
+  "load_regime": "trace replay (one-hour slice of BurstGPT with multi-round ShareGPT lengths) plus synthetic bursty arrivals (burst intensity/duration swept)",
+  "tradeoff_acknowledged": "favours QoE over raw throughput ('Throughput is not all you need'); preemption overhead (swap/recompute) handled via refiner; paper argues TTFT/TPOT/P99 statistics miss user experience",
+  "eval_type": "real-system",
+  "hardware": "AWS p4d.24xlarge, A100 x4 or x8",
+  "models": "Phi-3-mini 3.8B, Command R 32B, Phi-3.5-MoE 16x3.8B (and others in Table 1)",
+  "workloads": "BurstGPT-timed arrivals, Multi-Round ShareGPT lengths, synthetic bursts",
+  "confidence": "high",
+  "extractor_notes": "Critiques standard metrics: server-centric throughput, TTFT, and avg/P90/P99 TPOT 'fail to fully capture user experience'. Optimizes the MEAN of per-request QoE, not tail or percentile. Appendix A mentions alternative objectives (e.g. minimum QoE) not read in detail. Baselines vLLM v0.6.1 and Sarathi-Serve.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "We leverage both real-world request traces from BurstGPT [34] and synthetic bursty traces (§6.1)",
+  "repass_log": [
+    "QOE: design (objective: maximize average QoE)",
+    "MEMORY: design (knapsack capacity constraint)",
+    "COST: moved to reported (headline-only; QoE remains the objective)",
+    "load_class online-arrivals"
+  ]
+}

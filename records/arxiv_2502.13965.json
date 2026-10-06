@@ -1,0 +1,124 @@
+{
+ "key": "arxiv_2502.13965",
+ "title": "Autellix: An Efficient Serving Engine for LLM Agents as General Programs",
+ "first_author": "Michael Luo",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2502.13965",
+ "cluster": "D6",
+ "technique": "Program-level scheduling (PLAS for single-threaded, ATLAS for multi-threaded, non-clairvoyant) with preemption on cumulative program service time plus data-locality-aware load balancing",
+ "layer": "agent/compound-serving",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2502.13965.txt",
+ "optimized_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "role": "objective",
+   "evidence": "an LLM serving system that treats programs as first-class citizens to minimize their end-to-end latencies.",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "Average latency for different LLM serving systems across four real-world workloads"
+  },
+  {
+   "metric": "UTIL",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "Autellix focuses on three primary objectives: (1) improving overall program's end-to-end latency, for users, (2) maximizing GPU utilization for providers, and (3) mitigating program starvation to improve fairness, measured via 95th and 99th percentile latencies.",
+   "locator": "§4.1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P99",
+   "role": "objective",
+   "evidence": "mitigating program starvation to improve fairness, measured via 95th and 99th percentile latencies.",
+   "locator": "§4.1",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "measured via 95th and 99th ... percentile latencies"
+  }
+ ],
+ "headline_claim": {
+  "text": "Autellix improves throughput of programs by 4-15× at the same latency compared to state-of-the-art systems, such as vLLM.",
+  "metrics": [
+   "PROGRAM_JCT",
+   "THR_REQ"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "mean",
+   "where": "Fig 12 (program-level token latency vs request rate)"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P95",
+   "where": "Fig 13"
+  },
+  {
+   "metric": "PROGRAM_JCT",
+   "stat": "P99",
+   "where": "Fig 13"
+  },
+  {
+   "metric": "QUEUE",
+   "stat": "n/a",
+   "where": "Fig 5-6 waiting vs execution time ratio"
+  },
+  {
+   "metric": "THR_REQ",
+   "stat": "n/a",
+   "where": "max programs/s at fixed latency, Fig 12"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "program end-to-end latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "a single-threaded program's end-to-end latency comprises three components: (1) waiting time, the total queuing time of a program's LLM calls on the engine; (2) execution time, the cumulative feedforward time of LLM calls; and (3) interceptions, time spent waiting for external interrupts such as tool calls or human input.",
+   "locator": "§3",
+   "notes": "Program E2E = waiting + execution + interceptions; interceptions (tools/humans) excluded from what Autellix can optimize."
+  },
+  {
+   "term_as_written": "program-level token latency",
+   "canonical": "PROGRAM_JCT",
+   "definition_quote": "Existing LLM serving systems focus on request-level metrics, such as Time-to-First-Token (TFTT) and Time-per-Output-Token (TPOT), also referred to as token latency. However, these metrics overlook end-to-end latency for agentic programs. To that end, we introduce program-level token latency, defined as the total program response time divided by the number of tokens generated",
+   "locator": "§6 Metrics",
+   "notes": "Normalized program completion time (s/token); for multi-threaded programs: 'critical path response time divided by the total tokens across all threads' (footnote 2). Called simply 'latency' in evaluation. 'Throughput' = highest program arrival rate (programs/s) sustainable at a given program-level token latency."
+  },
+  {
+   "term_as_written": "waiting time (program-level)",
+   "canonical": "QUEUE",
+   "definition_quote": "waiting time, the total queuing time of a program's LLM calls on the engine",
+   "locator": "§3",
+   "notes": "Cumulative per-program queueing, used for the Fig 2 HoL analysis."
+  }
+ ],
+ "slo_spec": "No explicit SLO thresholds; compares latency-vs-request-rate curves and reads throughput at equal latency.",
+ "load_regime": "request-rate sweep (programs/s) over ShareGPT, BFCL, LATS, Mixed; single-engine and multi-engine",
+ "tradeoff_acknowledged": "Preemptive scheduling can reduce average latency but risk starving long programs (tail); MLFQ had poor P95/99 on ShareGPT; Autellix lower tails in 7 of 8 scenarios.",
+ "eval_type": "real-system",
+ "hardware": "A100-SXM4-80GB GPUs with NVLink; 1, 4 and 8 GPUs per engine",
+ "models": "LLaMA3.1-8B, LLaMA3.1-70B, Falcon-180B",
+ "workloads": "ShareGPT chatbot, BFCL function calling (ReAct), LATS MCTS, Mixed; multi-threaded DAG programs",
+ "confidence": "high",
+ "extractor_notes": "Explicit request-level vs program-level distinction: paper says TTFT/TPOT overlook program E2E and defines per-token normalised program latency. 'Throughput' headline is load at equal program-level token latency, not tokens/s. Tail (P95/P99) is reported and fairness is measured by tails. PROGRAM_JCT normalized by tokens, i.e. a NORM_LAT-style metric at program granularity. | TAIL AUDIT 2026-10-06: FAIRNESS@P99 -> PROGRAM_JCT tail objective",
+ "tail_role": "T-OBJ",
+ "tail_audit": {
+  "class": "T-OBJ",
+  "metrics": "program E2E latency @ P95/P99 (starvation/fairness objective)",
+  "correction": "Record has FAIRNESS P99 objective: re-code as PROGRAM_JCT (or E2E) P95/P99 objective (tail latency of programs), role objective; FAIRNESS stat should be n/a. Starvation mitigation (ATLAS/PLAS threshold) is explicitly a design goal.",
+  "source": "qa/TAIL_AUDIT.md"
+ },
+ "load_class": "online-arrivals",
+ "load_class_quote": "generating programs' arrivals using a Poisson process λ [§6, Fig 12 arrival-rate sweep (programs/s); a separate offline-batch section 6.5.1 is secondary]",
+ "repass_log": [
+  "PROGRAM_JCT mean: design quote kept (abstract goal); stat_basis explicit (Fig 12 average latency)",
+  "UTIL: already design quote (§4.1 objectives)",
+  "PROGRAM_JCT P99: design quote kept; stat explicit; tail_audit correction already applied (no FAIRNESS entry)"
+ ]
+}

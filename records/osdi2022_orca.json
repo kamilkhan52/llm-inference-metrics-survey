@@ -1,0 +1,95 @@
+{
+  "key": "osdi2022_orca",
+  "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+  "first_author": "Yu",
+  "year": 2022,
+  "venue": "OSDI'22",
+  "url": "https://www.usenix.org/conference/osdi22/presentation/yu",
+  "cluster": "D1",
+  "technique": "iteration-level scheduling + selective batching (batch all non-Attention ops, split Attention) with distributed execution engine",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/osdi2022_orca.txt",
+  "optimized_metrics": [
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a well-managed inference service should provide low latency and high throughput within a reasonable amount of cost",
+      "locator": "§1 (Introduction)",
+      "evidence_kind": "design",
+      "stat_basis": "unspecified",
+      "stat_quote": null
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "a well-managed inference service should provide low latency and high throughput within a reasonable amount of cost",
+      "locator": "§1 (Introduction)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "ORCA can significantly outperform NVIDIA FasterTransformer in terms of both latency and throughput: 36.9x throughput improvement at the same level of latency",
+    "metrics": [
+      "THR_REQ",
+      "NORM_LAT"
+    ],
+    "locator": "Abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "NORM_LAT",
+      "stat": "P50",
+      "where": "Fig 10 (median e2e latency / generated tokens, ms/token)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "P50",
+      "where": "Fig 11 (homogeneous requests, not normalized)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 10, 11 (req/s)"
+    },
+    {
+      "metric": "E2E",
+      "stat": "n/a",
+      "where": "Fig 9 (time to process a batch, engine microbenchmark)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "median end-to-end latency normalized by the number of generated tokens",
+      "canonical": "NORM_LAT",
+      "definition_quote": "Since each request in the trace requires different processing time, which is (roughly) in proportion to the number of generated tokens, we report median latency normalized by the number of generated tokens of each request.",
+      "locator": "§6.2",
+      "notes": "Median (P50) only; unit ms/token; normalized by generated tokens only (not input+output); no tail percentiles reported. Fixed-size traces report unnormalized latency."
+    },
+    {
+      "term_as_written": "throughput (req/s)",
+      "canonical": "THR_REQ",
+      "definition_quote": "Throughput (req/s)",
+      "locator": "Fig 10/11 axes",
+      "notes": "Throughput is in requests/s, never defined in text; read from the load-vs-latency curve as the achieved rate before latency blows up"
+    }
+  ],
+  "slo_spec": null,
+  "load_regime": "Poisson arrivals with varied rate on synthetic trace (input U(32,512), max_gen_tokens U(1,128)); also engine microbenchmark with fixed batch",
+  "tradeoff_acknowledged": "larger max batch size trades increased latency for throughput ('Increasing the batch size trades off increased throughput for increased latency'); operator tunes max_bs for the latency budget",
+  "eval_type": "real-system",
+  "hardware": "Azure NDv2/A100 VMs, up to 16-32 A100 GPUs (8/VM), 1.6Tb/s IB",
+  "models": "GPT 13B, 101B, 175B, 341B (synthetic configs, no checkpoint)",
+  "workloads": "synthetic traces; no EOS (generation length set by max_gen_tokens)",
+  "confidence": "high",
+  "extractor_notes": "Latency and throughput are co-objectives with no explicit latency SLO; the paper never states a formal objective, only 'low latency and high throughput'. 36.9x is throughput at matched median normalized latency (190ms) for 175B: 6.81 vs 0.185 req/s. Throughput is request-based, not token-based.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "we synthesize the trace by setting the request arrival time based on the Poisson process. To assess ORCA's behavior under varying load, we change the Poisson parameter (i.e., arrival rate) (§6.3 Evaluation; Fig 9 engine microbenchmark is fixed batch)",
+  "repass_log": [
+    "E2E: evidence replaced by design statement (§1 'low latency and high throughput'); stat P50->n/a, stat_basis unspecified (design states no statistic; median is only the eval measure)",
+    "THR_REQ: evidence_kind design, quote replaced by §1 statement",
+    "load_class online-arrivals"
+  ]
+}

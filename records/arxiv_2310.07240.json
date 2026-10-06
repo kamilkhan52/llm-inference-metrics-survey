@@ -1,0 +1,141 @@
+{
+ "key": "arxiv_2310.07240",
+ "title": "CacheGen: KV Cache Compression and Streaming for Fast Large Language Model Serving",
+ "first_author": "Liu",
+ "year": 2024,
+ "venue": "ACM SIGCOMM'24",
+ "url": "https://arxiv.org/abs/2310.07240",
+ "cluster": "D3",
+ "technique": "lossy KV-cache bitstream encoder (delta + layer-wise quantization + arithmetic coding) with bandwidth-adaptive per-chunk compression level / text fallback for streaming reused-context KV caches over the network",
+ "layer": "KV-compression",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2310.07240.txt",
+ "optimized_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "This paper focuses on reducing TTFT during prefilling while not changing the decoding process.",
+   "locator": "§2.1",
+   "evidence_kind": "design",
+   "stat_basis": "unspecified"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "to keep the TTFT within a given deadline while maintaining a high response quality",
+   "locator": "§4 (approach overview)",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "keep the TTFT within a given deadline"
+  },
+  {
+   "metric": "OTHER:kv_size",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "we want to reduce the transmission-time size of KV cache to reduce the network delay",
+   "locator": "§1",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "role": "constraint",
+   "evidence": "to keep the TTFT within a given deadline while maintaining a high response quality",
+   "locator": "§4 (approach overview)",
+   "evidence_kind": "design"
+  }
+ ],
+ "headline_claim": {
+  "text": "CacheGen reduces the KV cache size by 3.5-4.3x and the total delay in fetching and processing contexts by 3.2-3.7x with negligible impact on the LLM response quality.",
+  "metrics": [
+   "OTHER:kv_size",
+   "TTFT",
+   "QUALITY"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "TTFT",
+   "stat": "mean",
+   "where": "Fig 9-11 (TTFT vs quality, bandwidth sweep)"
+  },
+  {
+   "metric": "OTHER:kv_size",
+   "stat": "n/a",
+   "where": "Fig 9-10, Table"
+  },
+  {
+   "metric": "QUALITY",
+   "stat": "n/a",
+   "where": "accuracy (LongChat), F1 (TriviaQA, NarrativeQA), perplexity (Wikitext)"
+  },
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "§7.4 SLO violation rate vs quality under 0.5 s / 1 s SLO"
+  },
+  {
+   "metric": "OTHER:encode_decode_overhead",
+   "stat": "n/a",
+   "where": "§7.5 overheads, compute and storage cost"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "Time-to-first-token (TTFT)",
+   "canonical": "TTFT",
+   "definition_quote": "Time-to-first-token (TTFT) is the time from the arrival of the user query to the generation of the first token. This includes the loading delay of the KV cache and the prefill delay of the new questions.",
+   "locator": "§7.1 System metrics",
+   "notes": "Includes KV loading/network delay + prefill of the new query; no scheduler queueing (single-request-at-a-time evaluation)."
+  },
+  {
+   "term_as_written": "prefill duration = TTFT",
+   "canonical": "TTFT",
+   "definition_quote": "Since the prefill phase must be completed before generating the first output token, its duration is called Time-to-First-Token (TTFT).",
+   "locator": "§2.1",
+   "notes": "Informal equation TTFT = prefill duration."
+  },
+  {
+   "term_as_written": "Size of KV cache",
+   "canonical": "OTHER:kv_size",
+   "definition_quote": "Size of KV cache is the size of the KV cache after compression, this measures the bandwidth needed to load KV caches.",
+   "locator": "§7.1",
+   "notes": "Transmission-time size; contrasts with run-time GPU memory size that other KV-compression papers target."
+  },
+  {
+   "term_as_written": "Accuracy",
+   "canonical": "QUALITY",
+   "definition_quote": "The accuracy is defined as the percentage of generated answers that exactly includes the ground-truth topic.",
+   "locator": "§7.1 (LongChat)",
+   "notes": "F1 for TriviaQA/NarrativeQA; perplexity (exponentiated average negative log-likelihood of next token) for Wikitext."
+  },
+  {
+   "term_as_written": "SLO violation rate",
+   "canonical": "SLO_ATT",
+   "definition_quote": "Under an SLO of 1s, CacheGen reaches the same quality as the quantization baseline, while reducing the SLO violation rate from 81% to 8%.",
+   "locator": "§7.4",
+   "notes": "SLO is on TTFT / KV fetch delay (0.5 s, 1 s examples; 4 s in Fig 7 illustration); fraction over 20 bandwidth traces."
+  }
+ ],
+ "slo_spec": "Per-context TTFT / KV-fetch deadline (examples 0.5 s, 1 s, 4 s); controller picks per chunk the least-lossy configuration whose expected delay (from previous chunk's measured throughput) meets the SLO; footnote says SLO defined on TTFT.",
+ "load_regime": "single-request contexts with emulated bandwidth traces (0.1-10 Gbps, 20 traces); concurrent requests batched up to B for streaming",
+ "tradeoff_acknowledged": "Compression/delay vs generation quality (lossy KV encoding); at low bandwidth CacheGen drops quality or falls back to text recompute to meet the SLO.",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA A40 GPU server; emulated network bandwidth",
+ "models": "Mistral-7B, Llama-34B, Llama-70B (long-context fine-tuned, up to 32K)",
+ "workloads": "LongChat, TriviaQA, NarrativeQA (LongBench), Wikitext; 662 contexts",
+ "confidence": "high",
+ "extractor_notes": "TTFT here is network-load + prefill; abstract calls it 'total delay in fetching and processing contexts'. Size metric is bytes on the wire, not GPU memory. SLO attainment is a secondary reported metric but the controller is SLO-constrained.",
+ "load_class": "single-sequence",
+ "load_class_quote": "Figure 11 text: compare the TTFT of CacheGen with baselines under a wide range of available bandwidth (fixed network bandwidth of 3 Gbps); one context per request, no arrival process",
+ "repass_log": [
+  "TTFT objective: design ('This paper focuses on reducing TTFT'); stat mean -> n/a (stat_basis unspecified)",
+  "TTFT constraint: evidence replaced by design sentence (keep TTFT within a given deadline); stat_basis explicit (deadline attainment)",
+  "kv_size: abstract result replaced by §1 design statement",
+  "QUALITY: abstract result replaced by §4 design sentence",
+  "added load_class single-sequence"
+ ]
+}

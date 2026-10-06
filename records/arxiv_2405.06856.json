@@ -1,0 +1,144 @@
+{
+  "key": "arxiv_2405.06856",
+  "title": "Aladdin: Joint Placement and Scaling for SLO-Aware LLM Serving",
+  "first_author": "Chengyi Nie",
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2405.06856",
+  "cluster": "D1",
+  "technique": "cluster-level co-adaptive scheduler: predicts minimal GPUs/worker configuration for a query stream and places queries on workers using prefill/decode latency models (bin-packing-style) to maximise per-worker utilisation",
+  "layer": "cluster-routing/placement",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2405.06856.txt",
+  "optimized_metrics": [
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "our task is to determine how to use the minimum number of GPUs to serve both newly submitted and ongoing requests while ensuring compliance with the SLO requirements.",
+      "locator": "§4 Co-Adaptive Scheduling (raw txt line 476)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Aladdin first predicts minimal computing resources and the corresponding serving workers' configuration required to fulfill the SLOs for all queries.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "we have set a predetermined response deadline for time to the first token (TTFT). ... The SLO is attained when both TTFT and ATGT latency meet the requirement.",
+      "locator": "§2.2 / §6.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "we have set a predetermined response deadline for time to the first token (TTFT)"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "mean",
+      "role": "constraint",
+      "evidence": "We introduce the quality of experience SLO using the average token generation time (ATGT) metric",
+      "locator": "§3 (SLO definition)",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "We introduce the quality of experience SLO using the average token generation time (ATGT) metric ... reflects the average time spent generating each token during the decode stage"
+    },
+    {
+      "metric": "UTIL",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "it places the queries to each serving worker according to the prefill and decode latency models of batched LLM inference to maximize each worker's utilization.",
+      "locator": "abstract",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "Aladdin reduces the serving cost of a single model by up to 71% for the same SLO level compared with the baselines",
+    "metrics": [
+      "COST"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "COST",
+      "stat": "n/a",
+      "where": "§6.4 number of GPUs required vs arrival rate (simulation)"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "where": "Fig 9/10 end-to-end SLO attainment rate"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P99",
+      "where": "Fig 9/10 P99 ATGT"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "the first token generation is a single-round inference process without iteration, so we have set a predetermined response deadline for time to the first token (TTFT).",
+      "locator": "§3",
+      "notes": "TTFT never formally defined; used as prefill-latency deadline. Table 2: 'prefill latency SLOs are the approximated inference latency for the model's context length (4096 tokens) for each testbed'"
+    },
+    {
+      "term_as_written": "TBT",
+      "canonical": "TBT",
+      "definition_quote": "previous work [20] adopts the time between tokens (TBT) metric, constraining the latency between every token smaller than the target. However, the TBT metric is an over-strict metric with less flexibility, and it does not directly affect the user's quality of experience.",
+      "locator": "§3",
+      "notes": "explicitly rejected as SLO metric"
+    },
+    {
+      "term_as_written": "ATGT",
+      "canonical": "TPOT",
+      "definition_quote": "average token generation time (ATGT) metric ATGT = t_decode / (l_out - 1), where t_decode is the decode time of a request and l_out - 1 is the output length of the decode phase.",
+      "locator": "§3",
+      "notes": "= TPOT (excludes first token); per-request average; decode time excludes queueing/prefill"
+    },
+    {
+      "term_as_written": "SLO attained",
+      "canonical": "SLO_ATT",
+      "definition_quote": "The SLO is attained when both TTFT and ATGT latency meet the requirement.",
+      "locator": "§6.1 Metrics",
+      "notes": "joint per-request condition"
+    },
+    {
+      "term_as_written": "main metric (GPU number)",
+      "canonical": "COST",
+      "definition_quote": "we use the number of GPUs required to achieve a certain SLO attainment rate as the main metric.",
+      "locator": "§6.1 Metrics",
+      "notes": "cost = GPU count"
+    }
+  ],
+  "slo_spec": "Per-request: TTFT deadline = approx. inference latency for the full 4096-token context on each testbed; decode (ATGT) SLO chosen so batched per-token latency does not exceed 1.3x the individual-request inference latency. Evaluated as SLO attainment rate; cost = GPUs needed to hit a target attainment.",
+  "load_regime": "request-rate sweep (Poisson arrivals, varying lambda); real testbed for end-to-end, large-scale simulation for GPU counts",
+  "tradeoff_acknowledged": null,
+  "eval_type": "both",
+  "hardware": "4x A100 80GB (NVLink) and 4x V100 32GB servers",
+  "models": "Llama2-chat 7B, 13B, 70B",
+  "workloads": "ShareGPT_V3_unfiltered_cleaned_split prompts, Poisson arrivals; output lengths from model's generated responses (max 2048)",
+  "confidence": "high",
+  "extractor_notes": "Cost = number of GPUs (no $ cost). SLO attainment is a constraint targeted at 'all queries'; P99 ATGT is a reported metric only in real-testbed results. Builds on vLLM workers. Not primarily an in-replica scheduler (cluster placement + scaling), but cluster D1 per assignment.",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "P99 ATGT (average token gen time; reported); SLO is on mean ATGT and TTFT",
+    "correction": null,
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "submit the prompts follows a Poisson distribution (§6.1); GPU counts vs arrival rate in large-scale simulation (§6.4)",
+  "repass_log": [
+    "COST,SLO_ATT,UTIL: design (problem formulation / abstract design description)",
+    "TTFT: stat n/a->attainment explicit (predetermined response deadline)",
+    "TPOT: stat mean explicit (ATGT = average per-token time); tail-audit correction null",
+    "load_class online-arrivals"
+  ]
+}

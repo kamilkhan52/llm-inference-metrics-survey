@@ -1,0 +1,55 @@
+<section class="slide" id="s04" data-title="Metric list">
+<style>
+#s04 .slide-body { display: flex; flex-direction: column; gap: 6px; }
+#s04 table.t { font-size: 14px; line-height: 1.28; table-layout: fixed; }
+#s04 table.t th { padding: 2px 8px 4px; }
+#s04 table.t td { padding: 2.5px 8px; border-bottom: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#s04 table.t tbody tr:nth-child(even) td { background: var(--panel); }
+#s04 table.t td.m { font-weight: 600; color: var(--ink); }
+#s04 table.t td.d { color: var(--ink); }
+#s04 table.t td.v { color: var(--ink-2); }
+#s04 table.t tr.add td.m { color: var(--conv); }
+#s04 table.t tr.add td.m .st { color: var(--conv); }
+#s04 table.t tr.proxy td { border-top: 1.5px dashed var(--ink-3); }
+#s04 .sep { color: var(--ink-3); padding: 0 3px; }
+#s04 .aka { font-weight: 400; color: var(--ink-2); }
+#s04 .key { font-size: 12.5px; color: var(--ink-3); margin: 0; }
+#s04 .key .label-conv { font-weight: 600; }
+#s04 .lines { display: flex; justify-content: space-between; gap: 24px; margin-top: 2px; }
+#s04 .lines p { margin: 0; font-size: 15px; color: var(--ink-2); }
+</style>
+<header class="slide-head">
+<div class="kicker">04 · Metric list</div>
+<h2>The papers use fourteen serving metrics plus mechanism proxies; four go beyond the usual list.</h2>
+<div class="sub">From 143 full-text records; definitions are our consensus; slide 13 counts the TTFT, goodput and throughput variants.</div>
+</header>
+<div class="slide-body">
+<table class="t" id="s04-table">
+<colgroup><col style="width:250px"><col style="width:470px"><col></colgroup>
+<thead><tr><th>Metric</th><th>Consensus definition [Syn]</th><th>Main variants [P]</th></tr></thead>
+<tbody>
+<tr><td class="m">TTFT</td><td class="d">arrival → first token; includes queueing and prefill</td><td class="v">from arrival<span class="sep">·</span>= prefill time<span class="sep">·</span>unstated</td></tr>
+<tr><td class="m">TPOT</td><td class="d">per-request mean decode gap, first token excluded</td><td class="v">per-request mean<span class="sep">·</span>per-iteration time<span class="sep">·</span>deadline TTFT + i·TPOT</td></tr>
+<tr><td class="m">TBT <span class="aka">(vLLM: ITL)</span></td><td class="d">each gap is one sample; a distribution over tokens</td><td class="v">token-level distribution<span class="sep">·</span>an average called TBT</td></tr>
+<tr><td class="m">E2E <span class="aka">(TTLT, JCT)</span></td><td class="d">arrival → last token, per request, incl. queueing</td><td class="v">per request under load<span class="sep">·</span>offline batch wall time</td></tr>
+<tr><td class="m">Normalized latency</td><td class="d">E2E ÷ output tokens, averaged over requests</td><td class="v">mean<span class="sep">·</span>median<span class="sep">·</span>P90<span class="sep">·</span>÷ input+output tokens</td></tr>
+<tr class="add"><td class="m">Single-sequence speed<span class="st">*</span></td><td class="d">per-token time or speedup at batch 1 or fixed batch, no arrivals</td><td class="v">ms/token<span class="sep">·</span>tok/s called “throughput”<span class="sep">·</span>speedup</td></tr>
+<tr><td class="m">TPS/user</td><td class="d">1/TPOT per stream</td><td class="v">1/TTL<span class="sep">·</span>1/TPOT at batch 1<span class="sep">·</span>per-client rate SLA</td></tr>
+<tr><td class="m">Token throughput</td><td class="d">tokens/s completed; must state which tokens, phase, per GPU</td><td class="v">input+output<span class="sep">·</span>output-only<span class="sep">·</span>decode- or prefill-only</td></tr>
+<tr><td class="m">Request throughput / capacity</td><td class="d">completed req/s, or max rate sustained under a latency condition</td><td class="v">measured req/s<span class="sep">·</span>knee of latency curve<span class="sep">·</span>max rate under target</td></tr>
+<tr><td class="m">Goodput</td><td class="d">throughput that counts only SLO-satisfying work</td><td class="v">max rate at X % attainment<span class="sep">·</span>SLO-meeting req/s<span class="sep">·</span>a fraction</td></tr>
+<tr><td class="m">SLO attainment</td><td class="d">fraction of requests (or tokens) meeting their SLOs</td><td class="v">joint TTFT+TPOT per request<span class="sep">·</span>per token</td></tr>
+<tr><td class="m">Queueing delay</td><td class="d">arrival → first scheduled</td><td class="v">P99 scheduling delay as capacity limit</td></tr>
+<tr class="add"><td class="m">Program / workflow JCT<span class="st">*</span></td><td class="d">submission → final output of a multi-call program</td><td class="v">mean JCT<span class="sep">·</span>batch makespan<span class="sep">·</span>program time per token</td></tr>
+<tr class="add"><td class="m">Token-timeline QoE<span class="st">*</span></td><td class="d">how the token timeline tracks per-token deadlines</td><td class="v">Andes QoE<span class="sep">·</span>Etalon fluidity<span class="sep">·</span>smooth goodput</td></tr>
+<tr class="add proxy"><td class="m">Mechanism proxies<span class="st">*</span></td><td class="d">a mechanism quantity optimized directly, not a serving metric</td><td class="v">cache hit rate<span class="sep">·</span>model start-up time</td></tr>
+</tbody>
+</table>
+<p class="key"><span class="label-conv">*</span> not in the usual metric list (the four additions; the fourth, below the dashed rule, is not one of the fourteen).</p>
+<div class="lines">
+<p>Also measured: cost, energy, memory, quality, fairness, utilization, speculative acceptance.</p>
+<p>28&nbsp;% of full-text papers never define their headline metric (40 of 143).</p>
+</div>
+</div>
+<footer class="slide-foot"><div class="sources">[P/Syn] notes/DEFINITIONS.md §0, §3; SYNTHESIS v6.1 §0.6, §2 · [D] analysis/def_variants.py (variant counts on slide 13)</div><div class="pageno">04 / 14</div></footer>
+</section>

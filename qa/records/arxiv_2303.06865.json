@@ -1,0 +1,16 @@
+{"key":"arxiv_2303.06865","title":"High-throughput Generative Inference of Large Language Models with a Single GPU (FlexGen)","first_author":"Sheng","year":2023,"venue":"ICML'23 (arXiv v2)","url":"https://arxiv.org/abs/2303.06865","cluster":"D5",
+"technique":"offloading across GPU/CPU/disk with LP-searched tensor placement and zig-zag block schedule, plus 4-bit weight and KV compression",
+"layer":"parallelism/offloading/hardware-mapping","read_level":"full","fulltext_path":"fulltext/arxiv_2303.06865.txt",
+"optimized_metrics":[
+{"metric":"THR_TOK","stat":"n/a","role":"objective","evidence":"this paper initiates the study of high-throughput LLM inference using limited resources, such as a single commodity GPU. We present FlexGen, a high-throughput generation engine","locator":"abstract"},
+{"metric":"MEMORY","stat":"n/a","role":"constraint","evidence":"At any time, the total size of tensors stored on a device cannot exceed its memory capacity.","locator":"§4.1 problem formulation"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"FlexGen further compresses the weights and the attention cache to 4 bits with negligible accuracy loss.","locator":"abstract; §6.2"},
+{"metric":"E2E","stat":"n/a","role":"constraint","evidence":"can be easily extended to incorporate latency and throughput constraints, thus helping to navigate the trade-off space smoothly","locator":"§1 (optional latency bound in the policy search)"}],
+"headline_claim":{"text":"FlexGen achieves 100x higher maximum throughput for OPT-175B on a single T4 (effective batch size 144) than DeepSpeed Zero-Inference / Hugging Face Accelerate, at higher latency","metrics":["THR_TOK","E2E"],"locator":"§1 / Fig 1"},
+"reported_metrics":[{"metric":"THR_TOK","stat":"n/a","where":"Tables 2-3, Fig 1, Fig 2"},{"metric":"E2E","stat":"n/a","where":"Fig 1 latency vs throughput, Table 2 block latency"},{"metric":"QUALITY","stat":"n/a","where":"Table 5 / HELM, perplexity with compression"},{"metric":"MEMORY","stat":"n/a","where":"Table 1 memory breakdown"}],
+"metric_definitions":[
+{"term_as_written":"latency","canonical":"E2E","definition_quote":"the latency t is defined as the total number of seconds spent to process the prompts and generate all the bn tokens.","locator":"§3 Throughput and Latency","notes":"latency of a whole batch (block), not per-request; thousands of seconds"},
+{"term_as_written":"generation throughput","canonical":"THR_TOK","definition_quote":"The generation throughput is defined as bn/t.","locator":"§3","notes":"b = effective batch size, n = output length: counts generated tokens only; prompt processing time is in t"}],
+"slo_spec":null,"load_regime":"offline batch; effective batch size and block size chosen by policy search; latency-throughput frontier plotted","tradeoff_acknowledged":"latency sacrificed for throughput (e.g. latency 5000s to 12000s at 69-100x throughput)",
+"eval_type":"real-system","hardware":"NVIDIA T4 16GB, 208GB CPU DRAM, 1.5TB SSD; also 4xT4 for decentralized comparison","models":"OPT-6.7B to OPT-175B","workloads":"synthetic prompt length 512 and output 32/128 tokens; HELM benchmark; Wikitext",
+"confidence":"high","extractor_notes":"Explicitly throughput-oriented, latency-insensitive. Policy search LP objective is throughput (minimizing total execution time for a block)."}

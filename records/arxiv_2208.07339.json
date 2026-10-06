@@ -1,0 +1,73 @@
+{
+  "key": "arxiv_2208.07339",
+  "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+  "first_author": "Tim Dettmers",
+  "year": 2022,
+  "venue": "NeurIPS'22",
+  "url": "https://arxiv.org/abs/2208.07339",
+  "cluster": "D4",
+  "technique": "vector-wise Int8 quantization plus mixed-precision decomposition that keeps ~0.1% outlier feature dimensions in 16-bit",
+  "layer": "quantization/sparsity/model-compression",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2208.07339.txt",
+  "optimized_metrics": [
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Large pretrained language models are widely adopted in NLP ... but require significant memory for inference. ... One way to reduce the size of the parameters is to quantize them to less bits and use low-bit-precision matrix multiplication.",
+      "locator": "§1 (txt line 41-46)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "QUALITY",
+      "stat": "n/a",
+      "role": "constraint",
+      "evidence": "while we focus on preserving predictive performance under an 8-bit memory footprint",
+      "locator": "§6 Related work (txt line 607-608)",
+      "evidence_kind": "design"
+    }
+  ],
+  "headline_claim": {
+    "text": "a 175B parameter 16/32-bit checkpoint can be loaded, converted to Int8, and used immediately without performance degradation ... cut the memory needed for inference by half",
+    "metrics": [
+      "MEMORY",
+      "QUALITY"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "QUALITY",
+      "stat": "mean",
+      "where": "Fig 1, Table 1 (C4 perplexity), zero-shot accuracy"
+    },
+    {
+      "metric": "MEMORY",
+      "stat": "n/a",
+      "where": "§3 (BLOOM-176B footprint reduced 1.96x)"
+    },
+    {
+      "metric": "OTHER:matmul_speedup",
+      "stat": "n/a",
+      "where": "Appendix D, Table 5 (Int8 vs 16-bit matmul, microbenchmarks)"
+    }
+  ],
+  "metric_definitions": [],
+  "slo_spec": null,
+  "load_regime": "not applicable (accuracy/memory study; matmul microbenchmarks in Appendix D)",
+  "tradeoff_acknowledged": "Quantization and decomposition overhead is significant; Int8 matmul only faster for large models, mixed-precision decomposition slows inference further so only 13B and 175B models see speedups (Appendix D)",
+  "eval_type": "real-system",
+  "hardware": "consumer and A100 GPUs (inference on 8x RTX3090 / single server)",
+  "models": "OPT, BLOOM up to 176B, GPT-2-class scaling",
+  "workloads": "C4 perplexity, zero-shot (EleutherAI LM eval)",
+  "confidence": "high",
+  "extractor_notes": "Optimizes memory footprint under a no-degradation constraint; explicitly NOT a latency paper ('our work focuses on making large language models accessible', 'maintain end-to-end inference runtime performance'). No latency/throughput metric definitions.",
+  "load_class": "offline-batch",
+  "load_class_quote": "We benchmark vs. 16-bit and try settings that use a larger batch size or fewer GPUs in the case of Int8 inference (Appendix D); main claims are accuracy/memory, no serving load",
+  "repass_log": [
+    "MEMORY: evidence/locator replaced with design statement (was: 'Large language models have been widely adopted but require s...')",
+    "QUALITY: evidence/locator replaced with design statement (was: 'we show empirically it is possible to perform inference in L...')",
+    "load_class = offline-batch"
+  ]
+}

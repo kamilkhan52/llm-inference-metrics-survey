@@ -1,0 +1,115 @@
+{
+  "key": "arxiv_2510.09665",
+  "title": "LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference",
+  "first_author": "Liu",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2510.09665",
+  "cluster": "D3",
+  "technique": "Open-source KV cache layer: extracts KV from vLLM/SGLang, stores/shares across GPU/CPU/disk/remote tiers via batched, pipelined data movement with a connector and control API; supports CPU offloading, cross-engine prefix reuse, and PD disaggregation transfer",
+  "layer": "prefix/context-caching",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2510.09665.txt",
+  "optimized_metrics": [
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "role": "objective",
+      "evidence": "Our evaluation shows that combining LMCache with vLLM achieves up to 15x improvement in throughput across workloads such as multi-round question answering and document analysis.",
+      "locator": "abstract",
+      "evidence_kind": "result-only"
+    }
+  ],
+  "headline_claim": {
+    "text": "combining LMCache with vLLM achieves up to 15x improvement in throughput across workloads such as multi-round question answering and document analysis.",
+    "metrics": [
+      "THR_REQ"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "TTFT",
+      "stat": "mean",
+      "where": "Fig 8-11 (TTFT vs QPS), §8.1"
+    },
+    {
+      "metric": "TBT",
+      "stat": "mean",
+      "where": "Fig 8-11 (ITL vs QPS)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P95",
+      "where": "Fig 12 (PD disaggregation)"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "§8.1: 2.3-14x higher query processing rate at the same TTFT; 1.3-3x on real trace"
+    },
+    {
+      "metric": "OTHER:cache_hit_ratio",
+      "stat": "mean",
+      "where": "§9 lessons: context truncation halves prefix cache hit ratio"
+    },
+    {
+      "metric": "OTHER:transfer_bandwidth",
+      "stat": "n/a",
+      "where": "Table on achieved bandwidth, Fig 14 delay breakdown"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P95",
+      "where": "headline/evaluation (demoted by tail audit)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "time-to-first-token (TTFT), which is the prefill delay",
+      "locator": "§8 Metrics",
+      "notes": "Defined only as 'prefill delay'; with QPS sweeps under queueing it effectively includes waiting, but not stated."
+    },
+    {
+      "term_as_written": "ITL",
+      "canonical": "TBT",
+      "definition_quote": "inter-token-latency (ITL), which is the average delay between the generation of two consecutive output tokens",
+      "locator": "§8 Metrics",
+      "notes": "Mean of per-token gaps; note ITL is shown to be inflated by baseline slow prefill queueing subsequent decodes."
+    },
+    {
+      "term_as_written": "throughput (query processing rate)",
+      "canonical": "THR_REQ",
+      "definition_quote": "LMCache achieves 2.3-14x higher query processing rate (i.e., throughput), at the same TTFT, than the strongest baseline across five evaluated models.",
+      "locator": "§8.1",
+      "notes": "Throughput is read off TTFT-vs-QPS curves: the QPS sustainable at a fixed TTFT, i.e. SLO-style capacity; not tokens/s."
+    }
+  ],
+  "slo_spec": "No explicit SLO; throughput compared 'at the same TTFT' read from latency-vs-QPS curves; mentions user-configurable latency SLO for replication in design (§ about data placement)",
+  "load_regime": "QPS sweep of multi-round chat / document-analysis workloads (10K-20K-token contexts, 100-token outputs), real company trace over days, PD-disaggregation random 8K-in/200-out benchmark",
+  "tradeoff_acknowledged": "Remote/storage backends add loading latency that can exceed prefill for short contexts; lower TTFT only when cache hit and bandwidth sufficient; context truncation destroys prefix hits.",
+  "eval_type": "real-system",
+  "hardware": "8xH100 server (GMI Cloud); B200 for context-length study; NVLink between prefiller/decoder",
+  "models": "Llama 3.1 70B, Qwen2.5-Coder-32B, Qwen3-32B, Qwen3-Coder-480B, others (five models)",
+  "workloads": "multi-round QA, document analysis, real production trace, random 8K/200 PD benchmark",
+  "confidence": "high",
+  "extractor_notes": "Systems/experience paper; objectives are throughput at fixed TTFT plus TTFT/ITL reductions, not a formal objective. Headline 'throughput' is QPS at same TTFT. Hardware for all models not fully enumerated; model list partial. | TAIL AUDIT 2026-10-06: demoted TTFT@P95 (non-tail entry kept)",
+  "tail_role": "T-REP",
+  "tail_audit": {
+    "class": "T-REP",
+    "metrics": "TTFT P95 (reported, PD-disaggregation comparison)",
+    "correction": "Demote TTFT P95 'objective' to reported. Objective is throughput/mean latency/cache efficiency.",
+    "source": "qa/TAIL_AUDIT.md"
+  },
+  "load_class": "online-arrivals",
+  "load_class_quote": "additional users join according to a specified arrival rate (QPS) (§8.1; QPS sweeps and a real company trace)",
+  "repass_log": [
+    "THR_REQ: no design statement for throughput found; kept as the single most central headline metric",
+    "THR_REQ: kept as result-only (only objective candidate)",
+    "TTFT: demoted to reported_metrics (headline only; no design statement found)",
+    "TBT: demoted to reported_metrics (headline only; no design statement found)",
+    "load_class = online-arrivals"
+  ]
+}

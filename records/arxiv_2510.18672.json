@@ -1,0 +1,67 @@
+{
+ "key": "arxiv_2510.18672",
+ "title": "Reasoning Language Model Inference Serving Unveiled: An Empirical Study",
+ "first_author": "Li",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2510.18672",
+ "cluster": "D6",
+ "technique": "METRIC-PAPER: empirical characterization of reasoning-LLM (RLLM) serving vs LLM serving; proposes ASU (Accuracy, Service-end, User-end) assessment framework with TPS, TTFVT (time to first visible token) and E2E time, and ASU-Perf benchmark suite; evaluates quantization, prefix caching, speculative decoding, PD-disaggregation for RLLM",
+ "layer": "other",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2510.18672.txt",
+ "optimized_metrics": [
+  {"metric": "OTHER:TTFVT", "stat": "mean", "role": "objective",
+   "evidence": "For user-side metrics, we use TTFVT (time to first visible token), a variant of TTFT, since we assume reasoning tokens of RLLM are invisible to users like commercial RLLM like OpenAI o1, and E2E requests running time as metrics.",
+   "locator": "§3.2 ASU framework"},
+  {"metric": "THR_TOK", "stat": "mean", "role": "objective",
+   "evidence": "For service provider side metrics, we use throughput metric TPS (token per second).",
+   "locator": "§3.2"},
+  {"metric": "E2E", "stat": "mean", "role": "objective",
+   "evidence": "For user-side metrics, we use TTFVT ... and E2E requests running time as metrics.",
+   "locator": "§3.2"},
+  {"metric": "QUALITY", "stat": "n/a", "role": "constraint",
+   "evidence": "it is essential to ensure response accuracy while optimizing RLLM serving system performance as much as possible. Thus, we propose ASU (Accuracy, Service-end, User-end), a trinity framework",
+   "locator": "§3.2"}
+ ],
+ "headline_claim": {"text": "model quantization methods and speculative decoding can improve service system efficiency with small compromise to RLLM accuracy, while prefix caching, KV cache quantization may even degrade accuracy or serving performance for small RLLM.",
+  "metrics": ["THR_TOK", "E2E", "QUALITY"], "locator": "abstract"},
+ "reported_metrics": [
+  {"metric": "THR_TOK", "stat": "mean TPS", "where": "Figs/tables §4-§6, appendix"},
+  {"metric": "OTHER:TTFVT", "stat": "mean", "where": "§4-§6"},
+  {"metric": "TTFT", "stat": "mean", "where": "appendix tables"},
+  {"metric": "E2E", "stat": "mean running time", "where": "§4-§6"},
+  {"metric": "QUALITY", "stat": "dataset accuracy", "where": "§4-§6"},
+  {"metric": "MEMORY", "stat": "KV cache utilization over time", "where": "§4 pilot study"}
+ ],
+ "metric_definitions": [
+  {"term_as_written": "TTFT", "canonical": "TTFT", "definition_quote": "Time to first token (TTFT) is the time it takes to process the prompt until generate the first token. It measures how long a user must wait before seeing the model's output", "locator": "§2", "notes": "§E.2 variant: 'Time from receiving a request until the first token is generated (i.e., the prefill stage is completed)'"},
+  {"term_as_written": "E2E latency", "canonical": "E2E", "definition_quote": "End-to-end request latency (E2E latency) indicates the time it takes from submitting the first token of a request to receiving the last token of response, including the time for queueing and batching and network latencies in real-world scenario", "locator": "§2", "notes": "includes queueing; appendix: 'Time from user request submission until receipt of the final token'"},
+  {"term_as_written": "TBT / ITL", "canonical": "TBT", "definition_quote": "Time between tokens (TBT, a.k.a Intertoken latency, ITL) is the average time between the generation of consecutive tokens in a sequence", "locator": "§2", "notes": "defined as an average (TPOT-like); for RLLMs 'both the thinking stage and decoding stage share this metric'"},
+  {"term_as_written": "TPS", "canonical": "THR_TOK", "definition_quote": "Tokens per second (TPS) of system represents the mean of total output tokens number per second, accounting for all the requests happening simultaneously", "locator": "§2", "notes": "output tokens only; includes reasoning tokens"},
+  {"term_as_written": "RPS", "canonical": "THR_REQ", "definition_quote": "Requests per second (RPS) is the average number of requests that can be successfully completed by the system in a 1-second period.", "locator": "§2", "notes": "appendix also defines 'Throughput: Number of processed requests per second' and RPS as 'full-request pipelines completed per second ... Unlike throughput (which counts raw requests)' (inconsistent)"},
+  {"term_as_written": "TTFVT", "canonical": "OTHER:TTFVT", "definition_quote": "Time to First Visible Token (TTFVT): The time from receiving a request until the first token is actually displayed to the user. This metric is specific to RLLMs because some inference systems hide the internal “thinking” steps and only reveal output once thinking is complete. Since RLLMs often perform a prolonged reasoning chain before producing any visible token, TTFVT is typically much larger than TTFT.", "locator": "§E.2", "notes": "new metric; includes full reasoning-phase time"},
+  {"term_as_written": "KV cache utilization", "canonical": "MEMORY", "definition_quote": "KV Cache Utilization: Proportion of total memory occupied by the KV cache during model execution.", "locator": "§E.2", "notes": ""},
+  {"term_as_written": "TPS (appendix)", "canonical": "THR_TOK", "definition_quote": "Tokens per Second (TPS): Total number of tokens generated per second across all active sessions. This combines throughput and per-token speed into one measure of generation capacity.", "locator": "§E.2", "notes": ""},
+  {"term_as_written": "straggler requests", "canonical": "OTHER:straggler_requests", "definition_quote": "significant disparities in request difficulty can lead to some requests taking much longer time to complete than others. We denote these slow requests as straggler requests. ... During this time, only a small number of requests remain running in inference engine, resulting in a noticeable drop in system throughput and hardware utilization.", "locator": "§4 pilot study", "notes": "RLLM-specific tail phenomenon"}
+ ],
+ "metric_critiques": [
+  {"target_metric": "TTFT", "critique_quote": "TTFVT (time to first visible token), a variant of TTFT, since we assume reasoning tokens of RLLM are invisible to users like commercial RLLM like OpenAI o1", "locator": "§3.2"},
+  {"target_metric": "TTFT", "critique_quote": "Since RLLMs often perform a prolonged reasoning chain before producing any visible token, TTFVT is typically much larger than TTFT.", "locator": "§E.2"},
+  {"target_metric": "THR_TOK", "critique_quote": "Nevertheless, it reduces the time required for RLLMs to process the same number of requests, and improves throughput metric TPS, but at the cost of increased average TTFVT.", "locator": "§4"},
+  {"target_metric": "THR_TOK", "critique_quote": "Observation 5.4. SD improves the running time of RLLMs and deteriorates metrics like TPS.", "locator": "§5 speculative decoding"}
+ ],
+ "recommended_practice": [
+  {"quote": "Assessing this tradeoff requires metrics that account for both performance and serving costs for both service provider and users. ... providers seek to maximize system throughput, while users expect rapid model responses.", "locator": "§3.2"},
+  {"quote": "the serving delay of requests by the serving engine is typically modeled using the Gamma distribution. To validate our insights ... BurstGPT-Perf that is capable of producing requests following a Gamma distribution", "locator": "§6 real-world workload"}
+ ],
+ "slo_spec": null,
+ "load_regime": "batched arrivals (batch sizes 8/16/32) and token-budget sweeps; additional Gamma-distribution arrival workload via BurstGPT-Perf",
+ "tradeoff_acknowledged": "Larger batch improves TPS at cost of higher average TTFVT; speculative decoding improves running time but lowers TPS and degrades TTFVT; GPTQ roughly doubled E2E and halved throughput; PD-disaggregation (1P1D) degrades RLLM serving metrics; prefix caching / KV quantization can hurt small RLLMs",
+ "eval_type": "real-system",
+ "hardware": "NVIDIA GPUs (vLLM/SGLang engines); details in appendix",
+ "models": "DeepSeek-R1-distilled and Qwen RLLMs (1.5B-32B class), LLM baselines, DeepSeek MoE",
+ "workloads": "math/coding/knowledge reasoning datasets (difficulty varied), BurstGPT-Perf Gamma arrivals",
+ "confidence": "medium",
+ "extractor_notes": "Empirical study that adds ASU framework and TTFVT; reports means (no percentiles/SLOs found). Definitions are internally inconsistent (throughput = requests/s in appendix vs TPS = output tokens/s; E2E counted 'from submitting the first token'). The ASU framework is a metric selection, not a scalar objective. Hardware/model specifics were not extracted in detail."
+}

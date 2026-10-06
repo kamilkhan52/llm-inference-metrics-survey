@@ -1,0 +1,125 @@
+{
+ "key": "arxiv_2512.03416",
+ "title": "TokenScale: Timely and Accurate Autoscaling for Disaggregated LLM Serving with Token Velocity",
+ "first_author": "Ruiqi Lai",
+ "year": 2025,
+ "venue": "arXiv preprint",
+ "url": "https://arxiv.org/abs/2512.03416",
+ "cluster": "D2",
+ "technique": "autoscaling for PD-disaggregated serving using Token Velocity (max tokens/s per stage) as leading indicator, plus Convertible Decoders that run prefill during bursts",
+ "layer": "cluster-routing/placement",
+ "read_level": "full",
+ "fulltext_path": "fulltext/arxiv_2512.03416.txt",
+ "optimized_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "role": "objective",
+   "evidence": "the scaling policy must be adaptive, applying rapid scaling for prefillers to meet TTFT SLOs while precisely managing decoders to sustain TPOT SLOs",
+   "locator": "§I (design requirements)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "role": "objective",
+   "evidence": "To avoid overprovisioning, we need to define the requirements for cost-efficient dynamic resource scaling for both prefiller and decoder instances",
+   "locator": "§II-C (scaling requirements)",
+   "evidence_kind": "design"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "leading to significant Time-to-First-Token (TTFT) and Time-Per-Output-Token (TPOT) SLO violations and costly over-provisioning",
+   "locator": "abstract",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "assign different TTFT targets based on input length: 250 ms for short requests (< 256 tokens), 400 ms for medium requests (< 1024 tokens)"
+  },
+  {
+   "metric": "TPOT",
+   "stat": "attainment",
+   "role": "constraint",
+   "evidence": "The TPOT SLO is fixed at 100 ms across all cases",
+   "locator": "§VI-A",
+   "evidence_kind": "design",
+   "stat_basis": "explicit",
+   "stat_quote": "The TPOT SLO is fixed at 100 ms across all cases"
+  }
+ ],
+ "headline_claim": {
+  "text": "TokenScale improves SLO attainment from 50-88% to 80-96% and reduces costs by 4-14% over state-of-the-art systems, including DistServe, BlitzScale, and AIBrix",
+  "metrics": [
+   "SLO_ATT",
+   "COST"
+  ],
+  "locator": "abstract"
+ },
+ "reported_metrics": [
+  {
+   "metric": "SLO_ATT",
+   "stat": "attainment",
+   "where": "Figs 9,12,13, ablation"
+  },
+  {
+   "metric": "COST",
+   "stat": "n/a",
+   "where": "Figs 9,12 (# of GPUs)"
+  },
+  {
+   "metric": "TTFT",
+   "stat": "n/a",
+   "where": "Fig 10, time series"
+  },
+  {
+   "metric": "THR_TOK",
+   "stat": "n/a",
+   "where": "Fig 10 decode throughput vs time"
+  },
+  {
+   "metric": "OTHER:token_velocity",
+   "stat": "n/a",
+   "where": "Figs 6-7, Table II"
+  }
+ ],
+ "metric_definitions": [
+  {
+   "term_as_written": "Token Velocity",
+   "canonical": "OTHER:token_velocity",
+   "definition_quote": "This metric represents the maximum number of tokens that the instance can release in a second with the current allocated resource, for identifying the resource bottleneck of the system.",
+   "locator": "§III-B",
+   "notes": "per stage: Prefill Velocity V_P (max input-token processing rate), Network Velocity V_N (max KV transfer rate), Decode Velocity V_D"
+  },
+  {
+   "term_as_written": "Decode Velocity",
+   "canonical": "OTHER:token_velocity",
+   "definition_quote": "Decode Velocity (VD) is the maximum rate at which decoders drain tokens, measured as the number of tokens completed per unit time. It differs from generation throughput: from a memory perspective, generation throughput measures how quickly GPU memory is allocated during token generation, whereas Decode Velocity reflects how quickly memory is released as tokens are finalized.",
+   "locator": "§III-B",
+   "notes": "capacity metric (memory-release rate), not an achieved throughput"
+  },
+  {
+   "term_as_written": "SLOs",
+   "canonical": "SLO_ATT",
+   "definition_quote": "We follow the SLO standards defined in prior works [35], which assign different TTFT targets based on input length: 250 ms for short requests (< 256 tokens), 400 ms for medium requests (< 1024 tokens), and 2000 ms for long requests (up to 8192 tokens). The TPOT SLO is fixed at 100 ms across all cases.",
+   "locator": "§VI-A",
+   "notes": "length-bucketed TTFT SLO; TTFT/TPOT/SLO attainment themselves not formally defined; overall attainment appears to be requests meeting both TTFT and TPOT (ablation reports TTFT and TPOT attainment separately and an overall rate)"
+  }
+ ],
+ "slo_spec": "TTFT 250/400/2000 ms by prompt length (<256/<1024/<=8192 tokens), TPOT 100 ms; taken from Azure-trace prior work [35] and said to be widely adopted incl. MLPerf.",
+ "load_regime": "trace replay (Azure Code/Conversation, BurstGPT) scaled to ~22 RPS average",
+ "tradeoff_acknowledged": "Cost vs attainment: lower output-length predictor accuracy raises GPUs from 7.5 to 8.9 (and ~2% lower attainment); no named metric degraded by the method",
+ "eval_type": "real-system",
+ "hardware": "A100 and H100 GPU clusters",
+ "models": "Llama-3.1-8B (TP1), Qwen-2.5 7B/14B/32B (32B TP4)",
+ "workloads": "Azure Code, Azure Conversation, BurstGPT traces",
+ "confidence": "medium",
+ "extractor_notes": "Core contribution is a new capacity metric (Token Velocity) used as the scaling signal, not a latency metric. Cost is measured as number of GPUs (not $). SLO attainment aggregation (mean over requests meeting both SLOs) not explicitly defined in text read. Baselines: DistServe, BlitzScale, AIBrix.",
+ "load_class": "online-arrivals",
+ "load_class_quote": "A custom load generator replays the traces, reproducing their input/output token distributions and request arrival patterns (§VI-A, Azure Conversation/Code, BurstGPT)",
+ "repass_log": [
+  "SLO_ATT and COST: abstract result quotes replaced by design statements (§I requirement 'meet TTFT SLOs ... sustain TPOT SLOs'; §II 'cost-efficient dynamic resource scaling')",
+  "TTFT/TPOT constraints: design; stat_basis explicit (threshold attainment)",
+  "added load_class online-arrivals"
+ ]
+}

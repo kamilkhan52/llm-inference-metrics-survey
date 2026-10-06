@@ -1,0 +1,126 @@
+{
+  "key": "arxiv_2504.08784",
+  "title": "SLOs-Serve: Optimized Serving of Multi-SLO LLMs",
+  "first_author": "Siyuan Chen",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "url": "https://arxiv.org/abs/2504.08784",
+  "cluster": "D1",
+  "technique": "multi-SLO dynamic-programming scheduler for token allocation (chunked prefill, optional speculative decoding, dynamic batch size) with soft admission control, burst-resilient scheduling and multi-replica routing",
+  "layer": "request-scheduling",
+  "read_level": "full",
+  "fulltext_path": "fulltext/arxiv_2504.08784.txt",
+  "optimized_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "Our goal is to maximize serving capacity, the maximum request load each GPU can process while maintaining a target SLO attainment rate (e.g., 90% attainment).",
+      "locator": "§2 (txt line ~268)",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "SLO_ATT",
+      "stat": "attainment",
+      "role": "objective",
+      "evidence": "The scheduling algorithm optimizes batch schedules to maximize the total value gained from attaining requests' SLO.",
+      "locator": "§3.2.1",
+      "evidence_kind": "design"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "Every request has a deadline for its prefill stage pDDL_i.",
+      "locator": "§3.2.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "Every request has a deadline for its prefill stage pDDL_i ... We say that a request's SLO is attained if and only if the SLO for every stage is satisfied."
+    },
+    {
+      "metric": "TPOT",
+      "stat": "attainment",
+      "role": "constraint",
+      "evidence": "For the decode stage, a request can enforce the TPOT SLO for every token from a vector of choices TPOT_1, TPOT_2, ..., TPOT_L. We say that a request's SLO is attained if and only if the SLO for every stage is satisfied.",
+      "locator": "§3.2.1",
+      "evidence_kind": "design",
+      "stat_basis": "explicit",
+      "stat_quote": "a request can enforce the TPOT SLO for every token ... We say that a request's SLO is attained if and only if the SLO for every stage is satisfied."
+    }
+  ],
+  "headline_claim": {
+    "text": "SLOs-Serve improves per-GPU serving capacity by 2.2x on average compared to prior state-of-the-art systems.",
+    "metrics": [
+      "GOODPUT"
+    ],
+    "locator": "abstract"
+  },
+  "reported_metrics": [
+    {
+      "metric": "GOODPUT",
+      "stat": "attainment",
+      "where": "Fig 1, 9 serving capacity (max load per GPU at 90% attainment)"
+    },
+    {
+      "metric": "TTFT",
+      "stat": "P99",
+      "where": "Fig 12 (mixed scenario) p99 TTFT"
+    },
+    {
+      "metric": "TPOT",
+      "stat": "P99",
+      "where": "Fig 12/13 normalized p99 TPOT"
+    },
+    {
+      "metric": "THR_REQ",
+      "stat": "n/a",
+      "where": "Fig 11 multi-replica scaling (capacity with 1-4 replicas)"
+    }
+  ],
+  "metric_definitions": [
+    {
+      "term_as_written": "serving capacity",
+      "canonical": "GOODPUT",
+      "definition_quote": "serving capacity (defined as the maximum request load per GPU while maintaining 90% SLO attainment)",
+      "locator": "§1 (txt line 216)",
+      "notes": "per-GPU, request-rate based; the paper's goodput analogue"
+    },
+    {
+      "term_as_written": "request SLO attained",
+      "canonical": "SLO_ATT",
+      "definition_quote": "We say that a request's SLO is attained if and only if the SLO for every stage is satisfied.",
+      "locator": "§3.2.1",
+      "notes": "multi-stage: prefill deadline plus per-token TPOT SLOs (and thinking stage for reasoning)"
+    },
+    {
+      "term_as_written": "TTFT",
+      "canonical": "TTFT",
+      "definition_quote": "The prefill stage (input processing, reasoning, tool interaction) is measured by Time-To-First-Token (TTFT), which impacts user wait time. The decode stage (token generation) is measured by Time-Per-Output-Token (TPOT), affecting response delivery speed.",
+      "locator": "§2",
+      "notes": "stage-dependent; TTFT also covers reasoning/tool stages in agentic cases; queueing implied by deadline"
+    },
+    {
+      "term_as_written": "SLO measurement",
+      "canonical": "TTFT",
+      "definition_quote": "we focus on the max TTFT slowdown compared to zero-load setup for the prefill stages and max TPOT for the decode stages. Because speculative decoding outputs more than one token at a time, we measure the TPOT every 10 tokens.",
+      "locator": "§6 SLOs",
+      "notes": "TTFT SLO is a slowdown factor vs zero-load prefill latency (scales with prompt length); TPOT SLO checked on max across tokens (every 10 tokens), i.e. a worst-case-token style constraint rather than a request mean"
+    }
+  ],
+  "slo_spec": "Application- and stage-specific SLOs from Table 1: e.g. summarization tight prefill/loose decode, coder normal prefill/fast decode, chatbot reading-speed decode, reasoning tight thinking stage; TTFT SLO set as max slowdown vs zero-load latency, TPOT as max over every-10-token windows; target 90% attainment for capacity.",
+  "load_regime": "trace replay (Azure LLM inference traces: bursty Coding, stable Chatting) scaled to request load; capacity search; multi-replica scaling",
+  "tradeoff_acknowledged": "Prefill-prioritising (vLLM) causes TPOT violations; decode-prioritising (Sarathi) causes TTFT violations; requests with unattainable SLOs are delayed/demoted to best-effort under bursts to protect the rest.",
+  "eval_type": "real-system",
+  "hardware": "Google a2-highgpu-4g (4x A100 40GB), a3-highgpu-8g (8x H100 80GB) for multi-replica",
+  "models": "OPT-7B/13B/30B (+OPT-125m draft), ToolLlama-7B, DeepSeek-R1-Distill-Qwen-1.5B",
+  "workloads": "Azure LLM traces with ShareGPT, HumanEval, Arxiv Summary, ToolBench, s1K prompts; six scenarios",
+  "confidence": "high",
+  "extractor_notes": "Capacity metric is per-GPU request load at 90% attainment (not tokens/s). TTFT SLO defined as slowdown relative to zero-load latency, and TPOT SLO evaluated as max over 10-token windows - both differ from common mean TPOT. Text layout is two-column; locators approximate.",
+  "load_class": "online-arrivals",
+  "load_class_quote": "We used Azure LLM inference traces [25] for realistic request arrival patterns: Coding shows bursty arrivals ... (§5.1)",
+  "repass_log": [
+    "GOODPUT, SLO_ATT: design",
+    "TTFT/TPOT constraints: design; stat n/a->attainment explicit (per-request deadline attainment)",
+    "load_class online-arrivals"
+  ]
+}

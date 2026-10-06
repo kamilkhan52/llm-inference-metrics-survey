@@ -1,0 +1,16 @@
+{"key":"arxiv_2401.15077","title":"EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty","first_author":"Li","year":2024,"venue":"ICML'24 (arXiv v3)","url":"https://arxiv.org/abs/2401.15077","cluster":"D4",
+"technique":"speculative decoding with feature-level (second-to-top-layer) autoregressive draft head plus tree drafts",
+"layer":"speculative/decoding-algorithm","read_level":"full","fulltext_path":"fulltext/arxiv_2401.15077.txt",
+"optimized_metrics":[
+{"metric":"TOKEN_LAT","stat":"n/a","role":"objective","evidence":"EAGLE primarily focuses on latency rather than throughput. We assess acceleration effects using the following metrics: Walltime speedup ratio: The actual test speedup ratio relative to vanilla autoregressive decoding.","locator":"§4.1 Metrics (p.5)"},
+{"metric":"QUALITY","stat":"n/a","role":"constraint","evidence":"while maintaining the distribution of the generated text.","locator":"abstract"}],
+"headline_claim":{"text":"For LLaMA2-Chat 70B, EAGLE achieved a latency speedup ratio of 2.7x-3.5x, doubled throughput, while maintaining the distribution of the generated text.","metrics":["TOKEN_LAT","THR_TOK","QUALITY"],"locator":"abstract"},
+"reported_metrics":[{"metric":"TOKEN_LAT","stat":"n/a","where":"Fig 1-2, Tables 1,3"},{"metric":"ACCEPT","stat":"mean","where":"Tables 1-3 (tau, alpha)"},{"metric":"THR_TOK","stat":"n/a","where":"Table 7 (max-batch throughput speedup)"}],
+"metric_definitions":[
+{"term_as_written":"Walltime speedup ratio","canonical":"TOKEN_LAT","definition_quote":"Walltime speedup ratio: The actual test speedup ratio relative to vanilla autoregressive decoding.","locator":"§4.1","notes":"batch size 1 default; relative, not absolute latency"},
+{"term_as_written":"Average acceptance length tau","canonical":"ACCEPT","definition_quote":"Average acceptance length τ : The average number of tokens accepted per forward pass of the target LLM.","locator":"§4.1","notes":""},
+{"term_as_written":"Acceptance rate alpha","canonical":"ACCEPT","definition_quote":"Acceptance rate α: The ratio of accepted to generated tokens during drafting, gauges draft accuracy.","locator":"§4.1","notes":"measured with chain drafts"}],
+"slo_spec":null,"load_regime":"batch=1 for most experiments; batch size 1-4 (and max batch for throughput) in §4.4; single-prompt benchmark runs (MT-bench, HumanEval, GSM8K, Alpaca)",
+"tradeoff_acknowledged":"speedup ratio diminishes with increasing batch size (3.01x at bs=1 to 2.40x at bs=4 for 70B); slightly more CUDA memory (max bs 8 -> 7)",
+"eval_type":"real-system","hardware":"RTX 3090 (7B/13B), A100 40G (33B/70B, 4 GPUs)","models":"Vicuna 7B/13B/33B, LLaMA2-Chat 7B/13B/70B, Mixtral 8x7B Instruct","workloads":"MT-bench, HumanEval, GSM8K, Alpaca",
+"confidence":"high","extractor_notes":"Not a serving paper; latency means single-stream decode speed. Throughput is secondary (Section 4.4). Two-column text extraction is interleaved."}
